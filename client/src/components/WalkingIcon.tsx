@@ -3,13 +3,13 @@ import iconImg from "/icon.png";
 
 export function WalkingIcon() {
   return (
-    <div className="w-full h-20 bg-gradient-to-b from-background to-transparent flex items-center overflow-hidden border-b border-white/5">
+    <div className="w-full h-20 bg-gradient-to-b from-background via-background/50 to-transparent flex items-center justify-center overflow-hidden border-b border-white/5">
       <motion.div
         animate={{
-          x: ["0vw", "100vw"],
+          x: ["-5%", "95%"],
         }}
         transition={{
-          duration: 8,
+          duration: 12,
           repeat: Infinity,
           ease: "linear",
         }}
@@ -18,14 +18,7 @@ export function WalkingIcon() {
         <motion.img
           src={iconImg}
           alt="Walking Icon"
-          className="w-12 h-12 object-contain"
-          animate={{
-            scaleX: [1, 1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-          }}
+          className="w-16 h-16 object-contain drop-shadow-lg"
           data-testid="walking-icon"
         />
       </motion.div>
