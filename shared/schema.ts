@@ -20,7 +20,7 @@ export const users = pgTable("users", {
   clicks: integer("clicks").default(0).notNull(),
   
   // Advanced Customization (guns.lol style)
-  layout: text("layout").default("default").notNull(), // 'default', 'minimal', 'grid', 'showcase'
+  layout: text("layout").default("default").notNull(),
   theme: text("theme").default("default").notNull(),
   accentColor: text("accent_color").default("#7c3aed").notNull(),
   bgColor: text("bg_color").default("#000000").notNull(),
@@ -31,14 +31,14 @@ export const users = pgTable("users", {
   backgroundBlur: integer("background_blur").default(10).notNull(),
   gradientEnabled: boolean("gradient_enabled").default(false).notNull(),
   fontFamily: text("font_family").default("inter").notNull(),
-  customFont: text("custom_font"), // URL to custom font
+  customFont: text("custom_font"),
   
   // Profile Effects
   typewriterAnimation: boolean("typewriter_animation").default(false).notNull(),
   typewriterSpeed: integer("typewriter_speed").default(50).notNull(),
-  cursorEffect: text("cursor_effect").default("none").notNull(), // 'none', 'glow', 'trail'
-  backgroundEffect: text("background_effect").default("none").notNull(), // 'gradient', 'animated', 'video'
-  backgroundUrl: text("background_url"), // For custom backgrounds
+  cursorEffect: text("cursor_effect").default("none").notNull(),
+  backgroundEffect: text("background_effect").default("none").notNull(),
+  backgroundUrl: text("background_url"),
   
   // Meta
   isPro: boolean("is_pro").default(false).notNull(),
@@ -77,7 +77,7 @@ export const templates = pgTable("templates", {
 export const analytics = pgTable("analytics", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
-  date: text("date").notNull(), // YYYY-MM-DD
+  date: text("date").notNull(),
   viewCount: integer("view_count").default(0).notNull(),
   clickCount: integer("click_count").default(0).notNull(),
   uniqueVisitors: integer("unique_visitors").default(0).notNull(),
@@ -110,7 +110,9 @@ export const insertUserSchema = createInsertSchema(users).omit({
   xp: true, 
   views: true, 
   likes: true,
-  clicks: true
+  clicks: true,
+  credentialId: true,
+  credentialPublicKey: true
 });
 
 export const insertLinkSchema = createInsertSchema(links).omit({ 

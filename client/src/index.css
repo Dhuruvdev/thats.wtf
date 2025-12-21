@@ -125,6 +125,25 @@
     50% { transform: translateY(-10px); }
   }
 
+  @keyframes pacman-move {
+    0% { transform: translateX(-100px); }
+    50% { transform: translateX(calc(100vw + 100px)); }
+    100% { transform: translateX(calc(100vw + 100px)); }
+  }
+
+  @keyframes pacman-mouth {
+    0% { clip-path: polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%); }
+    25% { clip-path: polygon(50% 0%, 80% 20%, 80% 80%, 50% 100%); }
+    50% { clip-path: polygon(50% 0%, 100% 50%, 100% 50%, 50% 100%); }
+    75% { clip-path: polygon(50% 0%, 80% 20%, 80% 80%, 50% 100%); }
+    100% { clip-path: polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%); }
+  }
+
+  @keyframes dot-fade {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
