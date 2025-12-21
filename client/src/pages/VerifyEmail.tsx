@@ -22,7 +22,7 @@ export default function VerifyEmail() {
 
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => setLocation("/lab"), 2000);
+      setTimeout(() => setLocation("/"), 2000);
     }
   }, [isSuccess, setLocation]);
 
