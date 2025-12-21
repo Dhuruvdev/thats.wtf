@@ -16,6 +16,7 @@ interface CardNavProps {
   logo?: string;
   logoAlt?: string;
   logoIcon?: React.ReactNode;
+  favicon?: string;
   items: CardNavItem[];
   className?: string;
   ease?: string;
@@ -29,6 +30,7 @@ export function CardNav({
   logo,
   logoAlt = "Logo",
   logoIcon,
+  favicon,
   items,
   className = "",
   ease = "power3.out",
@@ -153,18 +155,26 @@ export function CardNav({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-20 flex items-center justify-between gap-4">
           {/* Logo / Icon - Left Side */}
-          <div className="flex-shrink-0 flex items-center">
-            {logoIcon ? (
-              <div className="flex items-center justify-center" data-testid="nav-logo-icon">
-                {logoIcon}
-              </div>
-            ) : logo ? (
+          <div className="flex-shrink-0 flex items-center gap-2">
+            {favicon && (
+              <img
+                src={favicon}
+                alt="Favicon"
+                className="h-12 w-12 object-contain"
+                data-testid="nav-favicon"
+              />
+            )}
+            {logo ? (
               <img
                 src={logo}
                 alt={logoAlt}
-                className="h-8 w-auto"
+                className="h-12 w-auto object-contain"
                 data-testid="nav-logo-image"
               />
+            ) : logoIcon ? (
+              <div className="flex items-center justify-center h-12 w-12" data-testid="nav-logo-icon">
+                {logoIcon}
+              </div>
             ) : null}
           </div>
 
