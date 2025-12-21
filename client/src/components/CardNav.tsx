@@ -305,76 +305,44 @@ export function CardNav({
             </div>
 
             {/* Additional Menu Items */}
-            <div className="px-4 space-y-2 border-t border-white/10 pt-4">
-              <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center gap-3 group text-sm"
-                data-testid="menu-item-help">
-                <HelpCircle className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
-                <span className="flex-1 text-left">Help Center</span>
-              </button>
+            <div className="px-4 space-y-2 pt-2">
+              <a href="#">
+                <div className="w-full px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide"
+                  style={{
+                    backgroundColor: "#f59e0b",
+                    color: "#000000",
+                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
+                  }}
+                  onClick={() => setIsMenuOpen(false)}
+                  data-testid="menu-item-help">
+                  Help Center
+                </div>
+              </a>
               
-              <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center gap-3 group text-sm"
-                data-testid="menu-item-discord">
-                <MessageCircle className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
-                <span className="flex-1 text-left">Discord</span>
-              </button>
+              <a href="#">
+                <div className="w-full px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide"
+                  style={{
+                    backgroundColor: "#06b6d4",
+                    color: "#ffffff",
+                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
+                  }}
+                  onClick={() => setIsMenuOpen(false)}
+                  data-testid="menu-item-discord">
+                  Discord
+                </div>
+              </a>
               
               <Link href="/pricing">
-                <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center gap-3 group text-sm"
+                <div className="w-full px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide"
+                  style={{
+                    backgroundColor: "#ec4899",
+                    color: "#ffffff",
+                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
+                  }}
                   onClick={() => setIsMenuOpen(false)}
                   data-testid="menu-item-pricing">
-                  <DollarSign className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
-                  <span className="flex-1 text-left">Pricing</span>
-                </button>
-              </Link>
-            </div>
-
-            {/* Language Selector */}
-            <div className="px-4 border-t border-white/10 pt-4">
-              <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center justify-between group text-sm"
-                data-testid="menu-item-language">
-                <div className="flex items-center gap-3">
-                  <Globe className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
-                  <span>English (US)</span>
+                  Pricing
                 </div>
-                <svg
-                  className="w-4 h-4 text-muted-foreground"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            {/* Auth Buttons */}
-            <div className="px-4 space-y-2 border-t border-white/10 pt-4">
-              <Link href="/login">
-                <Button
-                  className="w-full border-white/20 text-white hover:bg-white/5 font-semibold text-sm"
-                  variant="outline"
-                  onClick={() => setIsMenuOpen(false)}
-                  data-testid="button-cardnav-mobile-login"
-                >
-                  Login
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button
-                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black rounded-xl text-sm mobile-cta-btn"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    handleGetStarted();
-                  }}
-                  data-testid="button-cardnav-mobile-signup"
-                >
-                  Sign Up Free
-                </Button>
               </Link>
             </div>
           </div>

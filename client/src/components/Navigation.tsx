@@ -13,24 +13,6 @@ export function Navigation() {
           href: `/u/${user.username}`,
           bgColor: "#7c3aed",
           textColor: "#ffffff"
-        },
-        {
-          label: "Lab",
-          href: "/lab",
-          bgColor: "#14b8a6",
-          textColor: "#000000"
-        },
-        {
-          label: "Templates",
-          href: "/templates",
-          bgColor: "#f472b6",
-          textColor: "#ffffff"
-        },
-        {
-          label: "Analytics",
-          href: "/analytics",
-          bgColor: "#0ea5e9",
-          textColor: "#ffffff"
         }
       ]
     : [
@@ -38,24 +20,6 @@ export function Navigation() {
           label: "Home",
           href: "/",
           bgColor: "#7c3aed",
-          textColor: "#ffffff"
-        },
-        {
-          label: "Lab",
-          href: "/lab",
-          bgColor: "#14b8a6",
-          textColor: "#000000"
-        },
-        {
-          label: "Templates",
-          href: "/templates",
-          bgColor: "#f472b6",
-          textColor: "#ffffff"
-        },
-        {
-          label: "Analytics",
-          href: "/analytics",
-          bgColor: "#0ea5e9",
           textColor: "#ffffff"
         }
       ];
