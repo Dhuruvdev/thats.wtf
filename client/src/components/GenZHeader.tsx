@@ -18,7 +18,7 @@ export function GenZHeader() {
           <img 
             src={logoImg}
             alt="Lab.dev Logo"
-            className="w-8 h-8 object-contain rounded-lg"
+            className="w-24 h-24 object-contain rounded-lg"
             data-testid="header-logo-image"
           />
           <span className="font-display text-lg font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">

@@ -13,13 +13,13 @@ export function Footer() {
             <img 
               src={iconImg}
               alt="Lab.dev Icon"
-              className="w-10 h-10 rounded-lg object-contain"
+              className="w-24 h-24 rounded-lg object-contain"
               data-testid="footer-logo-icon"
             />
             <img 
               src={logoImg}
               alt="Lab.dev Logo"
-              className="h-10 object-contain"
+              className="h-24 w-24 object-contain"
               data-testid="footer-logo-image"
             />
           </div>

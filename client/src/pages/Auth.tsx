@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import iconImg from "/icon.png";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -69,7 +70,7 @@ export default function Auth() {
       <Card className="relative w-full max-w-md border-white/10 bg-black/40 backdrop-blur-md p-8 rounded-2xl">
         {!isLogin && (
           <div className="flex justify-center mb-6">
-            <img src="/icon.png" alt="That's.WTF" className="w-16 h-16" />
+            <img src={iconImg} alt="That's.WTF" className="w-24 h-24" />
           </div>
         )}
         

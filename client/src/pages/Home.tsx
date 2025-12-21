@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Layers, Zap, Users, TrendingUp, Lock, Palette } from "lucide-react";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import iconImg from "/icon.png";
 
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -92,9 +93,9 @@ export default function Home() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
-                className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-8 w-fit"
+                className="hero-badge inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-8 w-fit"
               >
-                <Sparkles className="w-4 h-4 text-primary" />
+                <img src={iconImg} alt="Icon" className="w-6 h-6 object-contain" />
                 <span className="text-sm font-semibold text-primary">Your Identity, Leveled Up</span>
               </motion.div>
 
@@ -200,36 +201,46 @@ export default function Home() {
           >
             {[
               {
-                icon: <Palette className="w-6 h-6 text-primary" />,
+                type: "lucide",
+                lucideIcon: Palette,
                 title: "Customization Lab",
                 desc: "Themes, colors, fonts, and animations. Complete control."
               },
               {
-                icon: <TrendingUp className="w-6 h-6 text-primary" />,
+                type: "lucide",
+                lucideIcon: TrendingUp,
                 title: "Progression System",
                 desc: "Earn XP from views. Level up and unlock premium themes."
               },
               {
-                icon: <Sparkles className="w-6 h-6 text-primary" />,
+                type: "image",
                 title: "Cinematic Motion",
                 desc: "GSAP-powered animations. Premium, never cheap."
               },
               {
-                icon: <Lock className="w-6 h-6 text-primary" />,
+                type: "lucide",
+                lucideIcon: Lock,
                 title: "Creator Control",
                 desc: "Your data is yours. Built for privacy and security."
               }
-            ].map((feature, i) => (
+            ].map((feature, i) => {
+              const Icon = feature.type === "lucide" && feature.lucideIcon ? feature.lucideIcon : null;
+              return (
               <motion.div key={i} variants={itemVariants}>
                 <Card className="p-6 h-full border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:border-primary/30 transition-all group hover-elevate">
                   <div className="mb-4 p-3 rounded-xl bg-primary/10 w-fit border border-primary/20 group-hover:border-primary/40 transition-colors">
-                    {feature.icon}
+                    {feature.type === "image" ? (
+                      <img src={iconImg} alt="Icon" className="w-6 h-6 object-contain" />
+                    ) : Icon ? (
+                      <Icon className="w-6 h-6 text-primary" />
+                    ) : null}
                   </div>
                   <h3 className="text-lg font-display font-black text-white mb-2">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground">{feature.desc}</p>
                 </Card>
               </motion.div>
-            ))}
+            );
+            })}
           </motion.div>
         </div>
 
