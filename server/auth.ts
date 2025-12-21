@@ -8,6 +8,7 @@ import { storage } from "./storage";
 import { users } from "@shared/schema";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
+import { sendVerificationEmail } from "./email";
 
 const scryptAsync = promisify(scrypt);
 const crypto = {
