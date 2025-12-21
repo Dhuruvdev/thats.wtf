@@ -10,6 +10,7 @@ import Profile from "@/pages/Profile";
 import Lab from "@/pages/Lab";
 import Templates from "@/pages/Templates";
 import Analytics from "@/pages/Analytics";
+import CardNavDemo from "@/pages/CardNavDemo";
 
 function Router() {
   return (
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/lab" component={Lab} />
       <Route path="/templates" component={Templates} />
       <Route path="/analytics" component={Analytics} />
+      <Route path="/cardnav-demo" component={CardNavDemo} />
       <Route path="/u/:username" component={Profile} />
       <Route component={NotFound} />
     </Switch>
