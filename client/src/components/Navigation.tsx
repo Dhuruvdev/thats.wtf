@@ -66,12 +66,12 @@ export function Navigation() {
       <CardNav
         logoIcon={<Sparkles className="w-6 h-6 text-purple-500" data-testid="nav-brand-icon" />}
         items={navItems}
-        baseColor="rgba(0, 0, 0, 0.95)"
+        baseColor="rgba(0, 0, 0, 1)"
         menuColor="#ffffff"
         buttonBgColor="#7c3aed"
         buttonTextColor="#ffffff"
         ease="power3.out"
-        className="mx-3 sm:mx-4 lg:mx-6 rounded-xl sm:rounded-2xl bg-black/95 backdrop-blur-xl border border-white/5 shadow-xl"
+        className="mx-3 sm:mx-4 lg:mx-6 rounded-xl sm:rounded-2xl bg-black backdrop-blur-xl border border-white/5 shadow-2xl"
       />
     </div>
   );
