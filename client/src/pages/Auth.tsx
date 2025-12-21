@@ -9,7 +9,6 @@ import { Card } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
-import logoUrl from "@/assets/logo.png";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -66,7 +65,7 @@ export default function Auth() {
       <Card className="relative w-full max-w-md border-white/10 bg-black/40 backdrop-blur-md p-8">
         {!isLogin && (
           <div className="flex justify-center mb-6">
-            <img src={logoUrl} alt="That's.WTF" className="w-20 h-20" />
+            <img src="/logo.png" alt="That's.WTF" className="w-20 h-20" />
           </div>
         )}
         
