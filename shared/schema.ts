@@ -9,6 +9,8 @@ export const users = pgTable("users", {
   displayName: text("display_name"),
   bio: text("bio"),
   avatarUrl: text("avatar_url"),
+  credentialId: text("credential_id"),
+  credentialPublicKey: text("credential_public_key"),
   
   // Gamification & Stats
   level: integer("level").default(1).notNull(),
