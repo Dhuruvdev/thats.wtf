@@ -15,6 +15,7 @@ export interface CardNavItem {
 interface CardNavProps {
   logo?: string;
   logoAlt?: string;
+  logoIcon?: React.ReactNode;
   items: CardNavItem[];
   className?: string;
   ease?: string;
@@ -27,6 +28,7 @@ interface CardNavProps {
 export function CardNav({
   logo,
   logoAlt = "Logo",
+  logoIcon,
   items,
   className = "",
   ease = "power3.out",
@@ -149,18 +151,25 @@ export function CardNav({
       style={{ backgroundColor: baseColor }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="h-20 flex items-center justify-between">
-          {/* Logo */}
-          {logo && (
-            <img
-              src={logo}
-              alt={logoAlt}
-              className="h-8 w-auto"
-            />
-          )}
+        <div className="h-20 flex items-center justify-between gap-4">
+          {/* Logo / Icon - Left Side */}
+          <div className="flex-shrink-0 flex items-center">
+            {logoIcon ? (
+              <div className="flex items-center justify-center" data-testid="nav-logo-icon">
+                {logoIcon}
+              </div>
+            ) : logo ? (
+              <img
+                src={logo}
+                alt={logoAlt}
+                className="h-8 w-auto"
+                data-testid="nav-logo-image"
+              />
+            ) : null}
+          </div>
 
           {/* Desktop Navigation - Card Style */}
-          <div className="hidden md:flex items-center gap-4 flex-1 mx-6 lg:mx-8">
+          <div className="hidden md:flex items-center gap-4 flex-1 justify-center">
             {items.map((item, index) => (
               <Link key={index} href={item.href}>
                 <div
@@ -197,11 +206,11 @@ export function CardNav({
             </Button>
           </div>
 
-          {/* Mobile Menu Button with Animation */}
+          {/* Mobile Menu Button with Animation - Right Side */}
           <button
             ref={hamburgerRef}
             onClick={toggleMenu}
-            className="md:hidden p-2.5 hover:bg-white/10 rounded-lg transition-colors duration-200"
+            className="md:hidden p-2.5 hover:bg-white/10 rounded-lg transition-colors duration-200 flex-shrink-0"
             data-testid="button-card-nav-menu-toggle"
           >
             {isMenuOpen ? (
