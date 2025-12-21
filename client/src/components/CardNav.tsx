@@ -2,8 +2,9 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, HelpCircle, MessageCircle, DollarSign, Globe } from "lucide-react";
 import { useState } from "react";
+import logoImg from "/logo.png";
 
 export interface CardNavItem {
   label: string;
@@ -276,44 +277,125 @@ export function CardNav({
         {isMenuOpen && (
           <div 
             ref={mobileMenuRef}
-            className="md:hidden pb-4 pt-2 space-y-2"
+            className="md:hidden pb-6 pt-4 space-y-4"
             data-testid="mobile-nav-menu"
           >
-            {items.map((item, index) => (
-              <Link key={index} href={item.href}>
-                <div
-                  className={`card-nav-item-mobile px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide ${
-                    location === item.href
-                      ? "ring-2 ring-white/40 ring-offset-2 ring-offset-transparent"
-                      : ""
-                  }`}
-                  style={{
-                    backgroundColor: item.bgColor,
-                    color: item.textColor || "#000000",
-                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
-                  }}
-                  data-testid={`card-nav-mobile-${item.label.toLowerCase()}`}
+            {/* Menu Header */}
+            <div className="flex items-center justify-between px-4 pb-4 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <img
+                  src={logoImg}
+                  alt="That's.WTF"
+                  className="w-10 h-10 rounded-lg object-contain"
+                />
+                <span className="font-display font-black text-white text-sm">that's.wtf</span>
+              </div>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                data-testid="button-close-cardnav-menu"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+            </div>
+
+            {/* Navigation Items */}
+            <div className="px-4 space-y-2">
+              {items.map((item, index) => (
+                <Link key={index} href={item.href}>
+                  <div
+                    className={`card-nav-item-mobile px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide ${
+                      location === item.href
+                        ? "ring-2 ring-white/40 ring-offset-2 ring-offset-transparent"
+                        : ""
+                    }`}
+                    style={{
+                      backgroundColor: item.bgColor,
+                      color: item.textColor || "#000000",
+                      boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
+                    }}
+                    data-testid={`card-nav-mobile-${item.label.toLowerCase()}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Additional Menu Items */}
+            <div className="px-4 space-y-2 border-t border-white/10 pt-4">
+              <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center gap-3 group text-sm"
+                data-testid="menu-item-help">
+                <HelpCircle className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
+                <span className="flex-1 text-left">Help Center</span>
+              </button>
+              
+              <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center gap-3 group text-sm"
+                data-testid="menu-item-discord">
+                <MessageCircle className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
+                <span className="flex-1 text-left">Discord</span>
+              </button>
+              
+              <Link href="/pricing">
+                <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center gap-3 group text-sm"
                   onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </div>
+                  data-testid="menu-item-pricing">
+                  <DollarSign className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
+                  <span className="flex-1 text-left">Pricing</span>
+                </button>
               </Link>
-            ))}
-            <Button
-              size="sm"
-              className="w-full font-black rounded-xl uppercase tracking-wider text-xs mt-3 mobile-cta-btn transition-all hover:scale-105"
-              style={{
-                backgroundColor: buttonBgColor,
-                color: buttonTextColor
-              }}
-              data-testid="button-card-nav-cta-mobile"
-              onClick={() => {
-                setIsMenuOpen(false);
-                handleGetStarted();
-              }}
-            >
-              Get Started
-            </Button>
+            </div>
+
+            {/* Language Selector */}
+            <div className="px-4 border-t border-white/10 pt-4">
+              <button className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center justify-between group text-sm"
+                data-testid="menu-item-language">
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 text-primary group-hover:text-accent transition-colors" />
+                  <span>English (US)</span>
+                </div>
+                <svg
+                  className="w-4 h-4 text-muted-foreground"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Auth Buttons */}
+            <div className="px-4 space-y-2 border-t border-white/10 pt-4">
+              <Link href="/login">
+                <Button
+                  className="w-full border-white/20 text-white hover:bg-white/5 font-semibold text-sm"
+                  variant="outline"
+                  onClick={() => setIsMenuOpen(false)}
+                  data-testid="button-cardnav-mobile-login"
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button
+                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black rounded-xl text-sm mobile-cta-btn"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleGetStarted();
+                  }}
+                  data-testid="button-cardnav-mobile-signup"
+                >
+                  Sign Up Free
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
       </div>
