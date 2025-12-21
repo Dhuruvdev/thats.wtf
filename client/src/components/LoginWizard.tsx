@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Eye, EyeOff, Zap } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email").optional().or(z.literal("")),
@@ -77,11 +77,16 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
       {/* Form Card */}
       <div className="w-full max-w-sm bg-card/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl relative z-10 p-8 space-y-6">
         
-        {/* Icon */}
+        {/* Icon - Place icon.png in attached_assets/icon.png */}
         <div className="flex justify-center">
           <div className="w-16 h-16 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center">
-            <Zap className="w-8 h-8 text-primary" />
+            <div className="text-primary font-bold text-2xl">G</div>
           </div>
+        </div>
+
+        {/* Logo Text - Place logo.png in attached_assets/logo.png */}
+        <div className="flex justify-center">
+          <h2 className="text-xl font-bold text-white tracking-wider">guns.lol</h2>
         </div>
 
         {/* Title */}
