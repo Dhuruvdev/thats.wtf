@@ -67,11 +67,12 @@ function App() {
   const [location] = useLocation();
   const isAuthPage = location === "/login";
   const isCardNavDemoPage = location === "/cardnav-demo";
+  const isHomePage = location === "/";
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {!isAuthPage && !isCardNavDemoPage && <GenZHeader />}
+        {!isAuthPage && !isCardNavDemoPage && !isHomePage && <GenZHeader />}
         <Toaster />
         <Router />
       </TooltipProvider>
