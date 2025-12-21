@@ -1,7 +1,6 @@
 import { CardNav, type CardNavItem } from "@/components/CardNav";
 import { useUser } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
-import { Sparkles } from "lucide-react";
 
 export function Navigation() {
   const { data: user } = useUser();
@@ -64,7 +63,8 @@ export function Navigation() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4">
       <CardNav
-        logoIcon={<Sparkles className="w-6 h-6 text-purple-500" data-testid="nav-brand-icon" />}
+        logo="/logo.png"
+        logoAlt="Logo"
         items={navItems}
         baseColor="rgba(0, 0, 0, 1)"
         menuColor="#ffffff"
