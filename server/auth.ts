@@ -56,6 +56,9 @@ export async function setupAuth(app: Express) {
         if (!user || !(await crypto.compare(password, user.password))) {
           return done(null, false, { message: "Invalid username or password" });
         }
+        if (!user.isEmailVerified) {
+          return done(null, false, { message: "Please verify your email first" });
+        }
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -63,11 +66,11 @@ export async function setupAuth(app: Express) {
     }),
   );
 
-  passport.serializeUser((user, done) => {
+  passport.serializeUser((user: any, done) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser(async (id: number, done) => {
+  passport.deserializeUser(async (id: any, done) => {
     try {
       const user = await storage.getUser(id);
       done(null, user);
@@ -78,20 +81,25 @@ export async function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
-      const existingUser = await storage.getUserByUsername(req.body.username);
+      const { username, email, password } = req.body;
+      
+      const existingUser = await storage.getUserByUsername(username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
-      const hashedPassword = await crypto.hash(req.body.password);
+      const existingEmail = await storage.getUserByEmail(email);
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      const hashedPassword = await crypto.hash(password);
+      const verificationToken = randomBytes(32).toString("hex");
+      
       const user = await storage.createUser({
-        ...req.body,
+        username,
+        email,
         password: hashedPassword,
-        // Defaults for gamification
-        level: 1,
-        xp: 0,
-        views: 0,
-        likes: 0,
         theme: 'default',
         accentColor: '#7c3aed',
         frame: 'none',
@@ -99,9 +107,36 @@ export async function setupAuth(app: Express) {
         isPro: false
       });
 
-      req.login(user, (err) => {
+      // Update with verification token separately
+      await storage.updateUser(user.id, { verificationToken });
+
+      res.status(201).json({ 
+        message: "Registration successful. Check your email to verify your account.",
+        userId: user.id,
+        email: user.email
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post("/api/verify-email", async (req, res, next) => {
+    try {
+      const { token } = req.body;
+      const user = await storage.getUserByVerificationToken(token);
+      
+      if (!user) {
+        return res.status(400).json({ message: "Invalid or expired verification token" });
+      }
+
+      const updatedUser = await storage.updateUser(user.id, {
+        isEmailVerified: true,
+        verificationToken: null as any
+      });
+
+      req.login(updatedUser, (err) => {
         if (err) return next(err);
-        res.status(201).json(user);
+        res.json({ message: "Email verified successfully!" });
       });
     } catch (err) {
       next(err);

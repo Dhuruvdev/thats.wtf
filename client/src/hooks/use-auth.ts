@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, type InsertUser, type User } from "@shared/routes";
+import { api } from "@shared/routes";
 
 // GET /api/user - Check current session
 export function useUser() {
@@ -40,24 +40,42 @@ export function useLogin() {
 
 // POST /api/register
 export function useRegister() {
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: InsertUser) => {
-      const res = await fetch(api.auth.register.path, {
-        method: api.auth.register.method,
+    mutationFn: async (data: any) => {
+      const res = await fetch("/api/register", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       
       if (!res.ok) {
-        const error = await res.json(); // May be validation error format
+        const error = await res.json();
         throw new Error(error.message || "Registration failed");
       }
-      return api.auth.register.responses[201].parse(await res.json());
+      return res.json();
     },
-    onSuccess: () => {
-      // Auto login often happens on backend, or require explicit login
-      // For now we might just redirect to login
+  });
+}
+
+// POST /api/verify-email
+export function useVerifyEmail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (token: string) => {
+      const res = await fetch("/api/verify-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Verification failed");
+      }
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [api.auth.me.path] });
     },
   });
 }

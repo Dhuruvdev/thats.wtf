@@ -41,8 +41,8 @@ export async function registerRoutes(
       const input = api.users.update.input.parse(req.body);
       // Ensure we don't overwrite critical fields if they were hacked into the body
       // Zod schema handles most, but let's be safe.
-      
-      const updatedUser = await storage.updateUser(req.user.id, input);
+      const user = req.user as any;
+      const updatedUser = await storage.updateUser(user.id, input);
       res.json(updatedUser);
     } catch (err) {
        if (err instanceof z.ZodError) {
@@ -89,7 +89,8 @@ export async function registerRoutes(
     
     try {
       const input = api.links.create.input.parse(req.body);
-      const link = await storage.createLink({ ...input, userId: req.user.id });
+      const user = req.user as any;
+      const link = await storage.createLink({ ...input, userId: user.id });
       res.status(201).json(link);
     } catch (err) {
       if (err instanceof z.ZodError) return res.status(400).json(err);
@@ -100,10 +101,11 @@ export async function registerRoutes(
   app.delete(api.links.delete.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     const linkId = parseInt(req.params.id);
+    const user = req.user as any;
     // Verify ownership... 
     // For MVP, assuming ID is enough, but strictly should check if link belongs to user.
     // Since getLinksByUserId exists, I can check.
-    const links = await storage.getLinksByUserId(req.user.id);
+    const links = await storage.getLinksByUserId(user.id);
     const ownsLink = links.some(l => l.id === linkId);
     if (!ownsLink) return res.sendStatus(403);
     

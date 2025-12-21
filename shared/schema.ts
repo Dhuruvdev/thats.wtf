@@ -5,7 +5,10 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
+  isEmailVerified: boolean("is_email_verified").default(false).notNull(),
+  verificationToken: text("verification_token"),
   displayName: text("display_name"),
   bio: text("bio"),
   avatarUrl: text("avatar_url"),
@@ -112,7 +115,12 @@ export const insertUserSchema = createInsertSchema(users).omit({
   likes: true,
   clicks: true,
   credentialId: true,
-  credentialPublicKey: true
+  credentialPublicKey: true,
+  isEmailVerified: true
+}).extend({
+  email: z.string().email(),
+}).partial({
+  verificationToken: true
 });
 
 export const insertLinkSchema = createInsertSchema(links).omit({ 
