@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { MediaCustomizer } from "./MediaCustomizer";
 import { Button } from "@/components/ui/button";
+import logoImg from "/logo.png";
 
 export function GenZHeader() {
   return (
@@ -14,7 +15,12 @@ export function GenZHeader() {
           whileHover={{ scale: 1.05 }}
           className="flex items-center gap-2"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-primary" />
+          <img 
+            src={logoImg}
+            alt="Lab.dev Logo"
+            className="w-8 h-8 object-contain rounded-lg"
+            data-testid="header-logo-image"
+          />
           <span className="font-display text-lg font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
             Lab.dev
           </span>

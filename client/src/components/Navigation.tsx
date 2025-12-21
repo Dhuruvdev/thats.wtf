@@ -63,7 +63,7 @@ export function Navigation() {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4">
       <CardNav
-        favicon="/favicon.png"
+        favicon="/icon.png"
         logo="/logo.png"
         logoAlt="Logo"
         items={navItems}
