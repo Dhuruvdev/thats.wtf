@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useRouter } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -168,8 +168,13 @@ export function CardNav({
     return () => ctx.revert();
   }, [isMenuOpen]);
 
+  const router = useRouter();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleGetStarted = () => {
+    router.push("/auth");
   };
 
   return (
@@ -245,6 +250,7 @@ export function CardNav({
                 backgroundColor: buttonBgColor,
                 color: buttonTextColor
               }}
+              onClick={handleGetStarted}
               data-testid="button-card-nav-cta"
             >
               Get Started
@@ -301,7 +307,10 @@ export function CardNav({
                 color: buttonTextColor
               }}
               data-testid="button-card-nav-cta-mobile"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => {
+                setIsMenuOpen(false);
+                handleGetStarted();
+              }}
             >
               Get Started
             </Button>
