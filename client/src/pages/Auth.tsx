@@ -13,20 +13,15 @@ import { ArrowRight, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import iconImg from "/icon.png";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
+  username: z.string(),
+  password: z.string(),
 });
 
 const signupSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  agreeToTerms: z.boolean().refine((val) => val === true, {
-    message: "You must agree to the Terms & Privacy Policy",
-  }),
-}).refine((data) => data.password, {
-  message: "Password is required",
-  path: ["password"],
+  email: z.string(),
+  password: z.string(),
+  username: z.string(),
+  agreeToTerms: z.boolean(),
 });
 
 export default function Auth() {
@@ -68,11 +63,9 @@ export default function Auth() {
       </div>
 
       <Card className="relative w-full max-w-md border-white/10 bg-black/40 backdrop-blur-md p-8 rounded-2xl">
-        {!isLogin && (
-          <div className="flex justify-center mb-6">
-            <img src={iconImg} alt="That's.WTF" className="w-24 h-24" />
-          </div>
-        )}
+        <div className="flex justify-center mb-6">
+          <img src={iconImg} alt="That's.WTF" className="w-24 h-24" />
+        </div>
         
         <h1 className="text-2xl font-bold text-white text-center mb-1">
           {isLogin ? "Sign In" : "Create a thats.wtf account"}
