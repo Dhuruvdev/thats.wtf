@@ -1,5 +1,6 @@
 import { CardNav, type CardNavItem } from "@/components/CardNav";
 import { Footer } from "@/components/Footer";
+import { Palette, Sparkles, Smartphone, Link as LinkIcon, BookOpen, Code2 } from "lucide-react";
 
 const navItems: CardNavItem[] = [
   {
@@ -60,36 +61,48 @@ export default function CardNavDemo() {
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           <div className="p-6 rounded-xl bg-card/50 border border-white/5">
-            <h3 className="text-lg font-display font-black mb-3 text-primary">
-              🎨 Customizable Colors
-            </h3>
+            <div className="flex items-center gap-3 mb-3">
+              <Palette className="w-6 h-6 text-primary" />
+              <h3 className="text-lg font-display font-black text-primary">
+                Customizable Colors
+              </h3>
+            </div>
             <p className="text-muted-foreground leading-relaxed">
               Each nav item can have its own background and text color. Perfect for creating visually distinct sections.
             </p>
           </div>
 
           <div className="p-6 rounded-xl bg-card/50 border border-white/5">
-            <h3 className="text-lg font-display font-black mb-3 text-accent">
-              ✨ Smooth Animations
-            </h3>
+            <div className="flex items-center gap-3 mb-3">
+              <Sparkles className="w-6 h-6 text-accent" />
+              <h3 className="text-lg font-display font-black text-accent">
+                Smooth Animations
+              </h3>
+            </div>
             <p className="text-muted-foreground leading-relaxed">
               GSAP-powered animations with hover effects. Cards lift up with shadow effects on interaction.
             </p>
           </div>
 
           <div className="p-6 rounded-xl bg-card/50 border border-white/5">
-            <h3 className="text-lg font-display font-black mb-3 text-pink-400">
-              📱 Responsive Design
-            </h3>
+            <div className="flex items-center gap-3 mb-3">
+              <Smartphone className="w-6 h-6 text-pink-400" />
+              <h3 className="text-lg font-display font-black text-pink-400">
+                Responsive Design
+              </h3>
+            </div>
             <p className="text-muted-foreground leading-relaxed">
               Mobile-friendly with a hamburger menu. Automatically adapts to smaller screens.
             </p>
           </div>
 
           <div className="p-6 rounded-xl bg-card/50 border border-white/5">
-            <h3 className="text-lg font-display font-black mb-3 text-blue-400">
-              🔗 Easy Integration
-            </h3>
+            <div className="flex items-center gap-3 mb-3">
+              <LinkIcon className="w-6 h-6 text-blue-400" />
+              <h3 className="text-lg font-display font-black text-blue-400">
+                Easy Integration
+              </h3>
+            </div>
             <p className="text-muted-foreground leading-relaxed">
               Works seamlessly with Wouter routing. Active states automatically highlighted.
             </p>
