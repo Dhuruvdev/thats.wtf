@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { WalkingIcon } from "@/components/WalkingIcon";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
@@ -47,6 +48,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <Navigation />
+      <WalkingIcon />
       
       {/* Background Gradients */}
       <div className="fixed inset-0 pointer-events-none">
@@ -54,7 +56,7 @@ export default function Home() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[150px]" />
       </div>
 
-      <main className="relative pt-32 pb-0 overflow-hidden" ref={heroRef}>
+      <main className="relative pt-24 pb-0 overflow-hidden" ref={heroRef}>
         {/* Hero Section */}
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-16">
           <h1 ref={textRef} className="text-6xl sm:text-7xl lg:text-8xl font-display font-black tracking-tighter mb-6 leading-tight text-white">
