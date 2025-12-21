@@ -216,7 +216,7 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                       <div className="relative">
                         <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                         <Input
-                          placeholder="guns.lol/"
+                          placeholder="thats.wtf/"
                           {...field}
                           className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
                           data-testid="input-username"
