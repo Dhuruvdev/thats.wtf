@@ -56,55 +56,54 @@ export default function Home() {
       <main className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" ref={heroRef}>
         <div className="text-center max-w-4xl mx-auto">
           <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8">
-            <Sparkles className="w-4 h-4 text-accent animate-pulse" />
-            <span className="text-sm font-medium text-white/80">Identity gamified for the future</span>
+            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-white/70">New: Level system & custom frames</span>
           </div>
           
-          <h1 ref={textRef} className="text-5xl sm:text-7xl font-display font-bold tracking-tighter mb-8 leading-tight">
-            Level up your <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent relative inline-block">
-              digital presence
+          <h1 ref={textRef} className="text-6xl sm:text-8xl font-display font-black tracking-tighter mb-8 leading-tight text-white">
+            Gamified Identity <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-accent relative inline-block">
+              for the Future
               {/* Underline glow */}
-              <div className="absolute -bottom-2 left-0 right-0 h-[2px] bg-gradient-to-r from-primary to-accent blur-[2px]" />
+              <div className="absolute -bottom-3 left-0 right-0 h-[3px] bg-gradient-to-r from-primary to-accent blur-[2px]" />
             </span>
           </h1>
           
-          <p className="hero-desc text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
-            Create a stunning profile that evolves with you. 
-            Gain XP, unlock badges, and showcase your links in a high-fidelity interface designed for the modern web.
+          <p className="hero-desc text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+            Your profile is your game board. Earn XP, level up, unlock themes, and showcase your presence with premium motion and customization.
           </p>
           
           <div className="hero-btns flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/auth">
-              <Button size="lg" className="h-14 px-8 text-lg rounded-full shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] transition-all">
-                Claim your username <ArrowRight className="ml-2 w-5 h-5" />
+              <Button size="lg" className="h-14 px-8 text-lg font-bold rounded-full shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_50px_rgba(124,58,237,0.6)] transition-all bg-gradient-to-r from-primary to-primary/90">
+                CLAIM YOUR USERNAME <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
             <Link href="/u/demo">
-              <Button variant="outline" size="lg" className="h-14 px-8 text-lg rounded-full border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-sm">
-                View Demo Profile
+              <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-bold rounded-full border-white/20 bg-transparent hover:bg-white/5 backdrop-blur-sm transition-all">
+                VIEW DEMO
               </Button>
             </Link>
           </div>
         </div>
 
         {/* Feature Grid */}
-        <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
               icon: <Layers className="w-8 h-8 text-primary" />,
               title: "The Lab",
-              desc: "Deep customization with themes, frames, and motion controls."
+              desc: "Customize your profile with themes, accent colors, frames, and motion settings."
             },
             {
-              icon: <Zap className="w-8 h-8 text-accent" />,
+              icon: <Zap className="w-8 h-8 text-primary" />,
               title: "Progression",
-              desc: "Earn XP for every view and click. Level up your profile."
+              desc: "Every view increases your XP. Level up and unlock exclusive customization frames."
             },
             {
-              icon: <Sparkles className="w-8 h-8 text-purple-400" />,
-              title: "Visuals",
-              desc: "Cinematic animations powered by GSAP for premium feel."
+              icon: <Sparkles className="w-8 h-8 text-primary" />,
+              title: "Premium Motion",
+              desc: "GSAP-powered animations for a cinematic, luxury feel. Your profile feels alive."
             }
           ].map((feature, i) => (
             <motion.div
@@ -113,13 +112,13 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.2 }}
               viewport={{ once: true }}
-              className="p-8 rounded-3xl bg-card/50 border border-white/5 backdrop-blur-sm hover:border-white/10 transition-colors"
+              className="p-6 rounded-2xl bg-card/40 border border-white/5 backdrop-blur-sm hover:bg-card/60 hover:border-white/10 transition-all"
             >
-              <div className="mb-6 p-4 rounded-2xl bg-white/5 w-fit border border-white/5">
+              <div className="mb-4 p-3 rounded-xl bg-primary/10 w-fit">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-display font-bold mb-3">{feature.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-lg font-display font-bold mb-2">{feature.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 {feature.desc}
               </p>
             </motion.div>
