@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
@@ -49,82 +50,114 @@ export default function Home() {
       
       {/* Background Gradients */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[150px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[150px]" />
       </div>
 
-      <main className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" ref={heroRef}>
-        <div className="text-center max-w-4xl mx-auto">
-          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8">
-            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-wider text-white/70">New: Level system & custom frames</span>
+      <main className="relative pt-24 pb-0 overflow-hidden" ref={heroRef}>
+        {/* Announcement Banner */}
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 mb-12">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
+            <span className="text-xs font-bold text-primary uppercase tracking-wider">NEW</span>
+            <span className="text-sm text-primary">Level up unlocks exclusive profile frames & themes</span>
+            <ArrowRight className="w-4 h-4 text-primary ml-2" />
           </div>
-          
-          <h1 ref={textRef} className="text-6xl sm:text-8xl font-display font-black tracking-tighter mb-8 leading-tight text-white">
-            Gamified Identity <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-accent relative inline-block">
-              for the Future
-              {/* Underline glow */}
-              <div className="absolute -bottom-3 left-0 right-0 h-[3px] bg-gradient-to-r from-primary to-accent blur-[2px]" />
-            </span>
+        </div>
+
+        {/* Hero Section */}
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-16">
+          <h1 ref={textRef} className="text-6xl sm:text-7xl lg:text-8xl font-display font-black tracking-tighter mb-6 leading-tight text-white">
+            Gamified Identity <br /> from Prototype <br /> to Premium
           </h1>
           
-          <p className="hero-desc text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-            Your profile is your game board. Earn XP, level up, unlock themes, and showcase your presence with premium motion and customization.
+          <p className="hero-desc text-lg sm:text-xl text-muted-foreground mb-10 max-w-3xl leading-relaxed">
+            That's.WTF helps you build your best digital presence by bringing structure to identity creation with progression, customization, and cinematic animations.
           </p>
           
-          <div className="hero-btns flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/auth">
-              <Button size="lg" className="h-14 px-8 text-lg font-bold rounded-full shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_50px_rgba(124,58,237,0.6)] transition-all bg-gradient-to-r from-primary to-primary/90">
-                CLAIM YOUR USERNAME <ArrowRight className="ml-2 w-5 h-5" />
+          <div className="hero-btns flex flex-col sm:flex-row items-start justify-start gap-4 mb-16">
+            <Link href="/auth" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-base font-black rounded-full shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_50px_rgba(124,58,237,0.6)] transition-all bg-primary">
+                Claim Your Username
               </Button>
             </Link>
-            <Link href="/u/demo">
-              <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-bold rounded-full border-white/20 bg-transparent hover:bg-white/5 backdrop-blur-sm transition-all">
-                VIEW DEMO
+            <Link href="/u/demo" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 text-base font-black rounded-full border-white/30 bg-transparent hover:bg-white/5 backdrop-blur-sm transition-all">
+                Watch Demo
               </Button>
             </Link>
           </div>
         </div>
 
-        {/* Feature Grid */}
-        <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: <Layers className="w-8 h-8 text-primary" />,
-              title: "The Lab",
-              desc: "Customize your profile with themes, accent colors, frames, and motion settings."
-            },
-            {
-              icon: <Zap className="w-8 h-8 text-primary" />,
-              title: "Progression",
-              desc: "Every view increases your XP. Level up and unlock exclusive customization frames."
-            },
-            {
-              icon: <Sparkles className="w-8 h-8 text-primary" />,
-              title: "Premium Motion",
-              desc: "GSAP-powered animations for a cinematic, luxury feel. Your profile feels alive."
-            }
-          ].map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.2 }}
-              viewport={{ once: true }}
-              className="p-6 rounded-2xl bg-card/40 border border-white/5 backdrop-blur-sm hover:bg-card/60 hover:border-white/10 transition-all"
-            >
-              <div className="mb-4 p-3 rounded-xl bg-primary/10 w-fit">
-                {feature.icon}
+        {/* Demo Screenshot Section */}
+        <div className="w-full bg-card/30 border-t border-b border-white/5 py-16">
+          <div className="max-w-5xl mx-auto px-6 sm:px-8">
+            <div className="rounded-2xl bg-gradient-to-b from-card/60 to-card/20 border border-white/5 p-4 backdrop-blur-sm">
+              <div className="aspect-video bg-muted/20 rounded-xl border border-white/5 flex items-center justify-center">
+                <p className="text-muted-foreground text-sm">Product preview coming soon</p>
               </div>
-              <h3 className="text-lg font-display font-bold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {feature.desc}
-              </p>
-            </motion.div>
-          ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Features Section */}
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-24">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Layers className="w-6 h-6 text-primary" />,
+                title: "The Customization Lab",
+                desc: "Deep control over your profile. Themes, accent colors, frame effects, and motion settings. Everything."
+              },
+              {
+                icon: <Zap className="w-6 h-6 text-primary" />,
+                title: "Progression System",
+                desc: "Every view and interaction earns you XP. Level up and unlock new customization options for your profile."
+              },
+              {
+                icon: <Sparkles className="w-6 h-6 text-primary" />,
+                title: "Premium Motion",
+                desc: "GSAP-powered cinematic animations. Your profile feels alive, expensive, and premium. Never cheap."
+              }
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <div className="mb-6 p-4 rounded-xl bg-primary/10 w-fit border border-primary/20 group-hover:border-primary/40 transition-colors">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg sm:text-xl font-display font-black mb-3 text-white">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Purple Gradient Section */}
+        <div className="w-full bg-gradient-to-br from-primary via-primary/80 to-primary/60 py-24 mt-12">
+          <div className="max-w-5xl mx-auto px-6 sm:px-8 text-center">
+            <h2 className="text-5xl sm:text-6xl font-display font-black tracking-tighter mb-6 text-white leading-tight">
+              Build something real <br /> in minutes
+            </h2>
+            <p className="text-lg text-white/90 mb-10 max-w-2xl mx-auto">
+              Get started for free and start leveling up your digital presence today.
+            </p>
+            <Link href="/auth">
+              <Button size="lg" className="h-14 px-8 text-base font-black rounded-full bg-white text-primary hover:bg-white/90 shadow-2xl">
+                Share Download Link
+              </Button>
+            </Link>
+          </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
