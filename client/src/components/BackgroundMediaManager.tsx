@@ -17,17 +17,32 @@ export function BackgroundMediaManager() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [media, setMedia] = useState<BackgroundMedia>(() => {
     const stored = localStorage.getItem("backgroundMedia");
-    return stored
-      ? JSON.parse(stored)
-      : {
-          audioUrl: "",
-          videoUrl: "",
-          audioVolume: 0.3,
-          videoVolume: 0.5,
-          audioPlaying: false,
-          videoPlaying: false,
-          showControls: false,
-        };
+    const defaultMedia = {
+      audioUrl: "",
+      videoUrl: "",
+      audioVolume: 0.3,
+      videoVolume: 0.5,
+      audioPlaying: false,
+      videoPlaying: false,
+      showControls: false,
+    };
+    
+    if (!stored) return defaultMedia;
+    
+    try {
+      const parsed = JSON.parse(stored);
+      return {
+        audioUrl: parsed.audioUrl || "",
+        videoUrl: parsed.videoUrl || "",
+        audioVolume: isFinite(parsed.audioVolume) ? parsed.audioVolume : 0.3,
+        videoVolume: isFinite(parsed.videoVolume) ? parsed.videoVolume : 0.5,
+        audioPlaying: parsed.audioPlaying || false,
+        videoPlaying: parsed.videoPlaying || false,
+        showControls: parsed.showControls || false,
+      };
+    } catch {
+      return defaultMedia;
+    }
   });
 
   // Persist to localStorage
@@ -55,13 +70,17 @@ export function BackgroundMediaManager() {
     }
   }, [media.videoPlaying]);
 
-  // Update volumes
+  // Update volumes (with validation to prevent non-finite values)
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = media.audioVolume;
+    if (audioRef.current && isFinite(media.audioVolume)) {
+      audioRef.current.volume = Math.max(0, Math.min(1, media.audioVolume));
+    }
   }, [media.audioVolume]);
 
   useEffect(() => {
-    if (videoRef.current) videoRef.current.volume = media.videoVolume;
+    if (videoRef.current && isFinite(media.videoVolume)) {
+      videoRef.current.volume = Math.max(0, Math.min(1, media.videoVolume));
+    }
   }, [media.videoVolume]);
 
   const setAudioUrl = (url: string) =>
@@ -124,12 +143,13 @@ export function BackgroundMediaManager() {
                   max="1"
                   step="0.1"
                   value={media.videoVolume}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const vol = parseFloat(e.target.value);
                     setMedia((prev) => ({
                       ...prev,
-                      videoVolume: parseFloat(e.target.value),
+                      videoVolume: isFinite(vol) ? vol : 0.5,
                     }))
-                  }
+                  }}
                   className="w-24 h-1 bg-secondary rounded cursor-pointer"
                   data-testid="slider-video-volume"
                 />
@@ -175,12 +195,13 @@ export function BackgroundMediaManager() {
                   max="1"
                   step="0.1"
                   value={media.audioVolume}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const vol = parseFloat(e.target.value);
                     setMedia((prev) => ({
                       ...prev,
-                      audioVolume: parseFloat(e.target.value),
+                      audioVolume: isFinite(vol) ? vol : 0.3,
                     }))
-                  }
+                  }}
                   className="w-24 h-1 bg-secondary rounded cursor-pointer"
                   data-testid="slider-audio-volume"
                 />
