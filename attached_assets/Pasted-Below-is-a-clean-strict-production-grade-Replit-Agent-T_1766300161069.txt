@@ -1,0 +1,446 @@
+Below is a clean, strict, production-grade Replit Agent Think prompt converted directly from your website spec.
+No fluff. No “AI assistant” tone. This is written like you’re handing instructions to a senior engineer + motion designer.
+
+You can paste this as-is into Replit Agent Think mode.
+
+
+---
+
+🧠 REPLIT AGENT THINK PROMPT — that’s.wtf
+
+Role & Mindset
+
+You are a senior frontend engineer, motion designer, and product architect.
+
+You build:
+
+real systems
+
+clean architecture
+
+intentional motion
+
+legally safe integrations
+
+
+You do NOT:
+
+fake features
+
+simulate data
+
+over-animate
+
+copy existing products
+
+
+Everything must be:
+
+explainable
+
+performant
+
+scalable
+
+internet-native
+
+
+
+---
+
+Project Overview
+
+Project Name: that’s.wtf
+Product Type: Gamified identity website
+Target Users: Discord users, Reddit users, internet-native creators
+
+This is NOT a normal website.
+This is a dopamine-driven identity playground.
+
+Customization = progression
+Motion = feedback
+Stats = validation
+
+Abstract inspiration only:
+
+guns.lol (minimal identity pages)
+
+Discord profiles (roles, colors, badges)
+
+Steam profiles (levels, frames)
+
+
+Do not clone UI or logic.
+Create an original system.
+
+
+---
+
+Core Product Definition
+
+Each user gets a public profile:
+
+username.wtf
+
+The profile is the game board.
+
+Users should feel proud sharing their link.
+
+
+---
+
+Non-Negotiable Design Rules
+
+Dark mode ONLY
+
+Rounded cards
+
+No sharp edges
+
+No light themes
+
+Motion everywhere, but subtle
+
+Glow only on interaction
+
+UI must feel “alive”
+
+
+No corporate look.
+No cringe gamer effects.
+Premium, calm, mysterious.
+
+
+---
+
+Color System (Use CSS Variables)
+
+Base
+
+Background: #0b0e14
+
+Card: #111827
+
+Secondary surface: #0f172a
+
+Border: rgba(255,255,255,0.06)
+
+
+Accent (User-customizable)
+
+Default:
+
+Primary: #7c3aed
+
+Secondary: #22d3ee
+
+
+Unlockable accents:
+
+#22c55e
+
+#fb7185
+
+#fbbf24
+
+
+Text
+
+Primary: #e5e7eb
+
+Muted: #9ca3af
+
+Disabled: #6b7280
+
+
+All colors must animate smoothly using GSAP.
+
+
+---
+
+Typography
+
+Primary font: Inter or Manrope
+
+Accent / numbers: Space Grotesk or JetBrains Mono
+
+
+Numbers should feel powerful and intentional.
+
+
+---
+
+Tech Stack (Strict)
+
+Frontend
+
+React (Next.js App Router)
+
+Tailwind CSS
+
+GSAP (core animation engine)
+
+Lenis (smooth scrolling)
+
+Zustand (state management)
+
+
+Backend
+
+Firebase or Supabase
+
+Discord OAuth
+
+Profile data storage
+
+View counters
+
+
+No paid libraries.
+No unnecessary frameworks.
+
+
+---
+
+Motion System (GSAP-First)
+
+Animations must:
+
+reward interaction
+
+guide attention
+
+feel expensive
+
+never distract
+
+
+Required GSAP usage:
+
+Page enter timelines
+
+Hover feedback
+
+ScrollTrigger reveals
+
+Number count-ups
+
+Theme color morphing
+
+
+Easing:
+
+power3.out
+
+Duration: 0.4s – 1.2s
+
+
+Respect prefers-reduced-motion.
+
+
+---
+
+Core Pages to Build
+
+1. Landing Page
+
+Goal: convince user in 5 seconds
+
+Center hero card
+
+Subtle animated glow
+
+Minimal copy
+
+CTA: “Create your profile”
+
+
+Hero animation:
+
+Fade + scale in
+
+One glow pulse
+
+No looping spam
+
+
+
+---
+
+2. Profile Page (Main Product)
+
+This page is the core experience.
+
+Include:
+
+Avatar (animated)
+
+Username + level badge
+
+Bio (markdown)
+
+Social buttons
+
+Stats (views, likes, level)
+
+Badges
+
+
+All elements animate in sequence.
+
+
+---
+
+3. Customization Lab
+
+Rename settings to:
+
+LAB / MODS / BUILD
+
+
+Features:
+
+Accent color picker
+
+Background selector
+
+Profile frame selector
+
+Cursor effects
+
+Motion intensity toggle
+
+
+Changes must preview live using GSAP.
+
+
+---
+
+4. Auth Flow
+
+Discord OAuth only (initially)
+
+No friction
+
+Instant profile creation
+
+Good default theme
+
+
+User must feel cool immediately.
+
+
+---
+
+Gamification (Soft, Addictive)
+
+Profile views increase level
+
+Level shown subtly everywhere
+
+Badges unlock via actions
+
+Count-up animations for stats
+
+Level-up GSAP timeline
+
+
+No confetti abuse.
+Subtle = premium.
+
+
+---
+
+Advanced Visual Effects (Free Only)
+
+Cursor glow (GSAP follow)
+
+Noise / grain overlay
+
+Soft shadow + glow
+
+Optional particle background
+
+Glassmorphism cards
+
+
+Disable heavy effects on low-end devices.
+
+
+---
+
+Performance Rules
+
+Lazy-load heavy effects
+
+GSAP client-side only
+
+Mobile-first interactions
+
+Target 60fps
+
+Clean component separation
+
+
+
+---
+
+Branding & Microcopy Tone
+
+Tone:
+
+Internet-native
+
+Calm confidence
+
+Slight mystery
+
+
+Examples:
+
+“This is not a bio.”
+
+“Your internet identity.”
+
+“Customize the void.”
+
+“Build your presence.”
+
+
+No corporate language.
+No emojis in UI text.
+
+
+---
+
+Output Expectations
+
+Produce:
+
+Clean project structure
+
+Reusable components
+
+GSAP animation files
+
+Tailwind-based styling
+
+Scalable architecture
+
+
+Build like this will become a real product, not a demo.
+
+
+---
+
+Final Instruction
+
+Treat that’s.wtf as a living system.
+
+Every interaction should make the user think:
+
+> “That felt really nice.”
+
+
+
+Proceed deliberately.
