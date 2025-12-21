@@ -61,15 +61,15 @@ export function Navigation() {
       ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 pt-4">
+    <div className="fixed top-0 left-0 right-0 z-50 pt-3 sm:pt-4">
       <CardNav
         items={navItems}
-        baseColor="rgba(10, 10, 10, 0.8)"
+        baseColor="rgba(10, 10, 10, 0.85)"
         menuColor="#ffffff"
         buttonBgColor="#7c3aed"
         buttonTextColor="#ffffff"
         ease="power3.out"
-        className="mx-4 sm:mx-6 rounded-xl bg-background/80 backdrop-blur-xl border border-white/5"
+        className="mx-3 sm:mx-4 lg:mx-6 rounded-xl sm:rounded-2xl bg-background/80 backdrop-blur-xl border border-white/5 shadow-xl"
       />
     </div>
   );

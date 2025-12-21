@@ -36,21 +36,24 @@ export function CardNav({
   buttonTextColor = "white"
 }: CardNavProps) {
   const navRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
 
+  // Desktop card animations
   useEffect(() => {
     if (!navRef.current) return;
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>(".card-nav-item");
+      const desktopCards = gsap.utils.toArray<HTMLElement>(".card-nav-item-desktop");
       
-      cards.forEach((card) => {
+      desktopCards.forEach((card) => {
         card.addEventListener("mouseenter", () => {
           gsap.to(card, {
-            y: -4,
-            boxShadow: `0 20px 40px rgba(124, 58, 237, 0.3)`,
-            duration: 0.3,
+            y: -6,
+            boxShadow: `0 24px 48px rgba(124, 58, 237, 0.4)`,
+            duration: 0.4,
             ease: "back.out(1.7)"
           });
         });
@@ -58,7 +61,7 @@ export function CardNav({
         card.addEventListener("mouseleave", () => {
           gsap.to(card, {
             y: 0,
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
             duration: 0.3,
             ease: "power2.out"
           });
@@ -69,13 +72,83 @@ export function CardNav({
     return () => ctx.revert();
   }, [ease]);
 
+  // Mobile menu animations
+  useEffect(() => {
+    if (!mobileMenuRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const mobileCards = gsap.utils.toArray<HTMLElement>(".card-nav-item-mobile");
+      const ctaBtn = mobileMenuRef.current?.querySelector(".mobile-cta-btn");
+
+      if (isMenuOpen) {
+        // Animate menu entrance
+        gsap.fromTo(
+          mobileMenuRef.current,
+          { opacity: 0, y: -10 },
+          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+        );
+
+        // Stagger cards entrance
+        gsap.fromTo(
+          mobileCards,
+          { opacity: 0, x: -20 },
+          { 
+            opacity: 1, 
+            x: 0, 
+            duration: 0.4,
+            stagger: 0.08,
+            ease: "power3.out"
+          }
+        );
+
+        // Animate CTA button
+        if (ctaBtn) {
+          gsap.fromTo(
+            ctaBtn,
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.4, delay: 0.32, ease: "power2.out" }
+          );
+        }
+      }
+    }, mobileMenuRef);
+
+    return () => ctx.revert();
+  }, [isMenuOpen]);
+
+  // Hamburger icon animation
+  useEffect(() => {
+    if (!hamburgerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      if (isMenuOpen) {
+        gsap.to(hamburgerRef.current, {
+          rotation: 90,
+          duration: 0.4,
+          ease: "back.out(1.7)"
+        });
+      } else {
+        gsap.to(hamburgerRef.current, {
+          rotation: 0,
+          duration: 0.4,
+          ease: "back.out(1.7)"
+        });
+      }
+    }, hamburgerRef);
+
+    return () => ctx.revert();
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <nav
       ref={navRef}
       className={`sticky top-0 z-40 border-b border-white/5 backdrop-blur-xl transition-all ${className}`}
       style={{ backgroundColor: baseColor }}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-20 flex items-center justify-between">
           {/* Logo */}
           {logo && (
@@ -87,19 +160,19 @@ export function CardNav({
           )}
 
           {/* Desktop Navigation - Card Style */}
-          <div className="hidden md:flex items-center gap-6 flex-1 mx-8">
+          <div className="hidden md:flex items-center gap-4 flex-1 mx-6 lg:mx-8">
             {items.map((item, index) => (
               <Link key={index} href={item.href}>
                 <div
-                  className={`card-nav-item px-6 py-2.5 rounded-xl cursor-pointer transition-all duration-300 font-medium text-sm ${
+                  className={`card-nav-item-desktop px-5 py-2 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide ${
                     location === item.href
-                      ? "ring-2 ring-offset-2"
+                      ? "ring-2 ring-white/40 ring-offset-2 ring-offset-transparent"
                       : ""
                   }`}
                   style={{
                     backgroundColor: item.bgColor,
                     color: item.textColor || "#000000",
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)"
                   }}
                   data-testid={`card-nav-${item.label.toLowerCase()}`}
                 >
@@ -109,11 +182,11 @@ export function CardNav({
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* CTA Button - Desktop */}
           <div className="hidden lg:flex">
             <Button
               size="sm"
-              className="font-black rounded-full uppercase tracking-wider text-xs px-6"
+              className="font-black rounded-full uppercase tracking-wider text-xs px-6 transition-all hover:scale-105"
               style={{
                 backgroundColor: buttonBgColor,
                 color: buttonTextColor
@@ -124,34 +197,40 @@ export function CardNav({
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button with Animation */}
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors"
+            ref={hamburgerRef}
+            onClick={toggleMenu}
+            className="md:hidden p-2.5 hover:bg-white/10 rounded-lg transition-colors duration-200"
             data-testid="button-card-nav-menu-toggle"
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6" style={{ color: menuColor }} />
+              <X className="w-6 h-6" style={{ color: menuColor || "#ffffff" }} />
             ) : (
-              <Menu className="w-6 h-6" style={{ color: menuColor }} />
+              <Menu className="w-6 h-6" style={{ color: menuColor || "#ffffff" }} />
             )}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Animated */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4 space-y-2">
+          <div 
+            ref={mobileMenuRef}
+            className="md:hidden pb-4 pt-2 space-y-2"
+            data-testid="mobile-nav-menu"
+          >
             {items.map((item, index) => (
               <Link key={index} href={item.href}>
                 <div
-                  className={`card-nav-item px-4 py-3 rounded-lg cursor-pointer transition-all duration-300 font-medium text-sm ${
+                  className={`card-nav-item-mobile px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide ${
                     location === item.href
-                      ? "ring-2 ring-offset-2"
+                      ? "ring-2 ring-white/40 ring-offset-2 ring-offset-transparent"
                       : ""
                   }`}
                   style={{
                     backgroundColor: item.bgColor,
-                    color: item.textColor || "#000000"
+                    color: item.textColor || "#000000",
+                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
                   }}
                   data-testid={`card-nav-mobile-${item.label.toLowerCase()}`}
                   onClick={() => setIsMenuOpen(false)}
@@ -162,12 +241,13 @@ export function CardNav({
             ))}
             <Button
               size="sm"
-              className="w-full font-black rounded-lg uppercase tracking-wider text-xs mt-2"
+              className="w-full font-black rounded-xl uppercase tracking-wider text-xs mt-3 mobile-cta-btn transition-all hover:scale-105"
               style={{
                 backgroundColor: buttonBgColor,
                 color: buttonTextColor
               }}
               data-testid="button-card-nav-cta-mobile"
+              onClick={() => setIsMenuOpen(false)}
             >
               Get Started
             </Button>
