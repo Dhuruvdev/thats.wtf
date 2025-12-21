@@ -15,6 +15,12 @@ import Templates from "@/pages/Templates";
 import Analytics from "@/pages/Analytics";
 import CardNavDemo from "@/pages/CardNavDemo";
 import AccountOverview from "@/pages/AccountOverview";
+import Pricing from "@/pages/Pricing";
+import Blog from "@/pages/Blog";
+import About from "@/pages/About";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
+import Loading from "@/pages/Loading";
 
 function ProtectedRoute({ component: Component }: any) {
   const { data: user, isLoading } = useUser();
@@ -46,6 +52,12 @@ function Router() {
       <Route path="/templates" component={Templates} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/cardnav-demo" component={CardNavDemo} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/about" component={About} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/loading" component={Loading} />
       <Route component={NotFound} />
     </Switch>
   );

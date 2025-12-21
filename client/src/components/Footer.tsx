@@ -26,7 +26,7 @@ export function Footer() {
         </div>
 
         {/* Footer Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12">
           {/* Product */}
           <div>
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-4">
@@ -34,77 +34,52 @@ export function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/lab" className="text-white hover:text-primary transition-colors">
-                  Customization Lab
+                <Link href="/pricing" className="text-white hover:text-primary transition-colors" data-testid="link-footer-pricing">
+                  Pricing
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Progression System
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Downloads
-                </a>
+                <Link href="/lab" className="text-white hover:text-primary transition-colors" data-testid="link-footer-lab">
+                  Customization Lab
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* For */}
+          {/* Company */}
           <div>
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-4">
-              For
+              Company
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Creators
-                </a>
+                <Link href="/about" className="text-white hover:text-primary transition-colors" data-testid="link-footer-about">
+                  About
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Developers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Teams
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-4">
-              Resources
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
+                <Link href="/blog" className="text-white hover:text-primary transition-colors" data-testid="link-footer-blog">
                   Blog
-                </a>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground mb-4">
+              Legal
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/privacy" className="text-white hover:text-primary transition-colors" data-testid="link-footer-privacy">
+                  Privacy
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  Changelog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white hover:text-primary transition-colors">
-                  FAQs
-                </a>
+                <Link href="/terms" className="text-white hover:text-primary transition-colors" data-testid="link-footer-terms">
+                  Terms
+                </Link>
               </li>
             </ul>
           </div>
