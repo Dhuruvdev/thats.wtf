@@ -42,6 +42,7 @@ export function CardNav({
   const navRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location] = useLocation();
 
@@ -142,16 +143,50 @@ export function CardNav({
     return () => ctx.revert();
   }, [isMenuOpen]);
 
+  // Blackout backdrop animation
+  useEffect(() => {
+    if (!backdropRef.current) return;
+
+    const ctx = gsap.context(() => {
+      if (isMenuOpen) {
+        gsap.to(backdropRef.current, {
+          opacity: 1,
+          pointerEvents: "auto",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      } else {
+        gsap.to(backdropRef.current, {
+          opacity: 0,
+          pointerEvents: "none",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
+    }, backdropRef);
+
+    return () => ctx.revert();
+  }, [isMenuOpen]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav
-      ref={navRef}
-      className={`sticky top-0 z-40 border-b border-white/5 backdrop-blur-xl transition-all ${className}`}
-      style={{ backgroundColor: baseColor }}
-    >
+    <>
+      {/* Blackout Backdrop */}
+      <div
+        ref={backdropRef}
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden opacity-0 pointer-events-none"
+        onClick={() => setIsMenuOpen(false)}
+        data-testid="cardnav-backdrop"
+      />
+      
+      <nav
+        ref={navRef}
+        className={`sticky top-0 z-40 border-b border-white/5 backdrop-blur-xl transition-all ${className}`}
+        style={{ backgroundColor: baseColor }}
+      >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-20 flex items-center justify-between gap-4">
           {/* Logo / Icon - Left Side */}
@@ -274,5 +309,6 @@ export function CardNav({
         )}
       </div>
     </nav>
+    </>
   );
 }
