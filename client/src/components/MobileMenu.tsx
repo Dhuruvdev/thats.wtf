@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, HelpCircle, MessageCircle, DollarSign, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import logoImg from "/logo.png";
 
 export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,27 +77,6 @@ export function MobileMenu() {
             data-testid="panel-mobile-menu"
           >
             <div className="p-6 space-y-6">
-              {/* Header with Logo */}
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={logoImg}
-                    alt="That's.WTF"
-                    className="w-12 h-12 rounded-lg object-contain"
-                  />
-                  <span className="text-lg font-display font-black text-white">
-                    that's.wtf
-                  </span>
-                </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                  data-testid="button-close-menu"
-                >
-                  <X className="w-6 h-6 text-white" />
-                </button>
-              </div>
-
               {/* Menu Items */}
               <div className="space-y-3">
                 {menuItems.map((item, i) => {
