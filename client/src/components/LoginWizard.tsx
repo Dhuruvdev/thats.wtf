@@ -5,29 +5,30 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ArrowRight, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2, Eye, EyeOff, Zap } from "lucide-react";
 
-const usernameSchema = z.object({
+const registerSchema = z.object({
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username must be less than 20 characters")
-    .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, underscores, and hyphens")
-});
-
-const passwordSchema = z.object({
+    .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, underscores, and hyphens"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-const confirmPasswordSchema = z.object({
-  confirmPassword: z.string(),
-}).refine((data) => data.confirmPassword, {
-  message: "Please confirm your password",
+  confirmPassword: z.string().min(8, "Please confirm your password"),
+  agreeToTerms: z.boolean().refine(val => val === true, {
+    message: "You must agree to the Terms & Privacy Policy"
+  })
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
-type WizardStep = "username" | "password" | "confirm" | "security";
+const loginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
 
 interface LoginWizardProps {
   isLogin: boolean;
@@ -38,280 +39,234 @@ interface LoginWizardProps {
 }
 
 export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode }: LoginWizardProps) {
-  const [step, setStep] = useState<WizardStep>(isLogin ? "username" : "username");
-  const [collectedData, setCollectedData] = useState<Record<string, any>>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Step 1: Username
-  const usernameForm = useForm({
-    resolver: zodResolver(usernameSchema),
-    defaultValues: { username: collectedData.username || "" },
+  const formInstance = useForm({
+    resolver: zodResolver(isLogin ? loginSchema : registerSchema),
+    defaultValues: isLogin ? {
+      username: "",
+      password: "",
+    } : {
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+      agreeToTerms: false,
+    },
   });
 
-  // Step 2: Password
-  const passwordForm = useForm({
-    resolver: zodResolver(passwordSchema),
-    defaultValues: { password: collectedData.password || "" },
-  });
-
-  // Step 3: Confirm (Register only)
-  const confirmForm = useForm({
-    resolver: zodResolver(confirmPasswordSchema),
-    defaultValues: { confirmPassword: "" },
-  });
-
-  const handleUsernameNext = async (data: any) => {
-    setCollectedData({ ...collectedData, username: data.username });
-    setStep("password");
-  };
-
-  const handlePasswordNext = async (data: any) => {
-    setCollectedData({ ...collectedData, password: data.password });
-    if (isLogin) {
-      // Proceed to login
-      await onSubmit({ username: collectedData.username, password: data.password });
-    } else {
-      // Go to confirmation step
-      setStep("confirm");
+  const handleSubmit = async (data: any) => {
+    try {
+      await onSubmit(data);
+    } catch (error) {
+      formInstance.setError("root", {
+        message: (error as Error).message
+      });
     }
   };
-
-  const handleConfirmSubmit = async (data: any) => {
-    if (data.confirmPassword !== collectedData.password) {
-      confirmForm.setError("confirmPassword", { message: "Passwords don't match" });
-      return;
-    }
-    // Proceed to registration
-    await onSubmit({
-      username: collectedData.username,
-      password: collectedData.password,
-      confirmPassword: data.confirmPassword,
-    });
-  };
-
-  const handleBack = () => {
-    if (step === "password") {
-      setStep("username");
-    } else if (step === "confirm") {
-      setStep("password");
-    } else if (step === "security") {
-      setStep(isLogin ? "password" : "confirm");
-    }
-  };
-
-  const progress = {
-    username: 25,
-    password: isLogin ? 75 : 50,
-    confirm: 75,
-    security: 100,
-  }[step];
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden p-4">
       {/* Animated background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] animate-pulse" style={{ animationDuration: "4s" }} />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[128px] animate-pulse" style={{ animationDuration: "6s" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px] animate-pulse" style={{ animationDuration: "6s" }} />
       </div>
 
-      <Card className="w-full max-w-md bg-card/50 backdrop-blur-xl border-white/10 shadow-2xl relative z-10 animate-enter">
-        {/* Progress bar */}
-        <div className="h-1 bg-secondary/30">
-          <div
-            className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
+      {/* Form Card */}
+      <div className="w-full max-w-sm bg-card/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl relative z-10 p-8 space-y-6">
+        
+        {/* Icon */}
+        <div className="flex justify-center">
+          <div className="w-16 h-16 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center">
+            <Zap className="w-8 h-8 text-primary" />
+          </div>
         </div>
 
-        <CardHeader className="text-center space-y-2 pb-4">
-          <div className="mx-auto w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white font-display font-bold text-2xl mb-2">
-            W
-          </div>
-          <CardTitle className="text-2xl font-display font-bold">
-            {step === "username"
-              ? isLogin
-                ? "Welcome Back"
-                : "Create Your Identity"
-              : step === "password"
-                ? isLogin
-                  ? "Enter Password"
-                  : "Choose a Password"
-                : "Confirm Password"}
-          </CardTitle>
-          <CardDescription>
-            {step === "username"
-              ? isLogin
-                ? "Enter your username to access your lab"
-                : "This will be your unique username at thats.wtf/username"
-              : step === "password"
-                ? "Keep it secure"
-                : "Make sure it matches"}
-          </CardDescription>
-        </CardHeader>
+        {/* Title */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold text-white">
+            {isLogin ? "Welcome Back" : "Create Account"}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {isLogin ? "Sign in to your account" : "Join our community"}
+          </p>
+        </div>
 
-        <CardContent className="space-y-6">
-          {/* Step indicators */}
-          <div className="flex gap-2 justify-center">
-            <div className={`w-2 h-2 rounded-full transition-all ${step === "username" ? "bg-primary w-8" : "bg-secondary/50"}`} />
-            <div className={`w-2 h-2 rounded-full transition-all ${step === "password" ? "bg-primary w-8" : "bg-secondary/50"}`} />
+        {/* Form */}
+        <Form {...formInstance}>
+          <form onSubmit={formInstance.handleSubmit(handleSubmit)} className="space-y-4">
+            
+            {/* Email (Register only) */}
             {!isLogin && (
-              <div className={`w-2 h-2 rounded-full transition-all ${step === "confirm" ? "bg-primary w-8" : "bg-secondary/50"}`} />
+              <FormField
+                control={formInstance.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-white/80">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="you@example.com"
+                        {...field}
+                        className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg"
+                        data-testid="input-email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
-          </div>
 
-          {/* Username Step */}
-          {step === "username" && (
-            <Form {...usernameForm}>
-              <form onSubmit={usernameForm.handleSubmit(handleUsernameNext)} className="space-y-4">
-                <FormField
-                  control={usernameForm.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="cyber_user"
-                          {...field}
-                          className="bg-secondary/50 border-white/5 focus:border-primary/50"
-                          data-testid="input-username"
-                          autoFocus
-                        />
-                      </FormControl>
-                      <FormMessage />
-                      {field.value && (
-                        <div className="text-xs text-muted-foreground pt-1">
-                          Your profile: thats.wtf/{field.value}
-                        </div>
-                      )}
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" disabled={isPending} data-testid="button-next-username">
-                  {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <>
-                    Next <ArrowRight className="w-4 h-4 ml-2" />
-                  </>}
-                </Button>
-              </form>
-            </Form>
-          )}
+            {/* Username */}
+            <FormField
+              control={formInstance.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs text-white/80">Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={isLogin ? "Enter your username" : "Choose a username"}
+                      {...field}
+                      className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg"
+                      data-testid="input-username"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Password Step */}
-          {step === "password" && (
-            <Form {...passwordForm}>
-              <form onSubmit={passwordForm.handleSubmit(handlePasswordNext)} className="space-y-4">
-                <FormField
-                  control={passwordForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
+            {/* Password */}
+            <FormField
+              control={formInstance.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs text-white/80">Password</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        {...field}
+                        className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg pr-10"
+                        data-testid="input-password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                        data-testid="button-toggle-password-visibility"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Confirm Password (Register only) */}
+            {!isLogin && (
+              <FormField
+                control={formInstance.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-white/80">Confirm Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
                         <Input
-                          type="password"
-                          {...field}
-                          className="bg-secondary/50 border-white/5 focus:border-primary/50"
-                          data-testid="input-password"
-                          autoFocus
+                          type={showConfirmPassword ? "text" : "password"}
                           placeholder="••••••••"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={handleBack}
-                    data-testid="button-back"
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="flex-1"
-                    disabled={isPending}
-                    data-testid="button-next-password"
-                  >
-                    {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : isLogin ? "Login" : <>
-                      Next <ArrowRight className="w-4 h-4 ml-2" />
-                    </>}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          )}
-
-          {/* Confirm Password Step (Register only) */}
-          {step === "confirm" && !isLogin && (
-            <Form {...confirmForm}>
-              <form onSubmit={confirmForm.handleSubmit(handleConfirmSubmit)} className="space-y-4">
-                <FormField
-                  control={confirmForm.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
                           {...field}
-                          className="bg-secondary/50 border-white/5 focus:border-primary/50"
+                          className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg pr-10"
                           data-testid="input-confirm-password"
-                          autoFocus
-                          placeholder="••••••••"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={handleBack}
-                    data-testid="button-back-confirm"
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="flex-1"
-                    disabled={isPending}
-                    data-testid="button-create-account"
-                  >
-                    {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <>
-                      Create <Check className="w-4 h-4 ml-2" />
-                    </>}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          )}
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                          data-testid="button-toggle-confirm-visibility"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-          {error && (
-            <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md" data-testid="error-message">
-              {error}
-            </div>
-          )}
+            {/* Terms Checkbox (Register only) */}
+            {!isLogin && (
+              <FormField
+                control={formInstance.control}
+                name="agreeToTerms"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="rounded-md"
+                        data-testid="checkbox-agree-terms"
+                      />
+                    </FormControl>
+                    <FormLabel className="text-xs text-muted-foreground font-normal cursor-pointer">
+                      I agree to Terms & Privacy Policy
+                    </FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-          {/* Toggle mode */}
-          <div className="text-center pt-2">
+            {/* Error Message */}
+            {error && (
+              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg border border-destructive/20" data-testid="error-message">
+                {error}
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <Button 
+              type="submit" 
+              className="w-full mt-6 bg-primary hover:bg-primary/90 text-white rounded-lg h-auto py-3 font-semibold" 
+              disabled={isPending}
+              data-testid={isLogin ? "button-login" : "button-sign-up"}
+            >
+              {isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                isLogin ? "Sign In" : "Create Account"
+              )}
+            </Button>
+          </form>
+        </Form>
+
+        {/* Toggle Mode */}
+        <div className="text-center pt-2 border-t border-white/5">
+          <p className="text-xs text-muted-foreground">
+            {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button
               type="button"
               onClick={onToggleMode}
-              className="text-sm text-muted-foreground hover:text-white transition-colors"
+              className="text-primary hover:text-primary/80 font-semibold transition-colors"
               data-testid="button-toggle-auth-mode"
             >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
+              {isLogin ? "Sign Up" : "Sign In"}
             </button>
-          </div>
-        </CardContent>
-      </Card>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
