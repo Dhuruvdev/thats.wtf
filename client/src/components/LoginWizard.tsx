@@ -87,15 +87,17 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
           />
         </div>
 
-        {/* Logo */}
-        <div className="flex justify-center h-8">
-          <img 
-            src="/logo.png" 
-            alt="Logo" 
-            className="h-full object-contain"
-            data-testid="img-logo"
-          />
-        </div>
+        {/* Logo (Register only) */}
+        {!isLogin && (
+          <div className="flex justify-center h-8">
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              className="h-full object-contain"
+              data-testid="img-logo"
+            />
+          </div>
+        )}
 
         {/* Title */}
         <div className="text-center space-y-1">
