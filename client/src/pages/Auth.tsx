@@ -48,7 +48,7 @@ export default function Auth() {
         setLocation("/lab");
       } else {
         await register({ username: data.username, email: data.email, password: data.password });
-        setLocation("/verify-email");
+        setLocation("/login");
       }
     } catch (error) {
       form.setError("root", { message: (error as Error).message });
