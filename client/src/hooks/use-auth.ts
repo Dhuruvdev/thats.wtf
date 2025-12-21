@@ -27,8 +27,12 @@ export function useLogin() {
       });
       
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Login failed");
+        try {
+          const error = await res.json();
+          throw new Error(error.message || "Login failed");
+        } catch {
+          throw new Error("Invalid username or password");
+        }
       }
       return api.auth.login.responses[200].parse(await res.json());
     },
@@ -49,8 +53,12 @@ export function useRegister() {
       });
       
       if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Registration failed");
+        try {
+          const error = await res.json();
+          throw new Error(error.message || "Registration failed");
+        } catch {
+          throw new Error("Registration failed");
+        }
       }
       return res.json();
     },

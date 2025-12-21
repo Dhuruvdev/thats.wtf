@@ -142,10 +142,11 @@ export default function Auth() {
                     <FormControl>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                        <div className="absolute left-10 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">thats.wtf/</div>
+                        <div className="absolute left-10 top-1/2 -translate-y-1/2 text-white text-sm font-medium">thats.wtf/</div>
                         <Input
                           {...field}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-muted-foreground pl-24"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-muted-foreground pl-28"
+                          style={{ paddingLeft: '7rem' }}
                           data-testid="input-username"
                         />
                       </div>
