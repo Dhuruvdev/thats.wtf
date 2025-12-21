@@ -79,16 +79,12 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
         
         {/* Icon */}
         <div className="flex justify-center pt-4">
-          <div 
-            className="w-24 h-24 flex items-center justify-center bg-cover bg-center rounded-lg"
-            style={{
-              backgroundImage: 'url("/icon.png")',
-              backgroundColor: 'rgba(139, 92, 246, 0.2)',
-            }}
+          <img 
+            src="/icon.png" 
+            alt="Icon" 
+            className="w-24 h-24 object-contain"
             data-testid="img-icon"
-          >
-            <span className="text-3xl" style={{ display: 'none' }}>📁</span>
-          </div>
+          />
         </div>
 
         {/* Logo */}
@@ -97,10 +93,6 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
             src="/logo.png" 
             alt="Logo" 
             className="h-full object-contain"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-            }}
             data-testid="img-logo"
           />
         </div>
