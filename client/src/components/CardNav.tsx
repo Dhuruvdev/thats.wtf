@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Link, useLocation, useRouter } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -168,13 +168,13 @@ export function CardNav({
     return () => ctx.revert();
   }, [isMenuOpen]);
 
-  const router = useRouter();
+  const [, navigate] = useLocation();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   const handleGetStarted = () => {
-    router.push("/auth");
+    navigate("/auth");
   };
 
   return (
