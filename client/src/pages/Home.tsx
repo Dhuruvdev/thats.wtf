@@ -55,15 +55,6 @@ export default function Home() {
       </div>
 
       <main className="relative pt-24 pb-0 overflow-hidden" ref={heroRef}>
-        {/* Announcement Banner */}
-        <div className="max-w-5xl mx-auto px-6 sm:px-8 mb-12">
-          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
-            <span className="text-xs font-bold text-primary uppercase tracking-wider">NEW</span>
-            <span className="text-sm text-primary">Level up unlocks exclusive profile frames & themes</span>
-            <ArrowRight className="w-4 h-4 text-primary ml-2" />
-          </div>
-        </div>
-
         {/* Hero Section */}
         <div className="max-w-5xl mx-auto px-6 sm:px-8 py-16">
           <h1 ref={textRef} className="text-6xl sm:text-7xl lg:text-8xl font-display font-black tracking-tighter mb-6 leading-tight text-white">
