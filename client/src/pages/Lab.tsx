@@ -33,7 +33,7 @@ export default function Lab() {
   const [, setLocation] = useLocation();
   
   if (!isUserLoading && !user) {
-    setLocation("/auth");
+    setLocation("/login");
     return null;
   }
 

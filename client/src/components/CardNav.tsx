@@ -174,7 +174,7 @@ export function CardNav({
   };
 
   const handleGetStarted = () => {
-    navigate("/auth");
+    navigate("/login");
   };
 
   return (

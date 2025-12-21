@@ -66,7 +66,7 @@ export default function Home() {
           </p>
           
           <div className="hero-btns flex flex-col sm:flex-row items-start justify-start gap-4 mb-16">
-            <Link href="/auth" className="w-full sm:w-auto">
+            <Link href="/login" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-base font-black rounded-full shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_50px_rgba(124,58,237,0.6)] transition-all bg-primary">
                 Claim Your Username
               </Button>
@@ -139,7 +139,7 @@ export default function Home() {
             <p className="text-lg text-white/90 mb-10 max-w-2xl mx-auto">
               Get started for free and start leveling up your digital presence today.
             </p>
-            <Link href="/auth">
+            <Link href="/login">
               <Button size="lg" className="h-14 px-8 text-base font-black rounded-full bg-white text-primary hover:bg-white/90 shadow-2xl">
                 Share Download Link
               </Button>

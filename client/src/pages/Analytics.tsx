@@ -31,7 +31,7 @@ export default function Analytics() {
   const [, setLocation] = useLocation();
 
   if (!isLoading && !user) {
-    setLocation("/auth");
+    setLocation("/login");
     return null;
   }
 
