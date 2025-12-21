@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email").optional().or(z.literal("")),
@@ -75,33 +75,38 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
       </div>
 
       {/* Form Card */}
-      <div className="w-full max-w-sm bg-card/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl relative z-10 p-8 space-y-6">
+      <div className="w-full max-w-sm bg-card/30 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative z-10 p-8 space-y-6">
         
-        {/* Icon - Place icon.png in attached_assets/icon.png */}
-        <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center">
-            <div className="text-primary font-bold text-2xl">G</div>
+        {/* Icon */}
+        <div className="flex justify-center pt-4">
+          <div className="w-24 h-24 flex items-center justify-center">
+            <div className="text-6xl">🔫</div>
           </div>
         </div>
 
-        {/* Logo Text - Place logo.png in attached_assets/logo.png */}
-        <div className="flex justify-center">
-          <h2 className="text-xl font-bold text-white tracking-wider">guns.lol</h2>
-        </div>
-
         {/* Title */}
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-white">
-            {isLogin ? "Welcome Back" : "Create Account"}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {isLogin ? "Sign in to your account" : "Join our community"}
-          </p>
+        <div className="text-center space-y-1">
+          {isLogin ? (
+            <>
+              <h1 className="text-2xl font-bold text-white">
+                Welcome Back
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Sign in to your account
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-white">
+                Create a guns.lol account
+              </h1>
+            </>
+          )}
         </div>
 
         {/* Form */}
         <Form {...formInstance}>
-          <form onSubmit={formInstance.handleSubmit(handleSubmit)} className="space-y-4">
+          <form onSubmit={formInstance.handleSubmit(handleSubmit)} className="space-y-5">
             
             {/* Email (Register only) */}
             {!isLogin && (
@@ -110,15 +115,18 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs text-white/80">Email</FormLabel>
+                    <FormLabel className="text-sm font-medium text-white">Email</FormLabel>
                     <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="you@example.com"
-                        {...field}
-                        className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg"
-                        data-testid="input-email"
-                      />
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          type="email"
+                          placeholder="Email"
+                          {...field}
+                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
+                          data-testid="input-email"
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -126,25 +134,30 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
               />
             )}
 
-            {/* Username */}
-            <FormField
-              control={formInstance.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs text-white/80">Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={isLogin ? "Enter your username" : "Choose a username"}
-                      {...field}
-                      className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg"
-                      data-testid="input-username"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Password (always shown, but different order for login vs register) */}
+            {isLogin && (
+              <FormField
+                control={formInstance.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-white">Username</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          placeholder="Username"
+                          {...field}
+                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
+                          data-testid="input-username"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             {/* Password */}
             <FormField
@@ -152,23 +165,24 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs text-white/80">Password</FormLabel>
+                  <FormLabel className="text-sm font-medium text-white">Password</FormLabel>
                   <FormControl>
                     <div className="relative">
+                      <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
+                        placeholder="Password"
                         {...field}
-                        className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg pr-10"
+                        className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 pr-10 py-2.5"
                         data-testid="input-password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                        className="absolute right-3 top-3 text-muted-foreground hover:text-white transition-colors"
                         data-testid="button-toggle-password-visibility"
                       >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
                   </FormControl>
@@ -177,6 +191,31 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
               )}
             />
 
+            {/* Username (Register only) */}
+            {!isLogin && (
+              <FormField
+                control={formInstance.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-white">Username</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          placeholder="guns.lol/"
+                          {...field}
+                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
+                          data-testid="input-username"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             {/* Confirm Password (Register only) */}
             {!isLogin && (
               <FormField
@@ -184,23 +223,24 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs text-white/80">Confirm Password</FormLabel>
+                    <FormLabel className="text-sm font-medium text-white">Confirm Password</FormLabel>
                     <FormControl>
                       <div className="relative">
+                        <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
-                          placeholder="••••••••"
+                          placeholder="Confirm Password"
                           {...field}
-                          className="bg-secondary/50 border-white/5 focus:border-primary/50 rounded-lg pr-10"
+                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 pr-10 py-2.5"
                           data-testid="input-confirm-password"
                         />
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+                          className="absolute right-3 top-3 text-muted-foreground hover:text-white transition-colors"
                           data-testid="button-toggle-confirm-visibility"
                         >
-                          {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </button>
                       </div>
                     </FormControl>
@@ -216,17 +256,17 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                 control={formInstance.control}
                 name="agreeToTerms"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-2">
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="rounded-md"
+                        className="rounded"
                         data-testid="checkbox-agree-terms"
                       />
                     </FormControl>
-                    <FormLabel className="text-xs text-muted-foreground font-normal cursor-pointer">
-                      I agree to Terms & Privacy Policy
+                    <FormLabel className="text-sm text-muted-foreground font-normal cursor-pointer">
+                      I agree to ToS & Privacy Policy
                     </FormLabel>
                     <FormMessage />
                   </FormItem>
@@ -244,27 +284,27 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
             {/* Submit Button */}
             <Button 
               type="submit" 
-              className="w-full mt-6 bg-primary hover:bg-primary/90 text-white rounded-lg h-auto py-3 font-semibold" 
+              className="w-full mt-6 bg-transparent border-2 border-white/30 hover:border-white/50 text-white rounded-lg h-auto py-3 font-semibold transition-all" 
               disabled={isPending}
               data-testid={isLogin ? "button-login" : "button-sign-up"}
             >
               {isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                isLogin ? "Sign In" : "Create Account"
+                isLogin ? "Sign In" : "Sign Up"
               )}
             </Button>
           </form>
         </Form>
 
         {/* Toggle Mode */}
-        <div className="text-center pt-2 border-t border-white/5">
-          <p className="text-xs text-muted-foreground">
+        <div className="text-center pt-2">
+          <p className="text-sm text-muted-foreground">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <button
               type="button"
               onClick={onToggleMode}
-              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+              className="text-white hover:text-primary font-semibold transition-colors"
               data-testid="button-toggle-auth-mode"
             >
               {isLogin ? "Sign Up" : "Sign In"}
