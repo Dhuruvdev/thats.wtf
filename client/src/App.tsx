@@ -3,6 +3,8 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
+import { GenZHeader } from "@/components/GenZHeader";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
@@ -31,6 +33,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <BackgroundMediaManager />
+        <GenZHeader />
         <Toaster />
         <Router />
       </TooltipProvider>
