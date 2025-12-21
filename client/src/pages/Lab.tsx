@@ -2,6 +2,8 @@ import { useUser } from "@/hooks/use-auth";
 import { useUpdateProfile, useCreateLink, useDeleteLink, useProfile } from "@/hooks/use-profile";
 import { Navigation } from "@/components/Navigation";
 import { ProfileCard } from "@/components/ProfileCard";
+import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
+import { MediaTab } from "@/components/MediaTab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { useLocation } from "wouter";
-import { Loader2, Plus, Trash2, Wand2, Link as LinkIcon, Palette } from "lucide-react";
+import { Loader2, Plus, Trash2, Wand2, Link as LinkIcon, Palette, Music, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,13 +32,11 @@ export default function Lab() {
   const { data: user, isLoading: isUserLoading } = useUser();
   const [, setLocation] = useLocation();
   
-  // If no user, redirect (handled in component logic for simplicity)
   if (!isUserLoading && !user) {
     setLocation("/auth");
     return null;
   }
 
-  // We fetch full profile to get links
   const { data: profile } = useProfile(user?.username || "");
   const { mutate: updateProfile } = useUpdateProfile();
   const { mutate: createLink } = useCreateLink();
@@ -54,6 +54,7 @@ export default function Lab() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      <BackgroundMediaManager />
       <Navigation />
       
       <main className="pt-24 px-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -65,12 +66,15 @@ export default function Lab() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full grid grid-cols-3 bg-secondary/50 p-1">
+            <TabsList className="w-full grid grid-cols-4 bg-secondary/50 p-1">
               <TabsTrigger value="content" className="data-[state=active]:bg-background">
                 <LinkIcon className="w-4 h-4 mr-2" /> Content
               </TabsTrigger>
               <TabsTrigger value="design" className="data-[state=active]:bg-background">
                 <Palette className="w-4 h-4 mr-2" /> Design
+              </TabsTrigger>
+              <TabsTrigger value="media" className="data-[state=active]:bg-background">
+                <Music className="w-4 h-4 mr-2" /> Media
               </TabsTrigger>
               <TabsTrigger value="profile" className="data-[state=active]:bg-background">
                 <Wand2 className="w-4 h-4 mr-2" /> Identity
@@ -131,6 +135,7 @@ export default function Lab() {
                           onClick={() => updateProfile({ accentColor: color })}
                           className={`w-full aspect-square rounded-lg border-2 transition-transform hover:scale-105 ${profile.accentColor === color ? 'border-white ring-2 ring-white/20' : 'border-transparent'}`}
                           style={{ background: color }}
+                          data-testid={`color-${color.slice(1)}`}
                         />
                       ))}
                     </div>
@@ -145,6 +150,7 @@ export default function Lab() {
                           variant={profile.frame === frame ? "default" : "outline"}
                           className="capitalize"
                           onClick={() => updateProfile({ frame })}
+                          data-testid={`frame-${frame}`}
                         >
                           {frame}
                         </Button>
@@ -160,10 +166,16 @@ export default function Lab() {
                     <Switch 
                       checked={profile.glowEnabled}
                       onCheckedChange={(checked) => updateProfile({ glowEnabled: checked })}
+                      data-testid="switch-glow"
                     />
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* MEDIA TAB */}
+            <TabsContent value="media" className="space-y-4 mt-4">
+              <MediaTab />
             </TabsContent>
 
             {/* IDENTITY TAB */}
@@ -177,6 +189,7 @@ export default function Lab() {
                       onChange={(e) => updateProfile({ displayName: e.target.value })}
                       onBlur={(e) => updateProfile({ displayName: e.target.value })}
                       className="bg-background/50"
+                      data-testid="input-display-name"
                     />
                   </div>
                   
@@ -188,6 +201,7 @@ export default function Lab() {
                       onBlur={(e) => updateProfile({ bio: e.target.value })}
                       className="bg-background/50 min-h-[100px]"
                       placeholder="Tell the multiverse about yourself..."
+                      data-testid="textarea-bio"
                     />
                   </div>
 
@@ -199,6 +213,7 @@ export default function Lab() {
                       onBlur={(e) => updateProfile({ avatarUrl: e.target.value })}
                       className="bg-background/50"
                       placeholder="https://..."
+                      data-testid="input-avatar-url"
                     />
                     <div className="text-xs text-muted-foreground">Use any image URL for now.</div>
                   </div>
@@ -212,13 +227,12 @@ export default function Lab() {
         <div className="lg:col-span-7 sticky top-24 h-fit">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Live Preview</h2>
-            <Button variant="outline" size="sm" className="h-8" onClick={() => window.open(`/u/${profile.username}`, '_blank')}>
+            <Button variant="outline" size="sm" className="h-8" onClick={() => window.open(`/u/${profile.username}`, '_blank')} data-testid="button-open-public">
               Open Public Page <ExternalLink className="w-3 h-3 ml-2" />
             </Button>
           </div>
           
           <div className="rounded-3xl border border-white/5 bg-background/50 backdrop-blur-sm p-8 min-h-[600px] flex items-center justify-center relative overflow-hidden">
-            {/* Simulated Mobile Viewport */}
             <div className="w-[375px] h-[667px] bg-black rounded-[3rem] border-[8px] border-zinc-800 overflow-hidden relative shadow-2xl">
               <div className="absolute top-0 left-0 right-0 h-full overflow-y-auto scrollbar-hide bg-background p-4 pt-12">
                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-zinc-800 rounded-b-2xl z-50"></div>
@@ -253,7 +267,7 @@ function AddLinkDialog({ onCreate }: { onCreate: (data: any) => void }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Link</Button>
+        <Button size="sm" className="gap-2" data-testid="button-add-link"><Plus className="w-4 h-4" /> Add Link</Button>
       </DialogTrigger>
       <DialogContent className="bg-card border-white/10">
         <DialogHeader>
@@ -262,17 +276,18 @@ function AddLinkDialog({ onCreate }: { onCreate: (data: any) => void }) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
           <div className="space-y-2">
             <Label>Title</Label>
-            <Input {...form.register("title")} placeholder="My Portfolio" className="bg-background/50" />
+            <Input {...form.register("title")} placeholder="My Portfolio" className="bg-background/50" data-testid="input-link-title" />
           </div>
           <div className="space-y-2">
             <Label>URL</Label>
-            <Input {...form.register("url")} placeholder="https://..." className="bg-background/50" />
+            <Input {...form.register("url")} placeholder="https://..." className="bg-background/50" data-testid="input-link-url" />
           </div>
           <div className="space-y-2">
             <Label>Icon</Label>
             <select 
               {...form.register("icon")}
               className="w-full h-10 rounded-md border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              data-testid="select-link-icon"
             >
               <option value="default">Globe (Default)</option>
               <option value="twitter">Twitter / X</option>
@@ -283,12 +298,9 @@ function AddLinkDialog({ onCreate }: { onCreate: (data: any) => void }) {
               <option value="twitch">Twitch</option>
             </select>
           </div>
-          <Button type="submit" className="w-full">Create Link</Button>
+          <Button type="submit" className="w-full" data-testid="button-create-link">Create Link</Button>
         </form>
       </DialogContent>
     </Dialog>
   );
 }
-
-// Helper for preview
-import { ExternalLink } from "lucide-react";
