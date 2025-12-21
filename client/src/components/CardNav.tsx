@@ -168,11 +168,11 @@ export function CardNav({
               <img
                 src={logo}
                 alt={logoAlt}
-                className="h-12 w-auto object-contain"
+                className="h-8 w-auto object-contain"
                 data-testid="nav-logo-image"
               />
             ) : logoIcon ? (
-              <div className="flex items-center justify-center h-12 w-12" data-testid="nav-logo-icon">
+              <div className="flex items-center justify-center h-8 w-8" data-testid="nav-logo-icon">
                 {logoIcon}
               </div>
             ) : null}
