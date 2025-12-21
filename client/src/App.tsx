@@ -66,11 +66,12 @@ function Router() {
 function App() {
   const [location] = useLocation();
   const isAuthPage = location === "/login";
+  const isCardNavDemoPage = location === "/cardnav-demo";
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {!isAuthPage && <GenZHeader />}
+        {!isAuthPage && !isCardNavDemoPage && <GenZHeader />}
         <Toaster />
         <Router />
       </TooltipProvider>
