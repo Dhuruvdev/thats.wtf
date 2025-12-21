@@ -5,23 +5,23 @@
 @tailwind utilities;
 
 :root {
-  /* HSL Color System - Cyberpunk/Dark Future */
-  --background: 222 47% 6%;      /* #0b0e14 */
-  --foreground: 210 40% 98%;     /* #f8fafc */
+  /* HSL Color System - Premium Dark / Kiro.dev Aesthetic */
+  --background: 0 0% 0%;         /* Pure Black #000000 */
+  --foreground: 210 40% 98%;     /* #f8fafc - Pure White Text */
 
-  --card: 220 30% 11%;           /* #111827 */
+  --card: 0 0% 6%;               /* #0f0f0f - Darkest Gray */
   --card-foreground: 210 40% 98%;
 
-  --popover: 222 47% 6%;
+  --popover: 0 0% 0%;
   --popover-foreground: 210 40% 98%;
 
-  --primary: 263 70% 50%;        /* #6d28d9 - Deep Purple */
+  --primary: 263 70% 50%;        /* #7c3aed - Bold Purple */
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 217 33% 17%;      /* #1e293b */
+  --secondary: 0 0% 8%;          /* #141414 - Slightly Lighter Black */
   --secondary-foreground: 210 40% 98%;
 
-  --muted: 217 33% 17%;
+  --muted: 0 0% 10%;             /* #1a1a1a */
   --muted-foreground: 215 20% 65%;
 
   --accent: 173 80% 40%;         /* #14b8a6 - Teal Cyan */
@@ -30,8 +30,8 @@
   --destructive: 0 62% 30%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
+  --border: 0 0% 10%;            /* Subtle Light Black Border */
+  --input: 0 0% 8%;
   --ring: 263 70% 50%;
 
   --radius: 0.75rem;
