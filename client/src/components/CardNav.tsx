@@ -45,29 +45,7 @@ export function CardNav({
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>(".card-nav-item");
       
-      cards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 20,
-            scale: 0.95
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            delay: index * 0.1,
-            ease: ease,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-
+      cards.forEach((card) => {
         card.addEventListener("mouseenter", () => {
           gsap.to(card, {
             y: -4,
