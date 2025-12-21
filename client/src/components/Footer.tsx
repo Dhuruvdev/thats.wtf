@@ -1,5 +1,7 @@
 import { Link } from "wouter";
 import { Github, Linkedin, Twitter, Instagram, Youtube, MessageCircle } from "lucide-react";
+import logoImg from "/logo.png";
+import iconImg from "/icon.png";
 
 export function Footer() {
   return (
@@ -8,12 +10,18 @@ export function Footer() {
         {/* Logo */}
         <div className="mb-12">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center text-white font-display font-bold text-lg">
-              👻
-            </div>
-            <span className="font-display font-black text-lg tracking-tighter text-white">
-              THAT'S.WTF
-            </span>
+            <img 
+              src={iconImg}
+              alt="Lab.dev Icon"
+              className="w-10 h-10 rounded-lg object-contain"
+              data-testid="footer-logo-icon"
+            />
+            <img 
+              src={logoImg}
+              alt="Lab.dev Logo"
+              className="h-10 object-contain"
+              data-testid="footer-logo-image"
+            />
           </div>
         </div>
 
