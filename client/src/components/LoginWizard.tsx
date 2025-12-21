@@ -111,7 +111,7 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
           ) : (
             <>
               <h1 className="text-2xl font-bold text-white">
-                Create a guns.lol account
+                Create Your That's.WTF Account
               </h1>
             </>
           )}
