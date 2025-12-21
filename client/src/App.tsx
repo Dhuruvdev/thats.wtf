@@ -12,11 +12,13 @@ import Lab from "@/pages/Lab";
 import Templates from "@/pages/Templates";
 import Analytics from "@/pages/Analytics";
 import CardNavDemo from "@/pages/CardNavDemo";
+import AccountOverview from "@/pages/AccountOverview";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/~" component={AccountOverview} />
       <Route path="/login" component={Auth} />
       <Route path="/lab" component={Lab} />
       <Route path="/templates" component={Templates} />
