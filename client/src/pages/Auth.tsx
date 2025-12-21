@@ -32,7 +32,6 @@ export default function Auth() {
   const { mutateAsync: register, isPending: isRegisterPending } = useRegister();
 
   const form = useForm({
-    resolver: zodResolver(isLogin ? loginSchema : signupSchema),
     defaultValues: {
       username: "",
       email: "",
