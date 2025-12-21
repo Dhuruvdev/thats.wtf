@@ -68,20 +68,41 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden p-4">
-      {/* Animated background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[128px] animate-pulse" style={{ animationDuration: "4s" }} />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px] animate-pulse" style={{ animationDuration: "6s" }} />
+      {/* Background Gradients */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[150px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[150px]" />
       </div>
 
       {/* Form Card */}
-      <div className="w-full max-w-sm bg-card/30 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative z-10 p-8 space-y-6">
+      <div className="w-full max-w-sm bg-background border border-white/10 rounded-3xl shadow-2xl relative z-10 p-8 space-y-6">
         
         {/* Icon */}
         <div className="flex justify-center pt-4">
-          <div className="w-24 h-24 flex items-center justify-center">
-            <div className="text-6xl">🔫</div>
+          <div 
+            className="w-24 h-24 flex items-center justify-center bg-cover bg-center rounded-lg"
+            style={{
+              backgroundImage: 'url("/icon.png")',
+              backgroundColor: 'rgba(139, 92, 246, 0.2)',
+            }}
+            data-testid="img-icon"
+          >
+            <span className="text-3xl" style={{ display: 'none' }}>📁</span>
           </div>
+        </div>
+
+        {/* Logo */}
+        <div className="flex justify-center h-8">
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            className="h-full object-contain"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
+            data-testid="img-logo"
+          />
         </div>
 
         {/* Title */}
