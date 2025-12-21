@@ -74,7 +74,7 @@ export default function Auth() {
         )}
         
         <h1 className="text-2xl font-bold text-white text-center mb-1">
-          {isLogin ? "Sign In" : "Create a guns.lol account"}
+          {isLogin ? "Sign In" : "Create a thats.wtf account"}
         </h1>
         <p className="text-muted-foreground text-center text-sm mb-8">
           {isLogin ? "Welcome back" : "Join the community"}
@@ -148,7 +148,7 @@ export default function Auth() {
                     <FormControl>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                        <div className="absolute left-10 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">guns.lol/</div>
+                        <div className="absolute left-10 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">thats.wtf/</div>
                         <Input
                           placeholder="username"
                           {...field}
