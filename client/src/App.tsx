@@ -8,6 +8,8 @@ import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
 import Profile from "@/pages/Profile";
 import Lab from "@/pages/Lab";
+import Templates from "@/pages/Templates";
+import Analytics from "@/pages/Analytics";
 
 function Router() {
   return (
@@ -15,6 +17,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/auth" component={Auth} />
       <Route path="/lab" component={Lab} />
+      <Route path="/templates" component={Templates} />
+      <Route path="/analytics" component={Analytics} />
       <Route path="/u/:username" component={Profile} />
       <Route component={NotFound} />
     </Switch>

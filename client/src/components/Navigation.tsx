@@ -49,6 +49,16 @@ export function Navigation() {
                     Lab
                   </div>
                 </Link>
+                <Link href="/templates">
+                  <div className={`text-xs font-black uppercase tracking-widest transition-colors cursor-pointer ${location === '/templates' ? 'text-primary' : 'text-muted-foreground hover:text-white'}`}>
+                    Templates
+                  </div>
+                </Link>
+                <Link href="/analytics">
+                  <div className={`text-xs font-black uppercase tracking-widest transition-colors cursor-pointer ${location === '/analytics' ? 'text-primary' : 'text-muted-foreground hover:text-white'}`}>
+                    Analytics
+                  </div>
+                </Link>
               </div>
 
               {/* Search Icon */}
