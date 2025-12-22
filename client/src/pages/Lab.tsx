@@ -9,15 +9,16 @@ export default function Lab() {
   const { toast } = useToast();
   const { data: user } = useQuery<User>({
     queryKey: ["/api/user"],
+    staleTime: Infinity,
   });
 
   const [themeConfig, setThemeConfig] = useState<User["themeConfig"] | null>(null);
 
   useEffect(() => {
-    if (user) {
+    if (user && !themeConfig) {
       setThemeConfig(user.themeConfig);
     }
-  }, [user]);
+  }, [user, themeConfig]);
 
   const mutation = useMutation({
     mutationFn: async (config: User["themeConfig"]) => {
@@ -71,7 +72,7 @@ export default function Lab() {
           <div className="preview-box">
             <div className="audio-manager-btn">
               <FolderOpen size={48} strokeWidth={1} />
-              <p style={ { fontSize: '0.875rem', marginTop: '0.5rem' } }>Click to open audio manager</p>
+              <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>Click to open audio manager</p>
             </div>
           </div>
         </div>
@@ -93,8 +94,8 @@ export default function Lab() {
           <label className="asset-label">Custom Cursor</label>
           <div className="preview-box">
              <div className="audio-manager-btn">
-               <div style={ { width: '40px', height: '40px', background: themeConfig.cursor.color, borderRadius: '50%', boxShadow: '0 0 20px var(--accent)' } } />
-               <p style={ { fontSize: '0.875rem', marginTop: '0.5rem' } }>Type: {themeConfig.cursor.type}</p>
+               <div style={{ width: '40px', height: '40px', background: themeConfig.cursor.color, borderRadius: '50%', boxShadow: '0 0 20px var(--accent)' }} />
+               <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>Type: {themeConfig.cursor.type}</p>
              </div>
              <button className="remove-btn" onClick={() => updateAsset(['cursor', 'type'], 'default')}>
               <X size={16} />

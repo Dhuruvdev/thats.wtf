@@ -1,42 +1,52 @@
+import { Block, User } from "@shared/schema";
 import { useEffect, useRef } from "react";
 import { blockHover, blockLeave } from "@/lib/motion";
-import type { Block } from "@shared/schema";
 
-interface Props {
+interface IdentityBlockProps {
   block: Block;
+  user: User;
 }
 
-export function IdentityBlock({ block }: Props) {
+export function IdentityBlock({ block, user }: IdentityBlockProps) {
   const blockRef = useRef<HTMLDivElement>(null);
-  const { intensity, delay, trigger } = block.animationConfig;
+
+  const handleMouseEnter = () => {
+    if (blockRef.current) {
+      blockHover(blockRef.current, block.animationConfig.intensity);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (blockRef.current) {
+      blockLeave(blockRef.current);
+    }
+  };
 
   return (
-    <div
+    <div 
       ref={blockRef}
-      className="identity-block reveal-up"
-      style={{ animationDelay: `${delay}s` }}
-      onMouseEnter={() => trigger === 'hover' && blockHover(blockRef.current!, intensity)}
-      onMouseLeave={() => trigger === 'hover' && blockLeave(blockRef.current!)}
-      onClick={() => trigger === 'click' && blockHover(blockRef.current!, intensity * 2)}
+      className="identity-block"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       data-testid={`block-${block.type}-${block.id}`}
+      style={{
+        '--delay': `${block.animationConfig.delay}s`,
+        '--ease': block.animationConfig.ease,
+      } as React.CSSProperties}
     >
-      {block.type === 'bio' && (
-        <div style={ { display: 'flex', flexDirection: 'column', gap: '0.5rem' } }>
-          <h2 style={ { fontSize: '1.25rem', fontWeight: 'bold' } }>{(block.content as any).title}</h2>
-          <p style={ { color: 'var(--text-secondary)' } }>{(block.content as any).text}</p>
-        </div>
-      )}
-      {block.type === 'link' && (
-        <a 
-          href={(block.content as any).url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          style={ { display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: 'inherit' } }
-        >
-          <span style={ { padding: '0.5rem', backgroundColor: 'rgba(124, 58, 237, 0.2)', borderRadius: '0.375rem' } }>🔗</span>
-          <span style={ { fontWeight: 500 } }>{(block.content as any).title}</span>
-        </a>
-      )}
+      <div className="block-content">
+        {block.type === 'bio' && (
+          <div className="bio-block">
+            <h2 className="display-name">{user.displayName}</h2>
+            <p className="bio-text">{user.bio}</p>
+          </div>
+        )}
+        {block.type === 'link' && (
+          <a href={block.content.url as string} target="_blank" rel="noopener noreferrer" className="link-block">
+            <span className="link-title">{block.content.title as string}</span>
+          </a>
+        )}
+      </div>
     </div>
   );
 }
