@@ -157,7 +157,7 @@ export default function Lab() {
                       <div className="text-xs text-muted-foreground">Ambient background glow</div>
                     </div>
                     <Switch 
-                      checked={profile.glowEnabled}
+                      checked={profile.glowEnabled ?? true}
                       onCheckedChange={(checked) => updateProfile({ glowEnabled: checked })}
                       data-testid="switch-glow"
                     />

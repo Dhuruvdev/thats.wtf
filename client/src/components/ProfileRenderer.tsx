@@ -1,6 +1,6 @@
 import { useEffect, useRef, useMemo } from "react";
 import { Block, User } from "@shared/schema";
-import { IdentityBlock } from "./IdentityBlock";
+import { IdentityBlock } from "@/components/IdentityBlock";
 import { springReveal, idlePulse } from "@/lib/motion";
 import { useLogicEngine } from "@/hooks/use-logic-engine";
 import { gsap } from "gsap";
@@ -31,6 +31,13 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
     });
     return config;
   }, [user.logicRules, user.themeConfig, logic]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const elements = containerRef.current.querySelectorAll(".identity-block");
+      springReveal(Array.from(elements) as HTMLElement[]);
+    }
+  }, [blocks]);
 
   useEffect(() => {
     if (logic.isIdle && containerRef.current) {
@@ -96,7 +103,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         }
       </div>
 
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .profile-container {
           background: var(--profile-bg);
           color: white;
@@ -104,7 +111,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         .identity-block {
           background: rgba(255, 255, 255, 0.05);
           backdrop-filter: blur(10px);
-          border: 1px border rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 12px;
           padding: 1.5rem;
           transition: border-color 0.3s ease;
@@ -112,7 +119,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         .identity-block:hover {
           border-color: var(--accent-color);
         }
-      `}</style>
+      `}} />
     </div>
   );
 }

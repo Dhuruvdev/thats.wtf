@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, buildUrl, type UpdateUserRequest, type InsertLink } from "@shared/routes";
+import { api, buildUrl, type UpdateUserRequest } from "@shared/routes";
+import { type InsertBlock } from "@shared/schema";
 
 // GET /api/u/:username
 export function useProfile(username: string) {
@@ -50,35 +51,34 @@ export function useAddView() {
   });
 }
 
-// POST /api/links (Create Link)
+// POST /api/blocks (Create Block)
 export function useCreateLink() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (link: Omit<InsertLink, "userId">) => {
-      const res = await fetch(api.links.create.path, {
-        method: api.links.create.method,
+    mutationFn: async (block: any) => {
+      const res = await fetch(api.blocks.create.path, {
+        method: api.blocks.create.method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(link),
+        body: JSON.stringify(block),
       });
-      if (!res.ok) throw new Error("Failed to create link");
-      return api.links.create.responses[201].parse(await res.json());
+      if (!res.ok) throw new Error("Failed to create block");
+      return api.blocks.create.responses[201].parse(await res.json());
     },
     onSuccess: () => {
-      // Invalidate current user profile to refresh links
       queryClient.invalidateQueries({ queryKey: [api.users.get.path] });
       queryClient.invalidateQueries({ queryKey: [api.auth.me.path] }); 
     }
   });
 }
 
-// DELETE /api/links/:id
+// DELETE /api/blocks/:id
 export function useDeleteLink() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: number) => {
-      const url = buildUrl(api.links.delete.path, { id });
-      const res = await fetch(url, { method: api.links.delete.method });
-      if (!res.ok) throw new Error("Failed to delete link");
+      const url = buildUrl(api.blocks.delete.path, { id });
+      const res = await fetch(url, { method: api.blocks.delete.method });
+      if (!res.ok) throw new Error("Failed to delete block");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [api.users.get.path] });

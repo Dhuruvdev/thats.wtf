@@ -1,4 +1,4 @@
-import { users, links, type User, type InsertUser, type Link, type InsertLink } from "@shared/schema";
+import { users, blocks, type User, type InsertUser, type Block, type InsertBlock } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -11,12 +11,10 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<User>): Promise<User>;
   
-  // Links
-  createLink(link: InsertLink): Promise<Link>;
-  deleteLink(id: number): Promise<void>;
-  getLinksByUserId(userId: number): Promise<Link[]>;
-  
-  // Session store helpers if needed, but usually handled by passport/session lib
+  // Blocks
+  createBlock(block: InsertBlock): Promise<Block>;
+  deleteBlock(id: number): Promise<void>;
+  getBlocksByUserId(userId: number): Promise<Block[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -50,17 +48,24 @@ export class DatabaseStorage implements IStorage {
     return updated;
   }
 
-  async createLink(insertLink: InsertLink): Promise<Link> {
-    const [link] = await db.insert(links).values(insertLink).returning();
-    return link;
+  async createBlock(insertBlock: InsertBlock): Promise<Block> {
+    const [block] = await db.insert(blocks).values({
+      type: insertBlock.type,
+      userId: insertBlock.userId,
+      content: insertBlock.content as any,
+      animationConfig: insertBlock.animationConfig,
+      order: insertBlock.order,
+      visible: insertBlock.visible
+    }).returning();
+    return block;
   }
 
-  async deleteLink(id: number): Promise<void> {
-    await db.delete(links).where(eq(links.id, id));
+  async deleteBlock(id: number): Promise<void> {
+    await db.delete(blocks).where(eq(blocks.id, id));
   }
   
-  async getLinksByUserId(userId: number): Promise<Link[]> {
-    return await db.select().from(links).where(eq(links.userId, userId)).orderBy(links.order);
+  async getBlocksByUserId(userId: number): Promise<Block[]> {
+    return await db.select().from(blocks).where(eq(blocks.userId, userId)).orderBy(blocks.order);
   }
 }
 

@@ -29,8 +29,8 @@ export async function registerRoutes(
       return res.status(404).json({ message: "User not found" });
     }
     
-    const links = await storage.getLinksByUserId(user.id);
-    res.json({ ...user, links });
+    const blocks = await storage.getBlocksByUserId(user.id);
+    res.json({ ...user, blocks });
   });
 
   // Update Profile (Protected)
@@ -39,10 +39,10 @@ export async function registerRoutes(
     
     try {
       const input = api.users.update.input.parse(req.body);
-      // Ensure we don't overwrite critical fields if they were hacked into the body
-      // Zod schema handles most, but let's be safe.
       const user = req.user as any;
-      const updatedUser = await storage.updateUser(user.id, input);
+      
+      // Map theme variables if needed to satisfy type safety or just pass through
+      const updatedUser = await storage.updateUser(user.id, input as any);
       res.json(updatedUser);
     } catch (err) {
        if (err instanceof z.ZodError) {
@@ -82,34 +82,32 @@ export async function registerRoutes(
     res.json({ views: updated.views });
   });
 
-  // === Link Routes ===
+  // === Block Routes ===
 
-  app.post(api.links.create.path, async (req, res) => {
+  app.post(api.blocks.create.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     
     try {
-      const input = api.links.create.input.parse(req.body);
+      const input = api.blocks.create.input.parse(req.body);
       const user = req.user as any;
-      const link = await storage.createLink({ ...input, userId: user.id });
-      res.status(201).json(link);
+      const block = await storage.createBlock({ ...input, userId: user.id });
+      res.status(201).json(block);
     } catch (err) {
       if (err instanceof z.ZodError) return res.status(400).json(err);
       throw err;
     }
   });
 
-  app.delete(api.links.delete.path, async (req, res) => {
+  app.delete(api.blocks.delete.path, async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
-    const linkId = parseInt(req.params.id);
+    const blockId = parseInt(req.params.id);
     const user = req.user as any;
-    // Verify ownership... 
-    // For MVP, assuming ID is enough, but strictly should check if link belongs to user.
-    // Since getLinksByUserId exists, I can check.
-    const links = await storage.getLinksByUserId(user.id);
-    const ownsLink = links.some(l => l.id === linkId);
-    if (!ownsLink) return res.sendStatus(403);
     
-    await storage.deleteLink(linkId);
+    const blocks = await storage.getBlocksByUserId(user.id);
+    const ownsBlock = blocks.some(b => b.id === blockId);
+    if (!ownsBlock) return res.sendStatus(403);
+    
+    await storage.deleteBlock(blockId);
     res.sendStatus(204);
   });
 

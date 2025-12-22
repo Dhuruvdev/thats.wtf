@@ -42,7 +42,7 @@ export default function Profile() {
       <div className="fixed inset-0 pointer-events-none -z-10">
         <div 
           className="absolute top-[-20%] left-[-20%] w-[70%] h-[70%] rounded-full blur-[150px] opacity-20" 
-          style={{ background: profile.accentColor }}
+          style={{ background: profile.accentColor || "#7c3aed" }}
         />
       </div>
 

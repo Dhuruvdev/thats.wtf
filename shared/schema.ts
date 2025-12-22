@@ -8,9 +8,15 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   isEmailVerified: boolean("is_email_verified").default(false).notNull(),
+  verificationToken: text("verification_token"),
   displayName: text("display_name"),
   bio: text("bio"),
   avatarUrl: text("avatar_url"),
+  
+  // Backwards compatibility fields for old UI components
+  accentColor: text("accent_color").default("#7c3aed"),
+  frame: text("frame").default("none"),
+  glowEnabled: boolean("glow_enabled").default(true),
   
   // High-Fidelity Identity Config
   themeConfig: jsonb("theme_config").$type<{
@@ -82,5 +88,6 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export const insertBlockSchema = createInsertSchema(blocks).omit({ id: true });
 
 export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Block = typeof blocks.$inferSelect;
 export type InsertBlock = z.infer<typeof insertBlockSchema>;

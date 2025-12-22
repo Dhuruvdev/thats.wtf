@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertUserSchema, insertLinkSchema, users, links } from './schema';
+import { insertUserSchema, insertBlockSchema, users, blocks } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -57,7 +57,7 @@ export const api = {
       method: 'GET' as const,
       path: '/api/u/:username',
       responses: {
-        200: z.custom<typeof users.$inferSelect & { links: typeof links.$inferSelect[] }>(),
+        200: z.custom<typeof users.$inferSelect & { blocks: typeof blocks.$inferSelect[] }>(),
         404: errorSchemas.notFound,
       },
     },
@@ -85,19 +85,19 @@ export const api = {
       },
     },
   },
-  links: {
+  blocks: {
     create: {
       method: 'POST' as const,
-      path: '/api/links',
-      input: insertLinkSchema.omit({ userId: true }), // userId inferred from session
+      path: '/api/blocks',
+      input: insertBlockSchema.omit({ userId: true }), // userId inferred from session
       responses: {
-        201: z.custom<typeof links.$inferSelect>(),
+        201: z.custom<typeof blocks.$inferSelect>(),
         401: z.object({ message: z.string() }),
       },
     },
     delete: {
       method: 'DELETE' as const,
-      path: '/api/links/:id',
+      path: '/api/blocks/:id',
       responses: {
         204: z.void(),
         401: z.object({ message: z.string() }),
@@ -105,6 +105,8 @@ export const api = {
     },
   },
 };
+
+export type UpdateUserRequest = z.infer<typeof api.users.update.input>;
 
 export function buildUrl(path: string, params?: Record<string, string | number>): string {
   let url = path;
