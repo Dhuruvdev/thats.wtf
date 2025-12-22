@@ -39,19 +39,13 @@ function ProtectedRoute({ component: Component }: any) {
 }
 
 function Router() {
-  const { data: user, isLoading } = useUser();
-
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   return (
     <Switch>
       <Route path="/login" component={Auth} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/u/:username" component={Profile} />
       <Route path="/">
-        {!isLoading && !user ? <Home /> : <AccountOverview />}
+        <Home />
       </Route>
       <Route path="/~" component={AccountOverview} />
       <Route path="/lab" component={Lab} />
@@ -70,11 +64,6 @@ function Router() {
 }
 
 function App() {
-  const [location] = useLocation();
-  const isAuthPage = location === "/login";
-  const isCardNavDemoPage = location === "/cardnav-demo";
-  const isHomePage = location === "/";
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
