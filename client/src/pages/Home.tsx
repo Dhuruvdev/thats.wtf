@@ -71,7 +71,7 @@ export default function Home() {
             <motion.h1
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "out" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               className="text-6xl sm:text-7xl lg:text-8xl font-display font-black tracking-tighter leading-[0.9] lg:leading-[0.85]"
             >
               Level Up Your <br />
