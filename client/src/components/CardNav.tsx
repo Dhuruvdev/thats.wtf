@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X, HelpCircle, MessageCircle, DollarSign, Mail, Lock } from "lucide-react";
+import { Menu, X, HelpCircle, MessageCircle, DollarSign, Globe } from "lucide-react";
 import { useState } from "react";
 import logoImg from "/logo.png";
 
@@ -362,59 +362,22 @@ export function CardNav({
               </Link>
             </div>
 
-            {/* Auth Buttons */}
-            <div className="px-4 space-y-4 pt-4 border-t border-white/10">
-              <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] pl-2 mb-2">Account</p>
-              
-              <div className="space-y-4">
-                <div className="space-y-3">
-                  <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-purple-400 transition-colors">
-                      <Mail className="w-4 h-4" />
-                    </div>
-                    <input 
-                      type="email" 
-                      placeholder="Email" 
-                      className="w-full h-12 bg-white/5 border border-white/5 focus:border-purple-500/50 rounded-xl pl-11 text-sm text-white placeholder:text-white/20 transition-all outline-none"
-                    />
-                  </div>
-                  <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-purple-400 transition-colors">
-                      <Lock className="w-4 h-4" />
-                    </div>
-                    <input 
-                      type="password" 
-                      placeholder="Password" 
-                      className="w-full h-12 bg-white/5 border border-white/5 focus:border-purple-500/50 rounded-xl pl-11 text-sm text-white placeholder:text-white/20 transition-all outline-none"
-                    />
-                  </div>
-                  <div className="flex justify-end px-1">
-                    <button className="text-[11px] font-bold text-white/40 hover:text-white transition-colors">
-                      Forgot password?
-                    </button>
-                  </div>
-                </div>
-
-                <Button 
-                  className="w-full h-12 bg-white text-black hover:bg-white/90 rounded-xl font-bold text-sm transition-all active:scale-[0.98]"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Login
-                </Button>
-              </div>
-
-              <div className="pt-2">
-                <Button
-                  className="w-full h-14 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-[0_10px_20px_rgba(124,58,237,0.3)] active:scale-[0.95]"
-                  onClick={() => {
-                    handleGetStarted();
-                    setIsMenuOpen(false);
-                  }}
-                  data-testid="button-mobile-cta"
-                >
-                  Get Started Now
-                </Button>
-              </div>
+            {/* CTA Button - Mobile */}
+            <div className="mobile-cta-btn pt-2">
+              <Button
+                className="w-full py-7 font-black rounded-2xl uppercase tracking-[0.1em] text-sm shadow-[0_10px_30px_rgba(124,58,237,0.3)] active:scale-95"
+                style={{
+                  backgroundColor: buttonBgColor,
+                  color: buttonTextColor
+                }}
+                onClick={() => {
+                  handleGetStarted();
+                  setIsMenuOpen(false);
+                }}
+                data-testid="button-mobile-cta"
+              >
+                Get Started Now
+              </Button>
             </div>
           </div>
         )}
