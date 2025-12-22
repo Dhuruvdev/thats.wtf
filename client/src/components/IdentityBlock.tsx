@@ -56,7 +56,7 @@ export function IdentityBlock({ block }: IdentityBlockProps) {
           </a>
         );
       case "bio":
-        return <p className="text-gray-300 leading-relaxed">{block.content.text}</p>;
+        return <p className="text-gray-300 leading-relaxed">{(block.content as any).text}</p>;
       default:
         return <pre className="text-xs opacity-50">{JSON.stringify(block.content, null, 2)}</pre>;
     }

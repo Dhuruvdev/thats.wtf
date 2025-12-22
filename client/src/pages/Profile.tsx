@@ -1,7 +1,7 @@
 import { useParams } from "wouter";
 import { useProfile, useAddView } from "@/hooks/use-profile";
 import { Navigation } from "@/components/Navigation";
-import { ProfileCard } from "@/components/ProfileCard";
+import { ProfileRenderer } from "@/components/ProfileRenderer";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -11,7 +11,6 @@ export default function Profile() {
   const { mutate: addView } = useAddView();
 
   useEffect(() => {
-    // Track view on mount
     if (username) {
       addView(username);
     }
@@ -48,10 +47,10 @@ export default function Profile() {
       </div>
 
       <main className="pt-24 pb-12 px-4 flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
-        <ProfileCard user={profile} links={profile.links} />
+        <ProfileRenderer user={profile} blocks={profile.blocks || []} />
         
         <div className="mt-12 text-center text-xs text-white/20 font-display tracking-widest uppercase">
-          Powered by that's.wtf
+          Powered by Lab.dev
         </div>
       </main>
     </div>
