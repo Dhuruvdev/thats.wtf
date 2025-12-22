@@ -222,9 +222,9 @@ export default function AccountOverview() {
                     <Sparkles className="w-3 h-3" />
                     Neural Dashboard
                   </div>
-                  <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-black tracking-tighter text-white leading-tight">
+                  <h1 className="text-4xl sm:text-6xl lg:text-8xl font-display font-black tracking-tighter text-white leading-[0.85] lg:leading-[0.8]">
                     Welcome, <br />
-                    <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x">{user.username}</span>
+                    <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x text-glow">{user.username}</span>
                   </h1>
                   <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed font-medium">
                     You've earned <span className="text-white font-bold">{user.xp || 0} XP</span> and reached <span className="text-primary font-bold tracking-tight">Tier {user.level || 1}</span> status. Your digital reach is expanding.

@@ -5,60 +5,40 @@
 @tailwind utilities;
 
 :root {
-  /* HSL Color System - Premium Dark / Kiro.dev Aesthetic */
-  --background: 0 0% 0%;         /* Pure Black #000000 */
-  --foreground: 210 40% 98%;     /* #f8fafc - Pure White Text */
+  /* HSL Color System - Premium Dark Aesthetic */
+  --background: 240 10% 2%;         /* Deep charcoal/black */
+  --foreground: 0 0% 98%;          /* Crisp white */
 
-  --card: 0 0% 6%;               /* #0f0f0f - Darkest Gray */
-  --card-foreground: 210 40% 98%;
+  --card: 240 10% 4%;              /* Elevated card background */
+  --card-foreground: 0 0% 98%;
 
-  --popover: 0 0% 0%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 240 10% 2%;
+  --popover-foreground: 0 0% 98%;
 
-  --primary: 280 100% 55%;       /* Light Purple */
-  --primary-foreground: 210 40% 98%;
+  --primary: 263 70% 50%;          /* Premium Purple */
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 0 0% 8%;          /* #141414 - Slightly Lighter Black */
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 240 10% 8%;
+  --secondary-foreground: 0 0% 98%;
 
-  --muted: 0 0% 10%;             /* #1a1a1a */
-  --muted-foreground: 215 20% 65%;
+  --muted: 240 10% 10%;
+  --muted-foreground: 240 5% 65%;
 
-  --accent: 173 80% 40%;         /* #14b8a6 - Teal Cyan */
-  --accent-foreground: 210 40% 98%;
+  --accent: 180 100% 50%;          /* Electric Cyan */
+  --accent-foreground: 240 10% 2%;
 
   --destructive: 0 62% 30%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive-foreground: 0 0% 98%;
 
-  --border: 0 0% 10%;            /* Subtle Light Black Border */
-  --input: 0 0% 8%;
+  --border: 240 10% 12%;           /* Subtle divider */
+  --input: 240 10% 12%;
   --ring: 263 70% 50%;
 
-  --radius: 0.75rem;
+  --radius: 1rem;
   
-  /* Custom vars */
+  /* Typography */
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
-  --font-mono-vt: 'VT323', monospace;
-}
-
-/* Gen Z Theme Variants */
-[data-theme="neon"] {
-  --background: 300 100% 10%;
-  --primary: 280 100% 60%;
-  --accent: 180 100% 50%;
-}
-
-[data-theme="sunset"] {
-  --background: 20 100% 8%;
-  --primary: 25 100% 60%;
-  --accent: 0 100% 60%;
-}
-
-[data-theme="forest"] {
-  --background: 120 40% 10%;
-  --primary: 140 70% 50%;
-  --accent: 160 80% 45%;
 }
 
 @layer base {
@@ -73,101 +53,56 @@
     font-family: var(--font-display);
     @apply tracking-tight font-bold;
   }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-background;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-secondary rounded-full;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground;
-  }
 }
 
 @layer utilities {
-  .text-glow {
-    text-shadow: 0 0 20px currentColor;
-  }
-  .box-glow {
-    box-shadow: 0 0 40px -10px currentColor;
-  }
   .glass-panel {
-    @apply bg-card/60 backdrop-blur-md border border-white/5;
-  }
-  .animate-enter {
-    animation: enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .hover-elevate {
-    @apply transition-all duration-300 hover:shadow-lg hover:scale-[1.02];
-  }
-  .active-elevate-2 {
-    @apply transition-all duration-150 active:scale-[0.98] active:shadow-inner;
-  }
-  .gradient-text {
-    @apply bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent;
-  }
-  .neon-border {
-    @apply border-2 border-accent shadow-lg shadow-accent/30;
+    @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl;
   }
   
+  .neural-border {
+    @apply border border-white/5 hover:border-primary/30 transition-all duration-500;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+  }
+
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 15s ease infinite;
+  }
+
+  @keyframes gradient-x {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
   .brand-text {
-    font-family: var(--font-mono-vt);
-    @apply text-2xl tracking-wide;
+    @apply font-display font-black tracking-tighter text-2xl;
   }
-  .brand-text-thats {
-    color: #9b58ff;
-  }
-  .brand-text-dot {
-    color: #ffff00;
-  }
-  .brand-text-wtf {
-    color: #ffffff;
-  }
-  @keyframes enter {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
+}
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
+.brand-text-thats {
+  @apply text-[#9b58ff];
+}
 
-  @keyframes pacman-move {
-    0% { transform: translateX(-100px); }
-    50% { transform: translateX(calc(100vw + 100px)); }
-    100% { transform: translateX(calc(100vw + 100px)); }
-  }
+.brand-text-dot {
+  @apply text-yellow-400 animate-pulse;
+}
 
-  @keyframes pacman-mouth {
-    0% { clip-path: polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%); }
-    25% { clip-path: polygon(50% 0%, 80% 20%, 80% 80%, 50% 100%); }
-    50% { clip-path: polygon(50% 0%, 100% 50%, 100% 50%, 50% 100%); }
-    75% { clip-path: polygon(50% 0%, 80% 20%, 80% 80%, 50% 100%); }
-    100% { clip-path: polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%); }
-  }
+.brand-text-wtf {
+  @apply text-white;
+}
 
-  @keyframes dot-fade {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-  }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
 
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
 
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(20, 184, 166, 0.5); }
-    50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.8); }
-  }
-
-  .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
 }

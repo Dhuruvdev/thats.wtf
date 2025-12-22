@@ -62,53 +62,53 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md"
             >
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-xs font-bold uppercase tracking-widest text-primary">The Next Generation of Bio Links</span>
+              <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+              <span className="text-xs font-black uppercase tracking-widest text-primary">The Next Generation of Bio Links</span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-6xl sm:text-7xl lg:text-8xl font-display font-black tracking-tighter leading-[0.9] lg:leading-[0.85]"
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="text-5xl sm:text-7xl lg:text-9xl font-display font-black tracking-tighter leading-[0.85] lg:leading-[0.8]"
             >
-              Level Up Your <br />
-              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x">Digital Identity</span>
+              Master Your <br />
+              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x text-glow">Digital Empire</span>
             </motion.h1>
             
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium"
+              className="text-lg sm:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium px-4"
             >
-              Build cinematic, high-performance profiles with gamified progression. 
-              Join the elite tier of creators on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
+              Cinema-grade profiles for elite creators. 
+              Join the new standard on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
             </motion.p>
             
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 px-4"
             >
               <Link href="/login" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
-                  className="w-full sm:w-auto h-16 px-12 text-lg font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_0_40px_rgba(155,88,255,0.4)] transition-all hover:scale-105 active:scale-95 group"
+                  className="w-full sm:w-auto h-16 sm:h-20 px-12 text-xl font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_0_50px_rgba(155,88,255,0.4)] transition-all hover:scale-105 active:scale-95 group"
                 >
-                  Start Building <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  Start Building <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-2 transition-transform" />
                 </Button>
               </Link>
               <Link href="/u/demo" className="w-full sm:w-auto">
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="w-full sm:w-auto h-16 px-12 text-lg font-bold rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl transition-all"
+                  className="w-full sm:w-auto h-16 sm:h-20 px-12 text-xl font-bold rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl transition-all"
                 >
-                  View Demo
+                  Live Demo
                 </Button>
               </Link>
             </motion.div>
@@ -125,17 +125,17 @@ export default function Home() {
             className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6"
           >
             {/* Large Feature 1 */}
-            <motion.div variants={itemVariants} className="md:col-span-4 lg:col-span-4 h-[400px]">
-              <Card className="h-full p-10 border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent rounded-[2.5rem] relative overflow-hidden group hover:border-primary/30 transition-all duration-500">
-                <div className="absolute top-0 right-0 p-10 opacity-20 group-hover:opacity-40 transition-opacity">
-                  <Palette className="w-40 h-40 text-primary rotate-12" />
+            <motion.div variants={itemVariants} className="md:col-span-4 lg:col-span-4 h-[450px]">
+              <Card className="h-full p-10 neural-border bg-gradient-to-br from-white/[0.05] to-transparent rounded-[3rem] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:opacity-30 transition-opacity duration-700">
+                  <Palette className="w-60 h-60 text-primary rotate-12" />
                 </div>
                 <div className="relative z-10 flex flex-col h-full justify-end">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mb-6 border border-primary/30">
-                    <Layout className="w-7 h-7 text-primary" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-8 border border-primary/30 shadow-[0_0_30px_rgba(155,88,255,0.2)]">
+                    <Layout className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-3xl font-display font-black mb-3">Customization Lab</h3>
-                  <p className="text-muted-foreground text-lg max-w-md font-medium">
+                  <h3 className="text-4xl font-display font-black mb-4 tracking-tight">Customization Lab</h3>
+                  <p className="text-muted-foreground text-xl max-w-md font-medium leading-relaxed">
                     A high-performance theme engine with full-spectrum control over colors, custom fonts, and cinematic animations.
                   </p>
                 </div>
