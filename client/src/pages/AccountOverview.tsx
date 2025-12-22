@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Edit2, 
   Users, 
-  Hash, 
   Eye, 
   CheckCircle, 
-  AlertCircle,
-  HelpCircle,
   LogOut,
   Palette,
   Link as LinkIcon,
@@ -24,14 +21,12 @@ import {
   LayoutDashboard,
   Sparkles
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   SidebarProvider, 
   Sidebar, 
   SidebarContent, 
   SidebarGroup, 
-  SidebarGroupContent, 
-  SidebarGroupLabel, 
   SidebarMenu, 
   SidebarMenuButton, 
   SidebarMenuItem, 
@@ -40,14 +35,13 @@ import {
   SidebarFooter
 } from "@/components/ui/sidebar";
 import { useUser, useLogout } from "@/hooks/use-auth";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import LoadingPage from "@/components/LoadingPage";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function AccountOverview() {
   const { data: user } = useUser();
   const logoutMutation = useLogout();
-  const [location] = useLocation();
   const [profileCompletion] = useState(20);
 
   if (!user) return <LoadingPage />;
@@ -121,8 +115,14 @@ export default function AccountOverview() {
 
   return (
     <SidebarProvider style={style as React.CSSProperties}>
-      <div className="flex h-screen w-full bg-[#050505] text-white overflow-hidden font-inter">
-        <Sidebar variant="inset" className="border-r border-white/5 bg-black">
+      <div className="flex h-screen w-full bg-[#050505] text-white overflow-hidden font-inter selection:bg-primary/30">
+        {/* Cinematic Background Layer */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 rounded-full blur-[120px]" />
+        </div>
+
+        <Sidebar variant="inset" className="border-r border-white/5 bg-black/40 backdrop-blur-xl z-10">
           <SidebarHeader className="p-6">
             <Link href="/" className="flex items-center gap-2 px-2">
               <span className="text-xl font-display font-black tracking-tighter">
@@ -139,16 +139,16 @@ export default function AccountOverview() {
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton 
                       isActive={item.active}
-                      className={`h-11 px-4 rounded-xl transition-all duration-200 ${
+                      className={`h-11 px-4 rounded-xl transition-all duration-300 ${
                         item.active 
-                        ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(155,88,255,0.15)]" 
+                        ? "bg-primary/15 text-primary border border-primary/20 shadow-[0_0_20px_rgba(155,88,255,0.2)]" 
                         : "hover:bg-white/5 text-muted-foreground hover:text-white"
                       }`}
                     >
-                      <button className="flex items-center gap-3 w-full">
+                      <div className="flex items-center gap-3 w-full">
                         <item.icon className={`w-4.5 h-4.5 ${item.active ? "text-primary" : ""}`} />
-                        <span className="font-medium">{item.label}</span>
-                      </button>
+                        <span className="font-bold tracking-tight">{item.label}</span>
+                      </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -156,55 +156,53 @@ export default function AccountOverview() {
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter className="p-6 border-t border-white/5 space-y-4">
-            <div className="px-2 py-4 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/5 border border-white/5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-lg bg-primary/20">
+            <div className="px-4 py-5 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/5 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-xl bg-primary/20 border border-primary/30">
                   <Crown className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-white uppercase tracking-wider">Pro Access</p>
-                  <p className="text-[10px] text-muted-foreground">Unlock custom domains</p>
+                  <p className="text-xs font-black text-white uppercase tracking-wider">Pro Access</p>
+                  <p className="text-[10px] text-muted-foreground font-medium">Unlock premium assets</p>
                 </div>
               </div>
-              <Button size="sm" className="w-full h-8 rounded-lg bg-primary hover:bg-primary/90 text-white font-bold text-[11px]">
+              <Button size="sm" className="w-full h-9 rounded-xl bg-primary hover:bg-primary/90 text-white font-black text-[11px] uppercase tracking-widest shadow-lg shadow-primary/20">
                 Upgrade Now
               </Button>
             </div>
             <Button 
               variant="ghost" 
-              className="w-full justify-start h-10 px-4 text-muted-foreground hover:text-red-400 hover:bg-red-400/10 rounded-xl"
+              className="w-full justify-start h-11 px-4 text-muted-foreground hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-colors group"
               onClick={() => logoutMutation.mutate()}
             >
-              <LogOut className="w-4 h-4 mr-3" />
-              <span className="font-medium">Logout</span>
+              <LogOut className="w-4 h-4 mr-3 group-hover:rotate-12 transition-transform" />
+              <span className="font-bold tracking-tight">Logout</span>
             </Button>
           </SidebarFooter>
         </Sidebar>
 
-        <div className="flex-1 flex flex-col min-w-0 bg-[#050505] relative overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" />
-          
-          <header className="h-20 border-b border-white/5 bg-black/40 backdrop-blur-xl px-8 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex-1 flex flex-col min-w-0 bg-[#050505]/50 backdrop-blur-sm relative overflow-hidden z-10">
+          <header className="h-20 border-b border-white/5 bg-black/40 backdrop-blur-2xl px-8 flex items-center justify-between sticky top-0 z-50">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="text-muted-foreground hover:text-white transition-colors" />
               <div className="h-6 w-px bg-white/10 hidden sm:block" />
-              <nav className="hidden sm:flex items-center gap-1 text-sm font-medium">
+              <nav className="hidden sm:flex items-center gap-1 text-[11px] font-black uppercase tracking-widest">
                 <span className="text-muted-foreground">Dashboard</span>
-                <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30" />
                 <span className="text-white">Overview</span>
               </nav>
             </div>
             <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">System Live</span>
+              <div className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Live</span>
               </div>
-              <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 gap-2">
+              <Button variant="outline" size="sm" className="h-10 px-5 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 gap-2 font-bold">
                 <Share2 className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Share</span>
               </Button>
               <Link href={`/u/${user.username}`}>
-                <Button size="sm" className="h-9 px-4 rounded-xl bg-primary hover:bg-primary/90 gap-2 shadow-[0_0_20px_rgba(155,88,255,0.3)]">
+                <Button size="sm" className="h-10 px-5 rounded-xl bg-primary hover:bg-primary/90 gap-2 font-black shadow-[0_0_30px_rgba(155,88,255,0.3)] transition-all hover:scale-105 active:scale-95">
                   <Eye className="w-3.5 h-3.5" />
                   <span>Preview</span>
                 </Button>
@@ -212,189 +210,219 @@ export default function AccountOverview() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto relative">
+          <main className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="p-8 lg:p-12 max-w-[1400px] mx-auto space-y-12">
-              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest mb-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col lg:flex-row lg:items-end justify-between gap-8"
+              >
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
                     <Sparkles className="w-3 h-3" />
-                    Welcome Back
+                    Neural Dashboard
                   </div>
-                  <h1 className="text-5xl lg:text-6xl font-display font-black tracking-tight text-white mb-4">
-                    Hey, <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{user.username}</span>
+                  <h1 className="text-6xl lg:text-7xl font-display font-black tracking-tighter text-white leading-tight">
+                    Welcome, <br />
+                    <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x">{user.username}</span>
                   </h1>
                   <p className="text-lg text-muted-foreground max-w-xl leading-relaxed font-medium">
-                    Your digital presence is growing. You've earned <span className="text-white font-bold">{user.xp || 0} XP</span> this week and leveled up to <span className="text-primary font-bold">Tier {user.level || 1}</span>.
+                    You've earned <span className="text-white font-bold">{user.xp || 0} XP</span> and reached <span className="text-primary font-bold tracking-tight">Tier {user.level || 1}</span> status. Your digital reach is expanding.
                   </p>
                 </div>
-                <div className="flex gap-3">
-                  <Button variant="outline" className="h-12 px-6 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 font-bold gap-2">
-                    <Edit2 className="w-4 h-4" /> Edit Profile
+                <div className="flex gap-4">
+                  <Button variant="outline" className="h-14 px-8 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 font-bold gap-3 transition-all">
+                    <Edit2 className="w-4.5 h-4.5" /> Edit Profile
                   </Button>
-                  <Button className="h-12 px-6 rounded-2xl bg-white text-black hover:bg-white/90 font-black gap-2">
-                    <Plus className="w-4 h-4" /> Add Link
+                  <Button className="h-14 px-8 rounded-2xl bg-white text-black hover:bg-white/90 font-black gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95">
+                    <Plus className="w-4.5 h-4.5" /> Add Link
                   </Button>
                 </div>
-              </div>
+              </motion.div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {accountCards.map((card, i) => (
-                  <Card 
+                  <motion.div
                     key={i}
-                    className="p-8 border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent hover:border-white/20 transition-all duration-300 group rounded-[2rem] overflow-hidden relative"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                    <div className="relative z-10 flex flex-col h-full">
-                      <div className="flex items-center justify-between mb-8">
-                        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
-                          <card.icon className="w-5 h-5 text-white" />
+                    <Card className="group p-8 border-white/5 bg-gradient-to-br from-white/[0.04] to-transparent hover:border-white/20 transition-all duration-500 rounded-[2.5rem] overflow-hidden relative h-full">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+                      <div className="relative z-10 flex flex-col h-full">
+                        <div className="flex items-center justify-between mb-10">
+                          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 group-hover:border-white/30 transition-all group-hover:scale-110">
+                            <card.icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest group-hover:text-white transition-colors">
+                            {card.label}
+                          </div>
                         </div>
-                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-white transition-colors">
-                          {card.label}
+                        <div className="mt-auto space-y-2">
+                          <h3 className="text-4xl font-display font-black text-white tracking-tighter leading-none">
+                            {card.value}
+                          </h3>
+                          <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider group-hover:text-white/80 transition-colors">
+                            {card.subtext}
+                          </p>
                         </div>
                       </div>
-                      <div className="mt-auto">
-                        <h3 className="text-3xl font-display font-black text-white mb-2 leading-none">
-                          {card.value}
-                        </h3>
-                        <p className="text-xs text-muted-foreground font-medium group-hover:text-white/70 transition-colors">
-                          {card.subtext}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
 
               <div className="grid lg:grid-cols-3 gap-8">
-                <Card className="lg:col-span-2 p-8 border-white/5 bg-[#0a0a0a] rounded-[2.5rem] relative overflow-hidden group">
-                  <div className="flex items-center justify-between mb-10">
-                    <div>
-                      <h2 className="text-2xl font-display font-black text-white mb-1">Traffic Activity</h2>
-                      <p className="text-sm text-muted-foreground font-medium">Profile views over the last 7 days</p>
-                    </div>
-                    <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-widest">
-                      Export CSV
-                    </Button>
-                  </div>
-                  
-                  <div className="h-[300px] w-full mt-4">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData}>
-                        <defs>
-                          <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#9b58ff" stopOpacity={0.3}/>
-                            <stop offset="95%" stopColor="#9b58ff" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
-                        <XAxis 
-                          dataKey="name" 
-                          stroke="#ffffff30" 
-                          fontSize={10} 
-                          tickLine={false} 
-                          axisLine={false}
-                          dy={10}
-                        />
-                        <YAxis 
-                          stroke="#ffffff30" 
-                          fontSize={10} 
-                          tickLine={false} 
-                          axisLine={false}
-                          dx={-10}
-                        />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#111', 
-                            border: '1px solid #333', 
-                            borderRadius: '12px',
-                            fontSize: '12px',
-                            color: '#fff'
-                          }}
-                          itemStyle={{ color: '#fff' }}
-                        />
-                        <Area 
-                          type="monotone" 
-                          dataKey="views" 
-                          stroke="#9b58ff" 
-                          strokeWidth={4}
-                          fillOpacity={1} 
-                          fill="url(#colorViews)" 
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
-                    <div className="flex gap-8">
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="lg:col-span-2"
+                >
+                  <Card className="p-10 border-white/5 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[3rem] relative overflow-hidden group hover:border-white/10 transition-all duration-500">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
                       <div>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Unique Visitors</p>
-                        <p className="text-xl font-display font-black text-white">0</p>
+                        <h2 className="text-3xl font-display font-black text-white mb-2 tracking-tight">Traffic Matrix</h2>
+                        <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">Real-time profile engagement</p>
                       </div>
-                      <div>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Avg. Time</p>
-                        <p className="text-xl font-display font-black text-white">0s</p>
-                      </div>
-                    </div>
-                    <Link href="/analytics">
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10 font-bold text-xs uppercase tracking-widest">
-                        Full Analytics <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                      <Button variant="outline" size="sm" className="h-10 px-6 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-[0.2em]">
+                        Export Matrix
                       </Button>
-                    </Link>
-                  </div>
-                </Card>
+                    </div>
+                    
+                    <div className="h-[320px] w-full mt-4">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                          <defs>
+                            <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#9b58ff" stopOpacity={0.4}/>
+                              <stop offset="95%" stopColor="#9b58ff" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke="#ffffff20" 
+                            fontSize={10} 
+                            tickLine={false} 
+                            axisLine={false}
+                            dy={15}
+                          />
+                          <YAxis 
+                            stroke="#ffffff20" 
+                            fontSize={10} 
+                            tickLine={false} 
+                            axisLine={false}
+                            dx={-15}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: '#000', 
+                              border: '1px solid #222', 
+                              borderRadius: '16px',
+                              padding: '12px',
+                              fontSize: '12px',
+                              color: '#fff',
+                              boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                            }}
+                            itemStyle={{ color: '#9b58ff', fontWeight: 'bold' }}
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="views" 
+                            stroke="#9b58ff" 
+                            strokeWidth={5}
+                            fillOpacity={1} 
+                            fill="url(#colorViews)" 
+                            animationDuration={2000}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
 
-                <Card className="p-8 border-white/5 bg-[#0a0a0a] rounded-[2.5rem] flex flex-col">
-                  <div className="mb-10">
-                    <h2 className="text-2xl font-display font-black text-white mb-1">Quick Tasks</h2>
-                    <p className="text-sm text-muted-foreground font-medium">Complete these to earn 500 XP</p>
-                  </div>
-
-                  <div className="flex-1 space-y-4">
-                    {completionTasks.map((task, i) => (
-                      <div 
-                        key={i} 
-                        className={`p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between group cursor-pointer ${
-                          task.done 
-                          ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-500/60" 
-                          : "bg-white/5 border-white/5 hover:border-white/20 text-white"
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-colors ${
-                            task.done 
-                            ? "bg-emerald-500/10 border-emerald-500/30" 
-                            : "bg-white/5 border-white/10 group-hover:border-primary/50"
-                          }`}>
-                            {task.done ? <CheckCircle className="w-4 h-4" /> : <div className="w-1.5 h-1.5 rounded-full bg-white/40" />}
-                          </div>
-                          <span className={`text-sm font-bold tracking-tight ${task.done ? "line-through" : ""}`}>
-                            {task.title}
-                          </span>
+                    <div className="mt-12 pt-10 border-t border-white/5 flex items-center justify-between">
+                      <div className="flex gap-12">
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Unique</p>
+                          <p className="text-2xl font-display font-black text-white">0</p>
                         </div>
-                        {!task.done && <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-0 group-hover:translate-x-1" />}
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Retention</p>
+                          <p className="text-2xl font-display font-black text-white">0%</p>
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                      <Link href="/analytics">
+                        <Button variant="ghost" className="text-primary hover:text-primary hover:bg-primary/10 font-black text-[10px] uppercase tracking-widest group">
+                          Deep Analytics <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </Card>
+                </motion.div>
 
-                  <div className="mt-10 p-6 rounded-[1.5rem] bg-gradient-to-br from-primary/20 to-accent/5 border border-white/5">
-                    <div className="flex items-center justify-between mb-4">
-                      <p className="text-[10px] font-bold text-white uppercase tracking-widest">Level Progress</p>
-                      <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Lvl {(user.level || 1) + 1}</p>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <Card className="p-10 border-white/5 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[3rem] flex flex-col h-full group hover:border-white/10 transition-all duration-500">
+                    <div className="mb-12">
+                      <h2 className="text-3xl font-display font-black text-white mb-2 tracking-tight">Missions</h2>
+                      <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">Gain +500 XP Rewards</p>
                     </div>
-                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-2">
-                      <motion.div 
-                        className="h-full bg-primary"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${((user.xp || 0) % 1000) / 10}%` }}
-                        transition={{ duration: 1 }}
-                      />
+
+                    <div className="flex-1 space-y-4">
+                      {completionTasks.map((task, i) => (
+                        <div 
+                          key={i} 
+                          className={`p-6 rounded-2xl border transition-all duration-300 flex items-center justify-between group cursor-pointer ${
+                            task.done 
+                            ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-500/40" 
+                            : "bg-white/5 border-white/10 hover:border-primary/40 hover:bg-primary/5 text-white"
+                          }`}
+                        >
+                          <div className="flex items-center gap-5">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${
+                              task.done 
+                              ? "bg-emerald-500/10 border-emerald-500/30" 
+                              : "bg-white/5 border-white/20 group-hover:border-primary/60 group-hover:scale-110"
+                            }`}>
+                              {task.done ? <CheckCircle className="w-5 h-5 text-emerald-500" /> : <div className="w-2 h-2 rounded-full bg-white/40" />}
+                            </div>
+                            <span className={`text-sm font-bold tracking-tight ${task.done ? "line-through opacity-50" : ""}`}>
+                              {task.title}
+                            </span>
+                          </div>
+                          {!task.done && <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-0 group-hover:translate-x-1" />}
+                        </div>
+                      ))}
                     </div>
-                    <p className="text-[9px] text-muted-foreground text-center font-bold uppercase tracking-wider">
-                      {1000 - ((user.xp || 0) % 1000)} XP until next level
-                    </p>
-                  </div>
-                </Card>
+
+                    <div className="mt-12 p-8 rounded-[2rem] bg-gradient-to-br from-primary/20 via-primary/10 to-transparent border border-white/10 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Zap className="w-16 h-16 text-primary" />
+                      </div>
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-5">
+                          <p className="text-[10px] font-black text-white uppercase tracking-widest">Sync Level</p>
+                          <p className="text-[10px] font-black text-primary uppercase tracking-widest">Lvl {(user.level || 1) + 1}</p>
+                        </div>
+                        <div className="h-2.5 w-full bg-black/40 rounded-full overflow-hidden mb-3 border border-white/5">
+                          <motion.div 
+                            className="h-full bg-gradient-to-r from-primary to-accent"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${((user.xp || 0) % 1000) / 10}%` }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                          />
+                        </div>
+                        <p className="text-[9px] text-muted-foreground text-center font-black uppercase tracking-[0.2em]">
+                          {1000 - ((user.xp || 0) % 1000)} XP to Next Sync
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
               </div>
             </div>
           </main>
