@@ -4,55 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Layers, Zap, Users, TrendingUp, Lock, Palette } from "lucide-react";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
+import { 
+  ArrowRight, 
+  Sparkles, 
+  Layers, 
+  Zap, 
+  Users, 
+  TrendingUp, 
+  Lock, 
+  Palette,
+  Layout,
+  MousePointer2,
+  Share2,
+  Globe,
+  Flame,
+  Gamepad2,
+  Code2
+} from "lucide-react";
 import iconImg from "/icon.png";
 
 export default function Home() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline();
-      
-      tl.from(".hero-badge", {
-        y: -20,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.out"
-      })
-      .from(textRef.current, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out"
-      }, "-=0.4")
-      .from(".hero-desc", {
-        y: 20,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out"
-      }, "-=0.6")
-      .from(".hero-btns", {
-        y: 20,
-        opacity: 0,
-        duration: 0.6,
-        ease: "back.out(1.7)"
-      }, "-=0.4")
-      .from(".hero-visual", {
-        y: 40,
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.8,
-        ease: "power2.out"
-      }, "-=0.3");
-    }, heroRef);
-
-    return () => ctx.revert();
-  }, []);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -74,341 +45,189 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+    <div className="min-h-screen bg-[#050505] text-white overflow-hidden selection:bg-primary/30">
       <Navigation />
       
-      {/* Background Gradients */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[150px]" />
+      {/* Cinematic Background */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[160px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/10 rounded-full blur-[160px] animate-pulse" />
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
-      <main className="relative overflow-hidden" ref={heroRef}>
+      <main className="relative z-10">
         {/* Hero Section */}
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 py-24 sm:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div>
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="hero-badge inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-8 w-fit"
-              >
-                <img src={iconImg} alt="Icon" className="w-6 h-6 object-contain" />
-                <span className="text-sm font-semibold text-primary">Your Identity, Leveled Up</span>
-              </motion.div>
-
-              <h1 ref={textRef} className="text-5xl sm:text-6xl lg:text-7xl font-display font-black tracking-tighter mb-8 leading-[1.1] text-white">
-                Own Your <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient-x">Digital Presence</span>
-              </h1>
-              
-              <p className="hero-desc text-xl text-muted-foreground mb-12 max-w-2xl leading-relaxed font-light">
-                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> is the premium bio link platform where creators and professionals build stunning, interactive profiles with gamified progression and cinematic animations.
-              </p>
-              
-              <div className="hero-btns flex flex-col sm:flex-row items-center gap-6 mb-16">
-                <Link href="/login" className="w-full sm:w-auto">
-                  <Button 
-                    size="lg" 
-                    className="w-full sm:w-auto h-16 px-10 text-lg font-bold rounded-2xl shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:shadow-[0_0_60px_rgba(124,58,237,0.7)] transition-all bg-primary hover:scale-[1.02] active:scale-[0.98]"
-                    data-testid="button-claim-username"
-                  >
-                    Claim Your Username <ArrowRight className="w-6 h-6 ml-2" />
-                  </Button>
-                </Link>
-                <Link href="/u/demo" className="w-full sm:w-auto">
-                  <Button 
-                    variant="outline" 
-                    size="lg" 
-                    className="w-full sm:w-auto h-16 px-10 text-lg font-bold rounded-2xl border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all hover:border-white/40"
-                    data-testid="button-view-demo"
-                  >
-                    View Demo Profile
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Stats */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex items-center gap-8"
-              >
-                <div>
-                  <p className="text-3xl font-black text-white">10K+</p>
-                  <p className="text-sm text-muted-foreground">Active Profiles</p>
-                </div>
-                <div className="h-8 w-px bg-white/10" />
-                <div>
-                  <p className="text-3xl font-black text-white">150K+</p>
-                  <p className="text-sm text-muted-foreground">Monthly Visitors</p>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Right Visual */}
+        <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
+          <div className="text-center space-y-8 max-w-4xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, x: 40, scale: 0.95 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="hero-visual hidden lg:flex"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md"
             >
-              <div className="relative w-full aspect-square">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent rounded-3xl border border-white/10 backdrop-blur-sm" />
-                <div className="absolute inset-4 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-white/5" />
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute inset-0 flex items-center justify-center"
-                >
-                  <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-4 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30">
-                      <Sparkles className="w-10 h-10 text-primary" />
-                    </div>
-                    <p className="text-white font-bold">Premium Profile Ready</p>
-                  </div>
-                </motion.div>
-              </div>
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-xs font-bold uppercase tracking-widest text-primary">The Next Generation of Bio Links</span>
             </motion.div>
-          </div>
-        </div>
 
-        {/* Features Section */}
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl sm:text-5xl font-display font-black text-white mb-4">
-              Powerful Features Built for Creators
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to build a stunning profile that converts visitors into followers
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {[
-              {
-                type: "lucide",
-                lucideIcon: Palette,
-                title: "Customization Lab",
-                desc: "Full-spectrum theme engine. Control colors, fonts, and pixel-perfect animations."
-              },
-              {
-                type: "lucide",
-                lucideIcon: TrendingUp,
-                title: "Progression System",
-                desc: "Earn XP from every visit. Unlock elite tiers and limited-edition profile themes."
-              },
-              {
-                type: "image",
-                title: "Cinematic Motion",
-                desc: "Premium GSAP-powered transitions. A smooth, high-end experience for your audience."
-              },
-              {
-                type: "lucide",
-                lucideIcon: Lock,
-                title: "Creator Control",
-                desc: "Privacy-first architecture. You own your data, your audience, and your brand."
-              }
-            ].map((feature, i) => {
-              const Icon = feature.type === "lucide" && feature.lucideIcon ? feature.lucideIcon : null;
-              return (
-              <motion.div key={i} variants={itemVariants}>
-                <Card className="p-6 h-full border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:border-primary/30 transition-all group hover-elevate">
-                  <div className="mb-4 p-3 rounded-xl bg-primary/10 w-fit border border-primary/20 group-hover:border-primary/40 transition-colors">
-                    {feature.type === "image" ? (
-                      <img src={iconImg} alt="Icon" className="w-6 h-6 object-contain" />
-                    ) : Icon ? (
-                      <Icon className="w-6 h-6 text-primary" />
-                    ) : null}
-                  </div>
-                  <h3 className="text-lg font-display font-black text-white mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                </Card>
-              </motion.div>
-            );
-            })}
-          </motion.div>
-        </div>
-
-        {/* Use Cases / Creators */}
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl sm:text-5xl font-display font-black text-white mb-4">
-              Built for Everyone
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              From content creators to indie developers to small businesses
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            {[
-              {
-                title: "Content Creators",
-                desc: "Monetize your audience with custom link experiences",
-                icon: Users
-              },
-              {
-                title: "Indie Developers",
-                desc: "Showcase your projects with interactive portfolios",
-                icon: Layers
-              },
-              {
-                title: "Small Business",
-                desc: "Direct customers to your services and shop",
-                icon: Zap
-              }
-            ].map((use, i) => {
-              const Icon = use.icon;
-              return (
-                <motion.div key={i} variants={itemVariants}>
-                  <Card className="p-8 h-full border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:border-primary/30 transition-all hover-elevate">
-                    <div className="mb-6 p-4 rounded-xl bg-primary/10 w-fit border border-primary/20">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-display font-black text-white mb-2">{use.title}</h3>
-                    <p className="text-muted-foreground">{use.desc}</p>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-
-        {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="w-full bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border-y border-white/5 py-16 my-12"
-        >
-          <div className="max-w-6xl mx-auto px-6 sm:px-8">
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "out" }}
+              className="text-6xl sm:text-7xl lg:text-8xl font-display font-black tracking-tighter leading-[0.9] lg:leading-[0.85]"
+            >
+              Level Up Your <br />
+              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x">Digital Identity</span>
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium"
+            >
+              Build cinematic, high-performance profiles with gamified progression. 
+              Join the elite tier of creators on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
+            </motion.p>
+            
             <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="grid grid-cols-1 md:grid-cols-4 gap-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              {[
-                { label: "Profiles Created", value: "10,000+" },
-                { label: "Clicks Generated", value: "1.2M+" },
-                { label: "Countries", value: "140+" },
-                { label: "Avg. Daily Views", value: "50K+" }
-              ].map((stat, i) => (
-                <motion.div key={i} variants={itemVariants} className="text-center">
-                  <p className="text-4xl font-black bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
-                    {stat.value}
-                  </p>
-                  <p className="text-muted-foreground">{stat.label}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto px-6 mb-24"
-        >
-          <div className="w-full bg-gradient-to-br from-primary via-primary/90 to-accent rounded-[2rem] p-12 sm:p-20 relative overflow-hidden shadow-[0_20px_50px_rgba(124,58,237,0.3)]">
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
-            </div>
-
-            <div className="max-w-3xl mx-auto text-center relative z-10">
-              <h2 className="text-5xl sm:text-6xl font-display font-black tracking-tighter mb-8 text-white leading-tight">
-                Ready to Level Up Your <span className="text-black/40">Brand?</span>
-              </h2>
-              <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">
-                Join 10,000+ creators building their premium digital presence on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
-              </p>
-              <Link href="/login">
+              <Link href="/login" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
-                  className="h-16 px-12 text-lg font-bold rounded-2xl bg-white text-primary hover:bg-white/90 shadow-2xl transition-all transform hover:scale-105 active:scale-95"
-                  data-testid="button-get-started"
+                  className="w-full sm:w-auto h-16 px-12 text-lg font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_0_40px_rgba(155,88,255,0.4)] transition-all hover:scale-105 active:scale-95 group"
                 >
-                  Get Started Free <ArrowRight className="w-6 h-6 ml-2" />
+                  Start Building <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+              <Link href="/u/demo" className="w-full sm:w-auto">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="w-full sm:w-auto h-16 px-12 text-lg font-bold rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl transition-all"
+                >
+                  View Demo
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Bento Grid Features */}
+        <div className="max-w-7xl mx-auto px-6 py-24">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6"
+          >
+            {/* Large Feature 1 */}
+            <motion.div variants={itemVariants} className="md:col-span-4 lg:col-span-4 h-[400px]">
+              <Card className="h-full p-10 border-white/5 bg-gradient-to-br from-white/[0.05] to-transparent rounded-[2.5rem] relative overflow-hidden group hover:border-primary/30 transition-all duration-500">
+                <div className="absolute top-0 right-0 p-10 opacity-20 group-hover:opacity-40 transition-opacity">
+                  <Palette className="w-40 h-40 text-primary rotate-12" />
+                </div>
+                <div className="relative z-10 flex flex-col h-full justify-end">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center mb-6 border border-primary/30">
+                    <Layout className="w-7 h-7 text-primary" />
+                  </div>
+                  <h3 className="text-3xl font-display font-black mb-3">Customization Lab</h3>
+                  <p className="text-muted-foreground text-lg max-w-md font-medium">
+                    A high-performance theme engine with full-spectrum control over colors, custom fonts, and cinematic animations.
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Small Stat 1 */}
+            <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-2 h-[400px]">
+              <Card className="h-full p-10 border-white/5 bg-[#0a0a0a] rounded-[2.5rem] flex flex-col justify-center items-center text-center space-y-4 hover:border-accent/30 transition-all duration-500">
+                <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30">
+                  <TrendingUp className="w-8 h-8 text-accent" />
+                </div>
+                <h3 className="text-4xl font-display font-black tracking-tight">100%</h3>
+                <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Aesthetic Score</p>
+              </Card>
+            </motion.div>
+
+            {/* Small Stat 2 */}
+            <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-2 h-[400px]">
+              <Card className="h-full p-10 border-white/5 bg-gradient-to-tr from-orange-500/10 to-transparent rounded-[2.5rem] flex flex-col justify-end group hover:border-orange-500/30 transition-all duration-500">
+                <div className="mb-6">
+                  <Flame className="w-10 h-10 text-orange-500 animate-bounce" />
+                </div>
+                <h3 className="text-2xl font-display font-black mb-2">Gamified XP</h3>
+                <p className="text-sm text-muted-foreground font-medium">Earn XP from every visit. Level up to unlock elite profile themes.</p>
+              </Card>
+            </motion.div>
+
+            {/* Large Feature 2 */}
+            <motion.div variants={itemVariants} className="md:col-span-4 lg:col-span-4 h-[400px]">
+              <Card className="h-full p-10 border-white/5 bg-gradient-to-bl from-white/[0.05] to-transparent rounded-[2.5rem] relative overflow-hidden group hover:border-primary/30 transition-all duration-500">
+                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 flex flex-col h-full justify-center text-center">
+                  <div className="mx-auto w-20 h-20 rounded-3xl bg-primary/20 flex items-center justify-center mb-8 border border-primary/30 group-hover:scale-110 transition-transform">
+                    <MousePointer2 className="w-10 h-10 text-primary" />
+                  </div>
+                  <h3 className="text-4xl font-display font-black mb-4 tracking-tight">Interactive Effects</h3>
+                  <p className="text-muted-foreground text-lg max-w-xl mx-auto font-medium">
+                    Premium cursor effects, background animations, and GSAP-powered transitions that captivate your audience.
+                  </p>
+                </div>
+              </Card>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Global Reach Section */}
+        <div className="max-w-7xl mx-auto px-6 py-24 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-12"
+          >
+            <h2 className="text-5xl lg:text-6xl font-display font-black tracking-tight">Built for the <span className="text-primary">Creator Economy</span></h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { icon: Gamepad2, label: "Gamers", color: "text-red-500" },
+                { icon: Code2, label: "Developers", color: "text-blue-500" },
+                { icon: Users, label: "Influencers", color: "text-purple-500" },
+                { icon: Globe, label: "Brands", color: "text-emerald-500" }
+              ].map((item, i) => (
+                <div key={i} className="space-y-4">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 hover:border-white/20 transition-all cursor-default">
+                    <item.icon className={`w-8 h-8 ${item.color}`} />
+                  </div>
+                  <p className="font-bold text-sm uppercase tracking-widest text-muted-foreground">{item.label}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Final CTA */}
+        <div className="max-w-7xl mx-auto px-6 py-32">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="w-full h-[500px] rounded-[3rem] bg-gradient-to-br from-primary via-primary/80 to-accent relative overflow-hidden shadow-[0_40px_100px_rgba(155,88,255,0.4)] flex items-center justify-center text-center p-10"
+          >
+            <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+            <div className="relative z-10 space-y-10 max-w-2xl">
+              <h2 className="text-5xl sm:text-7xl font-display font-black tracking-tighter text-white leading-[0.9]">
+                Claim Your Unique <br /> Space Today.
+              </h2>
+              <Link href="/login">
+                <Button size="lg" className="h-16 px-12 text-xl font-black rounded-2xl bg-white text-primary hover:bg-white/90 shadow-2xl transition-all hover:scale-105 active:scale-95">
+                  Get Started Free
                 </Button>
               </Link>
             </div>
-          </div>
-        </motion.div>
-
-        {/* FAQ / Trust */}
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl font-display font-black text-white mb-4">
-              Why Choose <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>?
-            </h2>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            {[
-              { title: "Free Forever", desc: "Get started with our free tier. Upgrade anytime." },
-              { title: "No Ads", desc: "Your profile stays clean. No third-party tracking." },
-              { title: "Custom Domain", desc: "Use your own domain or our that's.wtf namespace." },
-              { title: "Analytics", desc: "Track clicks, views, and engagement in real-time." },
-              { title: "Community", desc: "Join thousands of creators sharing experiences." },
-              { title: "Always Evolving", desc: "New features added weekly based on feedback." }
-            ].map((item, i) => (
-              <motion.div key={i} variants={itemVariants}>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white mb-1">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
           </motion.div>
         </div>
       </main>
