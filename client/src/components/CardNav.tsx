@@ -87,23 +87,24 @@ export function CardNav({
       const ctaBtn = mobileMenuRef.current?.querySelector(".mobile-cta-btn");
 
       if (isMenuOpen) {
-        // Animate menu entrance
+        // Animate menu entrance with a slight bounce
         gsap.fromTo(
           mobileMenuRef.current,
-          { opacity: 0, y: -10 },
-          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+          { opacity: 0, scale: 0.95, y: -20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "elastic.out(1, 0.8)" }
         );
 
-        // Stagger cards entrance
+        // Stagger cards entrance with a slide-up effect
         gsap.fromTo(
           mobileCards,
-          { opacity: 0, x: -20 },
+          { opacity: 0, y: 20, scale: 0.9 },
           { 
             opacity: 1, 
-            x: 0, 
-            duration: 0.4,
-            stagger: 0.08,
-            ease: "power3.out"
+            y: 0, 
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.05,
+            ease: "back.out(1.7)"
           }
         );
 
@@ -111,8 +112,8 @@ export function CardNav({
         if (ctaBtn) {
           gsap.fromTo(
             ctaBtn,
-            { opacity: 0, y: 10 },
-            { opacity: 1, y: 0, duration: 0.4, delay: 0.32, ease: "power2.out" }
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.5, delay: 0.4, ease: "power2.out" }
           );
         }
       }
@@ -277,73 +278,106 @@ export function CardNav({
         {isMenuOpen && (
           <div 
             ref={mobileMenuRef}
-            className="md:hidden pb-6 pt-4 space-y-4"
+            className="md:hidden pb-8 pt-4 px-4 space-y-6 bg-black/90 backdrop-blur-2xl rounded-b-3xl border-t border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
             data-testid="mobile-nav-menu"
           >
             {/* Navigation Items */}
-            <div className="px-4 space-y-2">
+            <div className="space-y-3">
+              <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] pl-2 mb-2">Main Menu</p>
               {items.map((item, index) => (
                 <Link key={index} href={item.href}>
                   <div
-                    className={`card-nav-item-mobile px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide ${
+                    className={`card-nav-item-mobile group flex items-center justify-between px-5 py-4 rounded-2xl cursor-pointer transition-all duration-300 font-bold text-base tracking-tight active:scale-95 ${
                       location === item.href
-                        ? "ring-2 ring-white/40 ring-offset-2 ring-offset-transparent"
-                        : ""
+                        ? "ring-2 ring-white/20"
+                        : "hover:brightness-110"
                     }`}
                     style={{
                       backgroundColor: item.bgColor,
                       color: item.textColor || "#000000",
-                      boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
+                      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)"
                     }}
                     data-testid={`card-nav-mobile-${item.label.toLowerCase()}`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    <div className="w-6 h-6 rounded-full bg-black/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
                 </Link>
               ))}
             </div>
 
             {/* Additional Menu Items */}
-            <div className="px-4 space-y-2 pt-2">
-              <a href="#">
-                <div className="w-full px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide"
-                  style={{
-                    backgroundColor: "#f59e0b",
-                    color: "#000000",
-                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
-                  }}
-                  onClick={() => setIsMenuOpen(false)}
-                  data-testid="menu-item-help">
-                  Help Center
-                </div>
-              </a>
+            <div className="space-y-3 pt-4 border-t border-white/10">
+              <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] pl-2 mb-2">Explore</p>
+              <div className="grid grid-cols-2 gap-3">
+                <a href="#" className="card-nav-item-mobile">
+                  <div className="px-4 py-4 rounded-2xl cursor-pointer transition-all duration-300 font-bold text-sm tracking-tight flex flex-col gap-2 active:scale-95"
+                    style={{
+                      backgroundColor: "#f59e0b",
+                      color: "#000000",
+                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)"
+                    }}
+                    onClick={() => setIsMenuOpen(false)}
+                    data-testid="menu-item-help">
+                    <HelpCircle className="w-5 h-5" />
+                    <span>Help Center</span>
+                  </div>
+                </a>
+                
+                <a href="#" className="card-nav-item-mobile">
+                  <div className="px-4 py-4 rounded-2xl cursor-pointer transition-all duration-300 font-bold text-sm tracking-tight flex flex-col gap-2 active:scale-95"
+                    style={{
+                      backgroundColor: "#06b6d4",
+                      color: "#ffffff",
+                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)"
+                    }}
+                    onClick={() => setIsMenuOpen(false)}
+                    data-testid="menu-item-discord">
+                    <MessageCircle className="w-5 h-5" />
+                    <span>Discord</span>
+                  </div>
+                </a>
+              </div>
               
-              <a href="#">
-                <div className="w-full px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide"
-                  style={{
-                    backgroundColor: "#06b6d4",
-                    color: "#ffffff",
-                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
-                  }}
-                  onClick={() => setIsMenuOpen(false)}
-                  data-testid="menu-item-discord">
-                  Discord
-                </div>
-              </a>
-              
-              <Link href="/pricing">
-                <div className="w-full px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 font-semibold text-sm tracking-wide"
+              <Link href="/pricing" className="card-nav-item-mobile block">
+                <div className="w-full px-5 py-4 rounded-2xl cursor-pointer transition-all duration-300 font-bold text-sm tracking-tight flex items-center justify-between active:scale-95"
                   style={{
                     backgroundColor: "#ec4899",
                     color: "#ffffff",
-                    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)"
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)"
                   }}
                   onClick={() => setIsMenuOpen(false)}
                   data-testid="menu-item-pricing">
-                  Pricing
+                  <div className="flex items-center gap-3">
+                    <DollarSign className="w-5 h-5" />
+                    <span>View Pricing</span>
+                  </div>
+                  <div className="bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider">Pro</div>
                 </div>
               </Link>
+            </div>
+
+            {/* CTA Button - Mobile */}
+            <div className="mobile-cta-btn pt-2">
+              <Button
+                className="w-full py-7 font-black rounded-2xl uppercase tracking-[0.1em] text-sm shadow-[0_10px_30px_rgba(124,58,237,0.3)] active:scale-95"
+                style={{
+                  backgroundColor: buttonBgColor,
+                  color: buttonTextColor
+                }}
+                onClick={() => {
+                  handleGetStarted();
+                  setIsMenuOpen(false);
+                }}
+                data-testid="button-mobile-cta"
+              >
+                Get Started Now
+              </Button>
             </div>
           </div>
         )}
