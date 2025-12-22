@@ -122,7 +122,7 @@ export default function AccountOverview() {
   return (
     <SidebarProvider style={style as React.CSSProperties}>
       <div className="flex h-screen w-full bg-[#050505] text-white overflow-hidden font-inter">
-        <Sidebar variant="floating" className="border-r border-white/5 bg-black">
+        <Sidebar variant="inset" className="border-r border-white/5 bg-black">
           <SidebarHeader className="p-6">
             <Link href="/" className="flex items-center gap-2 px-2">
               <span className="text-xl font-display font-black tracking-tighter">
