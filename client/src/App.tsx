@@ -22,11 +22,13 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Loading from "@/pages/Loading";
 
+import LoadingPage from "@/components/LoadingPage";
+
 function ProtectedRoute({ component: Component }: any) {
   const { data: user, isLoading } = useUser();
 
   if (isLoading) {
-    return <div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>;
+    return <LoadingPage />;
   }
 
   if (!user) {
@@ -38,6 +40,10 @@ function ProtectedRoute({ component: Component }: any) {
 
 function Router() {
   const { data: user, isLoading } = useUser();
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <Switch>
