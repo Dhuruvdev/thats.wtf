@@ -141,12 +141,21 @@ export default function Lab() {
                                   {block.content.url || block.type}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="w-10 h-10 rounded-xl text-zinc-500 hover:text-white hover:bg-white/10"
+                                  data-testid={`button-edit-block-${block.id}`}
+                                >
+                                  <LinkIcon className="w-4 h-4" />
+                                </Button>
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
                                   className="w-10 h-10 rounded-xl text-zinc-500 hover:text-red-500 hover:bg-red-500/10"
                                   onClick={() => deleteLink(block.id)}
+                                  data-testid={`button-delete-block-${block.id}`}
                                 >
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
