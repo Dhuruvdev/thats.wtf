@@ -57,9 +57,6 @@ export async function setupAuth(app: Express) {
         if (!user || !(await crypto.compare(password, user.password))) {
           return done(null, false, { message: "Invalid username or password" });
         }
-        if (!user.isEmailVerified) {
-          return done(null, false, { message: "Please verify your email first" });
-        }
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -105,16 +102,13 @@ export async function setupAuth(app: Express) {
         accentColor: '#7c3aed',
         frame: 'none',
         glowEnabled: true,
-        isPro: false
+        isPro: false,
+        isEmailVerified: true
       });
 
-      // Update with verification token separately
-      await storage.updateUser(user.id, { verificationToken });
-
-      res.status(201).json({ 
-        message: "Registration successful. Check your email to verify your account.",
-        userId: user.id,
-        email: user.email
+      req.login(user, (err) => {
+        if (err) return next(err);
+        res.status(201).json(user);
       });
     } catch (err) {
       next(err);
