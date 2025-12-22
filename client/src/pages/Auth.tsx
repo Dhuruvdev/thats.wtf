@@ -12,6 +12,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import iconImg from "/icon.png";
 
+import LoadingPage from "@/components/LoadingPage";
+
 const loginSchema = z.object({
   username: z.string(),
   password: z.string(),
@@ -53,6 +55,10 @@ export default function Auth() {
       form.setError("root", { message: (error as Error).message });
     }
   };
+
+  if (isLoginPending || isRegisterPending) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">

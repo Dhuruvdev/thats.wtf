@@ -25,6 +25,8 @@ import {
 import { motion } from "framer-motion";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
 
+import LoadingPage from "@/components/LoadingPage";
+
 export default function AccountOverview() {
   const [profileCompletion] = useState(20);
 
