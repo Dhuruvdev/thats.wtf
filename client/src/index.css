@@ -1,108 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=VT323&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  /* HSL Color System - Premium Dark Aesthetic */
-  --background: 240 10% 2%;         /* Deep charcoal/black */
-  --foreground: 0 0% 98%;          /* Crisp white */
-
-  --card: 240 10% 4%;              /* Elevated card background */
-  --card-foreground: 0 0% 98%;
-
-  --popover: 240 10% 2%;
-  --popover-foreground: 0 0% 98%;
-
-  --primary: 263 70% 50%;          /* Premium Purple */
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 240 10% 8%;
-  --secondary-foreground: 0 0% 98%;
-
-  --muted: 240 10% 10%;
-  --muted-foreground: 240 5% 65%;
-
-  --accent: 180 100% 50%;          /* Electric Cyan */
-  --accent-foreground: 240 10% 2%;
-
-  --destructive: 0 62% 30%;
-  --destructive-foreground: 0 0% 98%;
-
-  --border: 240 10% 12%;           /* Subtle divider */
-  --input: 240 10% 12%;
-  --ring: 263 70% 50%;
-
-  --radius: 1rem;
+  /* Core Identity Colors */
+  --bg-primary: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent: #7c3aed;
+  --accent-glow: rgba(124, 58, 237, 0.5);
   
-  /* Typography */
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Space Grotesk', sans-serif;
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground antialiased font-sans overflow-x-hidden selection:bg-primary/30 selection:text-white;
-  }
+  /* Dynamic State Variables */
+  --motion-intensity: 1;
+  --scroll-progress: 0;
+  --mouse-x: 0;
+  --mouse-y: 0;
   
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    @apply tracking-tight font-bold;
-  }
+  --radius-md: 12px;
+  --block-gap: 1.5rem;
 }
 
-@layer utilities {
-  .glass-panel {
-    @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl;
-  }
-  
-  .neural-border {
-    @apply border border-white/5 hover:border-primary/30 transition-all duration-500;
-  }
-
-  .text-glow {
-    text-shadow: 0 0 20px hsl(var(--primary) / 0.5);
-  }
-
-  .animate-gradient-x {
-    background-size: 200% 200%;
-    animation: gradient-x 15s ease infinite;
-  }
-
-  @keyframes gradient-x {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-
-  .brand-text {
-    @apply font-display font-black tracking-tighter text-2xl;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.brand-text-thats {
-  @apply text-[#9b58ff];
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-.brand-text-dot {
-  @apply text-yellow-400 animate-pulse;
+.dopamine-container {
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--block-gap);
+  perspective: 1000px;
 }
 
-.brand-text-wtf {
-  @apply text-white;
+.identity-block {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+.identity-block:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-transparent;
+.custom-cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  filter: blur(2px);
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+.audio-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.audio-toggle:hover {
+  background: var(--accent);
+  transform: scale(1.1);
+}
+
+/* Animations */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
 }
