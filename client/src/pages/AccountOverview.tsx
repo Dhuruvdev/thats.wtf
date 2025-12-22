@@ -110,20 +110,20 @@ export default function AccountOverview() {
     "--sidebar-background": "0 0% 0%",
     "--sidebar-foreground": "240 5% 64.9%",
     "--sidebar-primary": "263.4 70% 50.4%",
-    "--sidebar-border": "240 3.7% 15.9%",
+    "--sidebar-border": "0 0% 0%",
   };
 
   return (
     <SidebarProvider style={style as React.CSSProperties}>
-      <div className="flex min-h-screen w-full bg-[#050505] text-white font-inter selection:bg-primary/30 relative overflow-x-hidden">
+      <div className="flex min-h-screen w-full bg-black text-white font-inter selection:bg-primary/30 relative overflow-x-hidden">
         {/* Cinematic Background Layer */}
         <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 rounded-full blur-[120px]" />
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/2 rounded-full blur-[120px]" />
         </div>
 
-        <Sidebar variant="inset" className="border-r border-white/5 bg-black/40 backdrop-blur-xl z-50">
-          <SidebarHeader className="p-6">
+        <Sidebar variant="inset" className="border-none bg-black z-50">
+          <SidebarHeader className="p-6 bg-black">
             <Link href="/" className="flex items-center gap-2 px-2">
               <span className="text-xl font-display font-black tracking-tighter">
                 <span className="text-[#9b58ff]">thats</span>
@@ -132,21 +132,21 @@ export default function AccountOverview() {
               </span>
             </Link>
           </SidebarHeader>
-          <SidebarContent className="px-4">
+          <SidebarContent className="px-4 bg-black">
             <SidebarGroup>
-              <SidebarMenu>
+              <SidebarMenu className="gap-2">
                 {sidebarItems.map((item) => (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton 
                       isActive={item.active}
-                      className={`h-11 px-4 rounded-xl transition-all duration-300 ${
+                      className={`h-12 px-4 rounded-2xl transition-all duration-300 border ${
                         item.active 
-                        ? "bg-primary/15 text-primary border border-primary/20 shadow-[0_0_20px_rgba(155,88,255,0.2)]" 
-                        : "hover:bg-white/5 text-muted-foreground hover:text-white"
+                        ? "bg-white text-black border-white shadow-[0_10px_20px_rgba(255,255,255,0.1)] scale-[1.02]" 
+                        : "bg-transparent border-transparent text-zinc-500 hover:bg-white/5 hover:text-white hover:border-white/10"
                       }`}
                     >
                       <div className="flex items-center gap-3 w-full">
-                        <item.icon className={`w-4.5 h-4.5 ${item.active ? "text-primary" : ""}`} />
+                        <item.icon className={`w-4.5 h-4.5 ${item.active ? "text-black" : "text-inherit"}`} />
                         <span className="font-bold tracking-tight">{item.label}</span>
                       </div>
                     </SidebarMenuButton>
@@ -155,7 +155,7 @@ export default function AccountOverview() {
               </SidebarMenu>
             </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter className="p-6 border-t border-white/5 space-y-4">
+          <SidebarFooter className="p-6 bg-black border-t border-white/5 space-y-4">
             <div className="px-4 py-5 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/5 border border-white/10 backdrop-blur-md">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2.5 rounded-xl bg-primary/20 border border-primary/30">
@@ -182,7 +182,7 @@ export default function AccountOverview() {
         </Sidebar>
 
         <div className="flex-1 flex flex-col min-w-0 bg-[#050505]/50 backdrop-blur-sm relative overflow-hidden z-10">
-          <header className="h-20 border-b border-white/5 bg-black/40 backdrop-blur-2xl px-4 sm:px-8 flex items-center justify-between sticky top-0 z-50">
+          <header className="h-20 border-b border-white/5 bg-black px-4 sm:px-8 flex items-center justify-between sticky top-0 z-50">
             <div className="flex items-center gap-2 sm:gap-4">
               <SidebarTrigger className="text-muted-foreground hover:text-white transition-colors" />
               <div className="h-6 w-px bg-white/10 hidden sm:block" />
@@ -193,7 +193,7 @@ export default function AccountOverview() {
               </nav>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
-              <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+              <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
                 <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Live</span>
               </div>
@@ -218,7 +218,7 @@ export default function AccountOverview() {
                 className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8"
               >
                 <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest">
                     <Sparkles className="w-3 h-3" />
                     Neural Dashboard
                   </div>
@@ -248,7 +248,7 @@ export default function AccountOverview() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
                   >
-                    <Card className="group p-6 sm:p-8 border-white/5 bg-gradient-to-br from-white/[0.04] to-transparent hover:border-white/20 transition-all duration-500 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden relative h-full">
+                    <Card className="group p-6 sm:p-8 border-white/5 bg-black hover:border-white/20 transition-all duration-500 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden relative h-full">
                       <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
                       <div className="relative z-10 flex flex-col h-full">
                         <div className="flex items-center justify-between mb-8 sm:mb-10">
@@ -280,7 +280,7 @@ export default function AccountOverview() {
                   transition={{ delay: 0.4 }}
                   className="lg:col-span-2"
                 >
-                  <Card className="p-6 sm:p-10 border-white/5 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[2rem] sm:rounded-[3rem] relative overflow-hidden group hover:border-white/10 transition-all duration-500">
+                  <Card className="p-6 sm:p-10 border-white/5 bg-black rounded-[2rem] sm:rounded-[3rem] relative overflow-hidden group hover:border-white/10 transition-all duration-500">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 sm:mb-12">
                       <div>
                         <h2 className="text-2xl sm:text-3xl font-display font-black text-white mb-2 tracking-tight">Traffic Matrix</h2>
@@ -366,7 +366,7 @@ export default function AccountOverview() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <Card className="p-6 sm:p-10 border-white/5 bg-[#0a0a0a]/80 backdrop-blur-xl rounded-[2rem] sm:rounded-[3rem] flex flex-col h-full group hover:border-white/10 transition-all duration-500">
+                  <Card className="p-6 sm:p-10 border-white/5 bg-black rounded-[2rem] sm:rounded-[3rem] flex flex-col h-full group hover:border-white/10 transition-all duration-500">
                     <div className="mb-10 sm:mb-12">
                       <h2 className="text-2xl sm:text-3xl font-display font-black text-white mb-2 tracking-tight">Missions</h2>
                       <p className="text-[10px] sm:text-sm text-muted-foreground font-bold uppercase tracking-widest">Gain +500 XP Rewards</p>
