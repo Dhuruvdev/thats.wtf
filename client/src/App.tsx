@@ -78,7 +78,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {!isAuthPage && !isCardNavDemoPage && !isHomePage && <GenZHeader />}
         <Toaster />
         <Router />
       </TooltipProvider>
