@@ -51,7 +51,7 @@ function Router() {
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/u/:username" component={Profile} />
       <Route path="/">
-        {!isLoading && !user ? <Home /> : <ProtectedRoute component={() => <div className="min-h-screen bg-background flex items-center justify-center">Dashboard</div>} />}
+        {!isLoading && !user ? <Home /> : <AccountOverview />}
       </Route>
       <Route path="/~" component={AccountOverview} />
       <Route path="/lab" component={Lab} />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -9,10 +9,6 @@ import {
   Eye, 
   CheckCircle, 
   AlertCircle,
-  Download,
-  Github,
-  Settings,
-  Share2,
   HelpCircle,
   LogOut,
   Palette,
@@ -20,343 +16,390 @@ import {
   Crown,
   ImagePlus,
   Grid,
-  BarChart3
+  BarChart3,
+  Share2,
+  ChevronRight,
+  Plus,
+  Zap,
+  LayoutDashboard,
+  Sparkles
 } from "lucide-react";
-import { motion } from "framer-motion";
-import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  SidebarProvider, 
+  Sidebar, 
+  SidebarContent, 
+  SidebarGroup, 
+  SidebarGroupContent, 
+  SidebarGroupLabel, 
+  SidebarMenu, 
+  SidebarMenuButton, 
+  SidebarMenuItem, 
+  SidebarTrigger,
+  SidebarHeader,
+  SidebarFooter
+} from "@/components/ui/sidebar";
+import { useUser, useLogout } from "@/hooks/use-auth";
+import { Link, useLocation } from "wouter";
 import LoadingPage from "@/components/LoadingPage";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function AccountOverview() {
+  const { data: user } = useUser();
+  const logoutMutation = useLogout();
+  const [location] = useLocation();
   const [profileCompletion] = useState(20);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
+  if (!user) return <LoadingPage />;
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
+  const chartData = [
+    { name: 'Mon', views: 0 },
+    { name: 'Tue', views: 0 },
+    { name: 'Wed', views: 0 },
+    { name: 'Thu', views: 0 },
+    { name: 'Fri', views: 0 },
+    { name: 'Sat', views: 0 },
+    { name: 'Sun', views: 0 },
+  ];
 
   const sidebarItems = [
-    { icon: BarChart3, label: "Overview", id: "overview" },
+    { icon: LayoutDashboard, label: "Overview", id: "overview", active: true },
     { icon: BarChart3, label: "Analytics", id: "analytics" },
     { icon: Badge, label: "Badges", id: "badges" },
-    { icon: Settings, label: "Settings", id: "settings" },
     { icon: Palette, label: "Customize", id: "customize" },
     { icon: LinkIcon, label: "Links", id: "links" },
-    { icon: Crown, label: "Premium", id: "premium" },
     { icon: ImagePlus, label: "Image Host", id: "imagehost" },
     { icon: Grid, label: "Templates", id: "templates" },
+    { icon: Crown, label: "Premium", id: "premium" },
   ];
 
   const accountCards = [
     {
       label: "Username",
-      value: "dhuruv",
-      subtext: "Change available now",
+      value: user.username,
+      subtext: "Live on thats.wtf",
       icon: Edit2,
-      color: "from-violet-600/20 to-violet-600/5"
+      color: "from-primary/20 to-primary/5"
     },
     {
-      label: "Alias",
-      value: "Unavailable",
-      subtext: "Premium Only",
-      icon: Users,
-      color: "from-violet-600/20 to-violet-600/5"
-    },
-    {
-      label: "UID",
-      value: "1,247,941",
-      subtext: "Joined after 100% of all users",
-      icon: Hash,
-      color: "from-violet-600/20 to-violet-600/5"
+      label: "Tier",
+      value: user.isPro ? "Premium" : "Free",
+      subtext: user.isPro ? "All features unlocked" : "Basic access",
+      icon: Crown,
+      color: "from-accent/20 to-accent/5"
     },
     {
       label: "Profile Views",
-      value: "0",
-      subtext: "+0 views since last 7 days",
+      value: (user.views || 0).toLocaleString(),
+      subtext: "Lifetime visitors",
       icon: Eye,
-      color: "from-violet-600/20 to-violet-600/5"
+      color: "from-emerald-500/20 to-emerald-500/5"
+    },
+    {
+      label: "XP Level",
+      value: `Lvl ${user.level || 1}`,
+      subtext: `${user.xp || 0} total XP earned`,
+      icon: Zap,
+      color: "from-orange-500/20 to-orange-500/5"
     }
   ];
 
   const completionTasks = [
-    { title: "Upload An Avatar", done: true },
-    { title: "Add A Description", done: false },
-    { title: "Link Discord Account", done: false },
+    { title: "Upload An Avatar", done: !!user.avatarUrl },
+    { title: "Add A Description", done: !!user.bio },
+    { title: "Link Discord Account", done: !!user.discordId },
     { title: "Add Socials", done: false },
-    { title: "Enable 2FA", done: false },
-  ];
-
-  const accountActions = [
-    { label: "Change Username", icon: Edit2 },
-    { label: "Change Display Name", icon: Users },
-    { label: "Want more? Unlock as Premium", icon: Crown, highlight: true },
   ];
 
   const style = {
-    "--sidebar-width": "16rem",
+    "--sidebar-width": "18rem",
+    "--sidebar-background": "0 0% 0%",
+    "--sidebar-foreground": "240 5% 64.9%",
+    "--sidebar-primary": "263.4 70% 50.4%",
+    "--sidebar-border": "240 3.7% 15.9%",
   };
 
   return (
     <SidebarProvider style={style as React.CSSProperties}>
-      <div className="flex h-screen w-full bg-background">
-        {/* Sidebar */}
-        <Sidebar className="border-r border-white/5 bg-black/50 backdrop-blur-md">
-          <SidebarContent>
+      <div className="flex h-screen w-full bg-[#050505] text-white overflow-hidden font-inter">
+        <Sidebar variant="floating" className="border-r border-white/5 bg-black">
+          <SidebarHeader className="p-6">
+            <Link href="/" className="flex items-center gap-2 px-2">
+              <span className="text-xl font-display font-black tracking-tighter">
+                <span className="text-[#9b58ff]">thats</span>
+                <span className="text-yellow-400">.</span>
+                <span className="text-white">wtf</span>
+              </span>
+            </Link>
+          </SidebarHeader>
+          <SidebarContent className="px-4">
             <SidebarGroup>
-              <SidebarGroupLabel className="text-xs text-muted-foreground uppercase">
-                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {sidebarItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <SidebarMenuItem key={item.id}>
-                        <SidebarMenuButton asChild>
-                          <button className="flex items-center gap-2 text-white hover:text-primary transition-colors">
-                            <Icon className="w-4 h-4" />
-                            <span>{item.label}</span>
-                          </button>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-
-            {/* Help & Actions */}
-            <SidebarGroup className="mt-auto">
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2 px-2">
-                    Have a question or need support?
-                  </p>
-                  <Button className="w-full justify-start bg-blue-600/20 hover:bg-blue-600/30 text-white border border-blue-600/30">
-                    <HelpCircle className="w-4 h-4 mr-2" />
-                    Help Center
-                  </Button>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2 px-2">
-                    Check out your page
-                  </p>
-                  <Button className="w-full justify-start bg-purple-600/20 hover:bg-purple-600/30 text-white border border-purple-600/30">
-                    <LinkIcon className="w-4 h-4 mr-2" />
-                    My Page
-                  </Button>
-                </div>
-                <Button className="w-full justify-start bg-purple-600/20 hover:bg-purple-600/30 text-white border border-purple-600/30">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share Your Profile
-                </Button>
-              </div>
+              <SidebarMenu>
+                {sidebarItems.map((item) => (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton 
+                      isActive={item.active}
+                      className={`h-11 px-4 rounded-xl transition-all duration-200 ${
+                        item.active 
+                        ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(155,88,255,0.15)]" 
+                        : "hover:bg-white/5 text-muted-foreground hover:text-white"
+                      }`}
+                    >
+                      <button className="flex items-center gap-3 w-full">
+                        <item.icon className={`w-4.5 h-4.5 ${item.active ? "text-primary" : ""}`} />
+                        <span className="font-medium">{item.label}</span>
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
             </SidebarGroup>
           </SidebarContent>
-        </Sidebar>
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="border-b border-white/5 bg-black/30 backdrop-blur-md px-8 py-4 flex items-center justify-between sticky top-0 z-40">
-            <SidebarTrigger data-testid="button-sidebar-toggle" className="text-white" />
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">dhuruv</span>
-              <Button size="sm" variant="outline">
-                <LogOut className="w-4 h-4" />
+          <SidebarFooter className="p-6 border-t border-white/5 space-y-4">
+            <div className="px-2 py-4 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/5 border border-white/5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-lg bg-primary/20">
+                  <Crown className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white uppercase tracking-wider">Pro Access</p>
+                  <p className="text-[10px] text-muted-foreground">Unlock custom domains</p>
+                </div>
+              </div>
+              <Button size="sm" className="w-full h-8 rounded-lg bg-primary hover:bg-primary/90 text-white font-bold text-[11px]">
+                Upgrade Now
               </Button>
             </div>
-          </div>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start h-10 px-4 text-muted-foreground hover:text-red-400 hover:bg-red-400/10 rounded-xl"
+              onClick={() => logoutMutation.mutate()}
+            >
+              <LogOut className="w-4 h-4 mr-3" />
+              <span className="font-medium">Logout</span>
+            </Button>
+          </SidebarFooter>
+        </Sidebar>
 
-          {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-8 max-w-7xl">
-              {/* Background Gradients */}
-              <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[50%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[150px]" />
+        <div className="flex-1 flex flex-col min-w-0 bg-[#050505] relative overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" />
+          
+          <header className="h-20 border-b border-white/5 bg-black/40 backdrop-blur-xl px-8 flex items-center justify-between sticky top-0 z-50">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger className="text-muted-foreground hover:text-white transition-colors" />
+              <div className="h-6 w-px bg-white/10 hidden sm:block" />
+              <nav className="hidden sm:flex items-center gap-1 text-sm font-medium">
+                <span className="text-muted-foreground">Dashboard</span>
+                <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+                <span className="text-white">Overview</span>
+              </nav>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">System Live</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 gap-2">
+                <Share2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Share</span>
+              </Button>
+              <Link href={`/u/${user.username}`}>
+                <Button size="sm" className="h-9 px-4 rounded-xl bg-primary hover:bg-primary/90 gap-2 shadow-[0_0_20px_rgba(155,88,255,0.3)]">
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Preview</span>
+                </Button>
+              </Link>
+            </div>
+          </header>
+
+          <main className="flex-1 overflow-y-auto relative">
+            <div className="p-8 lg:p-12 max-w-[1400px] mx-auto space-y-12">
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest mb-4">
+                    <Sparkles className="w-3 h-3" />
+                    Welcome Back
+                  </div>
+                  <h1 className="text-5xl lg:text-6xl font-display font-black tracking-tight text-white mb-4">
+                    Hey, <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{user.username}</span>
+                  </h1>
+                  <p className="text-lg text-muted-foreground max-w-xl leading-relaxed font-medium">
+                    Your digital presence is growing. You've earned <span className="text-white font-bold">{user.xp || 0} XP</span> this week and leveled up to <span className="text-primary font-bold">Tier {user.level || 1}</span>.
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="h-12 px-6 rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 font-bold gap-2">
+                    <Edit2 className="w-4 h-4" /> Edit Profile
+                  </Button>
+                  <Button className="h-12 px-6 rounded-2xl bg-white text-black hover:bg-white/90 font-black gap-2">
+                    <Plus className="w-4 h-4" /> Add Link
+                  </Button>
+                </div>
               </div>
 
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                {/* Header */}
-                <motion.div variants={itemVariants} className="mb-8">
-                  <h1 className="text-4xl font-display font-black text-white mb-2">
-                    Account Overview
-                  </h1>
-                  <p className="text-muted-foreground">Manage your profile and account settings</p>
-                </motion.div>
-
-                {/* Account Cards Grid */}
-                <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                  {accountCards.map((card, i) => {
-                    const Icon = card.icon;
-                    return (
-                      <Card 
-                        key={i}
-                        className={`p-6 border-white/10 bg-gradient-to-br ${card.color}`}
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <p className="text-xs font-semibold text-muted-foreground uppercase">{card.label}</p>
-                          <Icon className="w-4 h-4 text-white/40" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {accountCards.map((card, i) => (
+                  <Card 
+                    key={i}
+                    className="p-8 border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent hover:border-white/20 transition-all duration-300 group rounded-[2rem] overflow-hidden relative"
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                    <div className="relative z-10 flex flex-col h-full">
+                      <div className="flex items-center justify-between mb-8">
+                        <div className="p-3 rounded-2xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
+                          <card.icon className="w-5 h-5 text-white" />
                         </div>
-                        <h3 className="text-2xl font-display font-black text-white mb-1">
+                        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest group-hover:text-white transition-colors">
+                          {card.label}
+                        </div>
+                      </div>
+                      <div className="mt-auto">
+                        <h3 className="text-3xl font-display font-black text-white mb-2 leading-none">
                           {card.value}
                         </h3>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground font-medium group-hover:text-white/70 transition-colors">
                           {card.subtext}
                         </p>
-                      </Card>
-                    );
-                  })}
-                </motion.div>
-
-                {/* Account Statistics Section */}
-                <motion.div variants={itemVariants} className="mb-8">
-                  <h2 className="text-2xl font-display font-black text-white mb-4">
-                    Account Statistics
-                  </h2>
-                  
-                  {/* Profile Completion */}
-                  <Card className="p-6 border-white/10 bg-gradient-to-br from-violet-600/20 to-violet-600/5 mb-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-lg font-display font-black text-white mb-1">
-                          Profile Completion
-                        </h3>
-                        <p className="text-sm text-muted-foreground">{profileCompletion}% completed</p>
                       </div>
-                      <Badge variant="secondary">{profileCompletion}%</Badge>
                     </div>
-                    
-                    {/* Progress Bar */}
-                    <div className="w-full bg-white/10 rounded-full h-2 mb-6 overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${profileCompletion}%` }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        className="h-full bg-gradient-to-r from-primary to-accent"
-                      />
-                    </div>
+                  </Card>
+                ))}
+              </div>
 
-                    {/* Completion Tasks */}
-                    <div className="space-y-3">
-                      {completionTasks.map((task, i) => (
-                        <div key={i} className="flex items-center gap-3 group hover:bg-white/5 p-2 rounded-md transition-colors">
-                          {task.done ? (
-                            <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                          ) : (
-                            <AlertCircle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                          )}
-                          <span className={task.done ? "text-muted-foreground line-through" : "text-white"}>
+              <div className="grid lg:grid-cols-3 gap-8">
+                <Card className="lg:col-span-2 p-8 border-white/5 bg-[#0a0a0a] rounded-[2.5rem] relative overflow-hidden group">
+                  <div className="flex items-center justify-between mb-10">
+                    <div>
+                      <h2 className="text-2xl font-display font-black text-white mb-1">Traffic Activity</h2>
+                      <p className="text-sm text-muted-foreground font-medium">Profile views over the last 7 days</p>
+                    </div>
+                    <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-widest">
+                      Export CSV
+                    </Button>
+                  </div>
+                  
+                  <div className="h-[300px] w-full mt-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <defs>
+                          <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#9b58ff" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#9b58ff" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                        <XAxis 
+                          dataKey="name" 
+                          stroke="#ffffff30" 
+                          fontSize={10} 
+                          tickLine={false} 
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis 
+                          stroke="#ffffff30" 
+                          fontSize={10} 
+                          tickLine={false} 
+                          axisLine={false}
+                          dx={-10}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: '#111', 
+                            border: '1px solid #333', 
+                            borderRadius: '12px',
+                            fontSize: '12px',
+                            color: '#fff'
+                          }}
+                          itemStyle={{ color: '#fff' }}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="views" 
+                          stroke="#9b58ff" 
+                          strokeWidth={4}
+                          fillOpacity={1} 
+                          fill="url(#colorViews)" 
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
+                    <div className="flex gap-8">
+                      <div>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Unique Visitors</p>
+                        <p className="text-xl font-display font-black text-white">0</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Avg. Time</p>
+                        <p className="text-xl font-display font-black text-white">0s</p>
+                      </div>
+                    </div>
+                    <Link href="/analytics">
+                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10 font-bold text-xs uppercase tracking-widest">
+                        Full Analytics <ChevronRight className="w-3.5 h-3.5 ml-1" />
+                      </Button>
+                    </Link>
+                  </div>
+                </Card>
+
+                <Card className="p-8 border-white/5 bg-[#0a0a0a] rounded-[2.5rem] flex flex-col">
+                  <div className="mb-10">
+                    <h2 className="text-2xl font-display font-black text-white mb-1">Quick Tasks</h2>
+                    <p className="text-sm text-muted-foreground font-medium">Complete these to earn 500 XP</p>
+                  </div>
+
+                  <div className="flex-1 space-y-4">
+                    {completionTasks.map((task, i) => (
+                      <div 
+                        key={i} 
+                        className={`p-5 rounded-2xl border transition-all duration-200 flex items-center justify-between group cursor-pointer ${
+                          task.done 
+                          ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-500/60" 
+                          : "bg-white/5 border-white/5 hover:border-white/20 text-white"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-colors ${
+                            task.done 
+                            ? "bg-emerald-500/10 border-emerald-500/30" 
+                            : "bg-white/5 border-white/10 group-hover:border-primary/50"
+                          }`}>
+                            {task.done ? <CheckCircle className="w-4 h-4" /> : <div className="w-1.5 h-1.5 rounded-full bg-white/40" />}
+                          </div>
+                          <span className={`text-sm font-bold tracking-tight ${task.done ? "line-through" : ""}`}>
                             {task.title}
                           </span>
-                          {!task.done && (
-                            <ChevronRightIcon className="w-4 h-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                          )}
                         </div>
-                      ))}
-                    </div>
-                  </Card>
-                </motion.div>
-
-                {/* Manage Account */}
-                <motion.div variants={itemVariants} className="mb-8">
-                  <h2 className="text-2xl font-display font-black text-white mb-4">
-                    Manage your account
-                  </h2>
-                  <p className="text-sm text-muted-foreground mb-4">Change your name, username and more.</p>
-                  
-                  <div className="space-y-3">
-                    {accountActions.map((action, i) => (
-                      <Button
-                        key={i}
-                        className={`w-full justify-start h-auto py-3 px-4 rounded-lg ${
-                          action.highlight
-                            ? "bg-purple-600/30 hover:bg-purple-600/40 border border-purple-600/30 text-white"
-                            : "bg-white/5 hover:bg-white/10 border border-white/10 text-white"
-                        }`}
-                        variant={action.highlight ? "default" : "outline"}
-                      >
-                        <action.icon className="w-4 h-4 mr-3" />
-                        <span className="flex-1 text-left text-sm font-medium">{action.label}</span>
-                        <ChevronRightIcon className="w-4 h-4" />
-                      </Button>
+                        {!task.done && <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-0 group-hover:translate-x-1" />}
+                      </div>
                     ))}
                   </div>
-                </motion.div>
 
-                {/* Connections */}
-                <motion.div variants={itemVariants} className="mb-8">
-                  <h2 className="text-2xl font-display font-black text-white mb-4">
-                    Connections
-                  </h2>
-                  <p className="text-sm text-muted-foreground mb-4">Link your Discord account to <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span></p>
-                  
-                  <Button className="w-full bg-blue-600/30 hover:bg-blue-600/40 border border-blue-600/30 text-white justify-start">
-                    <Github className="w-4 h-4 mr-3" />
-                    <span className="flex-1 text-left">Connect Discord</span>
-                    <ChevronRightIcon className="w-4 h-4" />
-                  </Button>
-                </motion.div>
-
-                {/* Account Analytics */}
-                <motion.div variants={itemVariants}>
-                  <h2 className="text-2xl font-display font-black text-white mb-4">
-                    Account Analytics
-                    <Badge className="ml-2" variant="secondary">View More</Badge>
-                  </h2>
-                  
-                  <Card className="p-8 border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02]">
-                    <h3 className="text-lg font-display font-bold text-white mb-4">
-                      Profile Views in the last 7 days
-                    </h3>
-                    <div className="flex items-center justify-center h-48 bg-white/5 rounded-lg border border-white/10">
-                      <p className="text-muted-foreground">No data available yet</p>
+                  <div className="mt-10 p-6 rounded-[1.5rem] bg-gradient-to-br from-primary/20 to-accent/5 border border-white/5">
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-[10px] font-bold text-white uppercase tracking-widest">Level Progress</p>
+                      <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Lvl {(user.level || 1) + 1}</p>
                     </div>
-                  </Card>
-                </motion.div>
-              </motion.div>
+                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden mb-2">
+                      <motion.div 
+                        className="h-full bg-primary"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${((user.xp || 0) % 1000) / 10}%` }}
+                        transition={{ duration: 1 }}
+                      />
+                    </div>
+                    <p className="text-[9px] text-muted-foreground text-center font-bold uppercase tracking-wider">
+                      {1000 - ((user.xp || 0) % 1000)} XP until next level
+                    </p>
+                  </div>
+                </Card>
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </div>
     </SidebarProvider>
-  );
-}
-
-function ChevronRightIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
   );
 }
