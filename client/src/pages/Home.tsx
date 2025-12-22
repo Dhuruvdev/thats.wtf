@@ -99,29 +99,29 @@ export default function Home() {
                 <span className="text-sm font-semibold text-primary">Your Identity, Leveled Up</span>
               </motion.div>
 
-              <h1 ref={textRef} className="text-5xl sm:text-6xl lg:text-7xl font-display font-black tracking-tighter mb-6 leading-tight text-white">
-                Own Your <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">Digital Presence</span>
+              <h1 ref={textRef} className="text-5xl sm:text-6xl lg:text-7xl font-display font-black tracking-tighter mb-8 leading-[1.1] text-white">
+                Own Your <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient-x">Digital Presence</span>
               </h1>
               
-              <p className="hero-desc text-lg text-muted-foreground mb-10 max-w-2xl leading-relaxed">
-                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> is the premium bio link platform where creators and professionals build stunning, interactive profiles with gamified progression and cinematic animations. Level up your digital identity.
+              <p className="hero-desc text-xl text-muted-foreground mb-12 max-w-2xl leading-relaxed font-light">
+                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> is the premium bio link platform where creators and professionals build stunning, interactive profiles with gamified progression and cinematic animations.
               </p>
               
-              <div className="hero-btns flex flex-col sm:flex-row items-start gap-4 mb-12">
+              <div className="hero-btns flex flex-col sm:flex-row items-center gap-6 mb-16">
                 <Link href="/login" className="w-full sm:w-auto">
                   <Button 
                     size="lg" 
-                    className="w-full sm:w-auto h-14 px-8 text-base font-bold rounded-xl shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_50px_rgba(124,58,237,0.6)] transition-all bg-primary"
+                    className="w-full sm:w-auto h-16 px-10 text-lg font-bold rounded-2xl shadow-[0_0_40px_rgba(124,58,237,0.5)] hover:shadow-[0_0_60px_rgba(124,58,237,0.7)] transition-all bg-primary hover:scale-[1.02] active:scale-[0.98]"
                     data-testid="button-claim-username"
                   >
-                    Claim Your Username <ArrowRight className="w-5 h-5 ml-2" />
+                    Claim Your Username <ArrowRight className="w-6 h-6 ml-2" />
                   </Button>
                 </Link>
                 <Link href="/u/demo" className="w-full sm:w-auto">
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="w-full sm:w-auto h-14 px-8 text-base font-bold rounded-xl border-white/30 bg-transparent hover:bg-white/5 backdrop-blur-sm transition-all"
+                    className="w-full sm:w-auto h-16 px-10 text-lg font-bold rounded-2xl border-white/20 bg-white/5 hover:bg-white/10 backdrop-blur-md transition-all hover:border-white/40"
                     data-testid="button-view-demo"
                   >
                     View Demo Profile
@@ -204,24 +204,24 @@ export default function Home() {
                 type: "lucide",
                 lucideIcon: Palette,
                 title: "Customization Lab",
-                desc: "Themes, colors, fonts, and animations. Complete control."
+                desc: "Full-spectrum theme engine. Control colors, fonts, and pixel-perfect animations."
               },
               {
                 type: "lucide",
                 lucideIcon: TrendingUp,
                 title: "Progression System",
-                desc: "Earn XP from views. Level up and unlock premium themes."
+                desc: "Earn XP from every visit. Unlock elite tiers and limited-edition profile themes."
               },
               {
                 type: "image",
                 title: "Cinematic Motion",
-                desc: "GSAP-powered animations. Premium, never cheap."
+                desc: "Premium GSAP-powered transitions. A smooth, high-end experience for your audience."
               },
               {
                 type: "lucide",
                 lucideIcon: Lock,
                 title: "Creator Control",
-                desc: "Your data is yours. Built for privacy and security."
+                desc: "Privacy-first architecture. You own your data, your audience, and your brand."
               }
             ].map((feature, i) => {
               const Icon = feature.type === "lucide" && feature.lucideIcon ? feature.lucideIcon : null;
@@ -338,38 +338,33 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="w-full bg-gradient-to-br from-primary via-primary/80 to-accent/60 py-24 relative overflow-hidden"
+          className="max-w-6xl mx-auto px-6 mb-24"
         >
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-10 right-10 w-40 h-40 bg-white rounded-full blur-3xl" />
-            <div className="absolute bottom-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl" />
-          </div>
+          <div className="w-full bg-gradient-to-br from-primary via-primary/90 to-accent rounded-[2rem] p-12 sm:p-20 relative overflow-hidden shadow-[0_20px_50px_rgba(124,58,237,0.3)]">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+            </div>
 
-          <div className="max-w-4xl mx-auto px-6 sm:px-8 text-center relative z-10">
-            <motion.div
-              initial={{ scale: 0.95 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-5xl sm:text-6xl font-display font-black tracking-tighter mb-6 text-white leading-tight">
-                Ready to Level Up?
+            <div className="max-w-3xl mx-auto text-center relative z-10">
+              <h2 className="text-5xl sm:text-6xl font-display font-black tracking-tighter mb-8 text-white leading-tight">
+                Ready to Level Up Your <span className="text-black/40">Brand?</span>
               </h2>
-              <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
-                Join thousands of creators building their premium digital presence on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
+              <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">
+                Join 10,000+ creators building their premium digital presence on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
               </p>
               <Link href="/login">
                 <Button 
                   size="lg" 
-                  className="h-14 px-10 text-base font-bold rounded-xl bg-white text-primary hover:bg-white/90 shadow-2xl transition-all transform hover:scale-105"
+                  className="h-16 px-12 text-lg font-bold rounded-2xl bg-white text-primary hover:bg-white/90 shadow-2xl transition-all transform hover:scale-105 active:scale-95"
                   data-testid="button-get-started"
                 >
-                  Get Started Free <ArrowRight className="w-5 h-5 ml-2" />
+                  Get Started Free <ArrowRight className="w-6 h-6 ml-2" />
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
 
