@@ -1,0 +1,93 @@
+import { useEffect, useRef } from "react";
+import { Block, User } from "@shared/schema";
+import { IdentityBlock } from "./IdentityBlock";
+import { springReveal } from "@/lib/motion";
+import { gsap } from "gsap";
+
+interface ProfileRendererProps {
+  user: User;
+  blocks: Block[];
+}
+
+export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const elements = containerRef.current.querySelectorAll(".identity-block");
+      springReveal(Array.from(elements) as HTMLElement[]);
+    }
+  }, [blocks]);
+
+  useEffect(() => {
+    // Inject dynamic theme variables
+    const root = document.documentElement;
+    root.style.setProperty("--accent-color", user.themeConfig.typography.accentColor);
+    root.style.setProperty("--heading-font", user.themeConfig.typography.headingFont);
+    root.style.setProperty("--body-font", user.themeConfig.typography.bodyFont);
+    
+    if (user.themeConfig.background.type === "static") {
+      root.style.setProperty("--profile-bg", user.themeConfig.background.value);
+    }
+  }, [user.themeConfig]);
+
+  return (
+    <div 
+      ref={containerRef}
+      className="profile-container min-h-screen w-full flex flex-col items-center py-20 px-4 transition-colors duration-500"
+      style={{
+        backgroundColor: "var(--profile-bg, #000)",
+        fontFamily: "var(--body-font, sans-serif)"
+      }}
+    >
+      <div className="max-w-2xl w-full space-y-6">
+        {/* Profile Header */}
+        <div className="flex flex-col items-center mb-12 identity-block">
+          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--accent-color)] mb-4">
+            <img 
+              src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
+              alt={user.username}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <h1 
+            className="text-4xl font-bold mb-2 text-white"
+            style={{ fontFamily: "var(--heading-font)" }}
+          >
+            {user.displayName || user.username}
+          </h1>
+          <p className="text-gray-400 text-center max-w-md">
+            {user.bio}
+          </p>
+        </div>
+
+        {/* Dynamic Blocks */}
+        {blocks
+          .filter(b => b.visible)
+          .sort((a, b) => a.order - b.order)
+          .map((block) => (
+            <IdentityBlock key={block.id} block={block} />
+          ))
+        }
+      </div>
+
+      <style jsx global>{`
+        .profile-container {
+          background: var(--profile-bg);
+          color: white;
+        }
+        .identity-block {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border: 1px border rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          padding: 1.5rem;
+          transition: border-color 0.3s ease;
+        }
+        .identity-block:hover {
+          border-color: var(--accent-color);
+        }
+      `}</style>
+    </div>
+  );
+}
