@@ -51,31 +51,44 @@ export default function Lab() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-black pb-20 overflow-x-hidden">
       <BackgroundMediaManager />
       <Navigation />
       
-      <main className="pt-24 px-4 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="pt-28 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Editor Panel */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-display font-bold">The Lab</h1>
-            <div className="text-sm text-muted-foreground">Level {profile.level}</div>
+        <div className="lg:col-span-5 space-y-10 animate-in fade-in slide-in-from-left-4 duration-700">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-purple-500/10 rounded-2xl border border-purple-500/20">
+                <Wand2 className="w-6 h-6 text-purple-400" />
+              </div>
+              <h1 className="text-4xl font-black tracking-tighter text-white">The Lab</h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="px-3 py-1 bg-zinc-900 rounded-full border border-white/5 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[11px] font-black text-zinc-400 uppercase tracking-widest">Level {profile.level}</span>
+              </div>
+              <div className="px-3 py-1 bg-zinc-900 rounded-full border border-white/5 text-[11px] font-black text-zinc-400 uppercase tracking-widest">
+                XP: {profile.xp}
+              </div>
+            </div>
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full grid grid-cols-4 bg-secondary/50 p-1">
-              <TabsTrigger value="content" className="data-[state=active]:bg-background">
-                <LinkIcon className="w-4 h-4 mr-2" /> Content
+            <TabsList className="w-full grid grid-cols-4 bg-[#121212] p-1.5 rounded-2xl border border-white/5">
+              <TabsTrigger value="content" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
+                Content
               </TabsTrigger>
-              <TabsTrigger value="design" className="data-[state=active]:bg-background">
-                <Palette className="w-4 h-4 mr-2" /> Design
+              <TabsTrigger value="design" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
+                Design
               </TabsTrigger>
-              <TabsTrigger value="media" className="data-[state=active]:bg-background">
-                <Music className="w-4 h-4 mr-2" /> Media
+              <TabsTrigger value="media" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
+                Assets
               </TabsTrigger>
-              <TabsTrigger value="profile" className="data-[state=active]:bg-background">
-                <Wand2 className="w-4 h-4 mr-2" /> Identity
+              <TabsTrigger value="profile" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
+                Identity
               </TabsTrigger>
             </TabsList>
 
@@ -217,19 +230,25 @@ export default function Lab() {
         </div>
 
         {/* Live Preview Panel */}
-        <div className="lg:col-span-7 sticky top-24 h-fit">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Live Preview</h2>
-            <Button variant="outline" size="sm" className="h-8" onClick={() => window.open(`/u/${profile.username}`, '_blank')} data-testid="button-open-public">
-              Open Public Page <ExternalLink className="w-3 h-3 ml-2" />
+        <div className="lg:col-span-7 sticky top-28 h-fit animate-in fade-in slide-in-from-right-4 duration-700">
+          <div className="flex items-center justify-between mb-6 px-2">
+            <h2 className="text-[13px] font-black text-zinc-500 uppercase tracking-[0.2em]">Real-time Preview</h2>
+            <Button variant="ghost" size="sm" className="h-9 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 font-bold" onClick={() => window.open(`/u/${profile.username}`, '_blank')} data-testid="button-open-public">
+              View Profile <ExternalLink className="w-3.5 h-3.5 ml-2" />
             </Button>
           </div>
           
-          <div className="rounded-3xl border border-white/5 bg-background/50 backdrop-blur-sm p-8 min-h-[600px] flex items-center justify-center relative overflow-hidden">
-            <div className="w-[375px] h-[667px] bg-black rounded-[3rem] border-[8px] border-zinc-800 overflow-hidden relative shadow-2xl">
-              <div className="absolute top-0 left-0 right-0 h-full overflow-y-auto scrollbar-hide bg-background p-4 pt-12">
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-zinc-800 rounded-b-2xl z-50"></div>
-                 <ProfileRenderer user={profile} blocks={profile.blocks || []} />
+          <div className="rounded-[40px] border border-white/5 bg-[#0a0a0a] p-12 min-h-[750px] flex items-center justify-center relative overflow-hidden shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]">
+            <div className="absolute inset-0 bg-purple-500/5 blur-[120px] rounded-full translate-y-1/2" />
+            
+            <div className="w-[340px] h-[680px] bg-black rounded-[3.5rem] border-[12px] border-zinc-900 overflow-hidden relative shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_30px_60px_rgba(0,0,0,0.8)] transform transition-transform hover:scale-[1.02] duration-500">
+              <div className="absolute top-0 left-0 right-0 h-full overflow-y-auto scrollbar-hide bg-black">
+                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-zinc-900 rounded-b-2xl z-50">
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-800 rounded-full" />
+                 </div>
+                 <div className="p-4 pt-12">
+                    <ProfileRenderer user={profile} blocks={profile.blocks || []} />
+                 </div>
               </div>
             </div>
           </div>
