@@ -26,6 +26,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import LoadingPage from "@/components/LoadingPage";
+
 const linkSchema = insertLinkSchema.omit({ userId: true });
 
 export default function Lab() {
