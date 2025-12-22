@@ -67,61 +67,68 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden p-4">
-      {/* Background Gradients */}
+    <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden p-4">
+      {/* Background Glow */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/15 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[150px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-purple-600/10 rounded-full blur-[180px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-900/5 rounded-full blur-[180px]" />
       </div>
 
       {/* Form Card */}
-      <div className="w-full max-w-sm bg-background border border-white/10 rounded-3xl shadow-2xl relative z-10 p-8 space-y-6">
+      <div className="w-full max-w-[420px] bg-[#121212]/80 border border-white/5 rounded-[32px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.8)] backdrop-blur-3xl relative z-10 p-10 space-y-8">
         
         {/* Icon */}
-        <div className="flex justify-center pt-4">
-          <img 
-            src="/icon.png" 
-            alt="Icon" 
-            className="w-24 h-24 object-contain"
-            data-testid="img-icon"
-          />
-        </div>
-
-        {/* Logo (Register only) */}
-        {!isLogin && (
-          <div className="flex justify-center h-8">
+        <div className="flex justify-center pt-2">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full group-hover:bg-purple-500/30 transition-all duration-500" />
             <img 
-              src="/logo.png" 
-              alt="Logo" 
-              className="h-full object-contain"
-              data-testid="img-logo"
+              src="/icon.png" 
+              alt="Icon" 
+              className="w-20 h-20 object-contain relative transition-transform duration-500 group-hover:scale-110"
+              data-testid="img-icon"
             />
           </div>
-        )}
+        </div>
 
         {/* Title */}
-        <div className="text-center space-y-1">
-          {isLogin ? (
-            <>
-              <h1 className="text-2xl font-bold text-white">
-                Welcome Back
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Sign in to your account
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 className="text-2xl font-bold text-white">
-                Create Your <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> Account
-              </h1>
-            </>
+        <div className="text-center space-y-2">
+          <h1 className="text-[28px] font-bold text-white tracking-tight leading-tight">
+            {isLogin ? "Log in to your account" : `Create a lab.dev account`}
+          </h1>
+          {isLogin && (
+            <p className="text-[15px] text-zinc-400 font-medium">
+              Welcome back to the future of profiles
+            </p>
           )}
         </div>
 
+        {/* Discord Social Login (Mockup as in screenshot) */}
+        {isLogin && (
+          <div className="space-y-6">
+            <Button 
+              className="w-full h-14 bg-[#5865F2] hover:bg-[#4752C4] text-white rounded-2xl flex items-center justify-center gap-3 font-bold text-base transition-all active:scale-[0.98]"
+              data-testid="button-discord-login"
+            >
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" />
+              </svg>
+              Discord
+            </Button>
+            
+            <div className="relative flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/5"></div>
+              </div>
+              <span className="relative px-4 bg-[#121212] text-[13px] font-bold text-zinc-500 uppercase tracking-widest">
+                Or with email
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Form */}
         <Form {...formInstance}>
-          <form onSubmit={formInstance.handleSubmit(handleSubmit)} className="space-y-5">
+          <form onSubmit={formInstance.handleSubmit(handleSubmit)} className="space-y-6">
             
             {/* Email (Register only) */}
             {!isLogin && (
@@ -129,107 +136,95 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                 control={formInstance.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-white">Email</FormLabel>
+                  <FormItem className="space-y-2.5">
+                    <FormLabel className="text-[14px] font-bold text-zinc-400 ml-1">Email</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                      <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 text-zinc-500 group-focus-within:text-purple-500">
+                          <Mail className="w-[18px] h-[18px]" />
+                        </div>
                         <Input
                           type="email"
                           placeholder="Email"
                           {...field}
-                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
+                          className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 focus:ring-purple-500/20 rounded-2xl pl-12 text-white font-medium placeholder:text-zinc-600 transition-all"
                           data-testid="input-email"
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-[12px] font-bold text-red-400" />
                   </FormItem>
                 )}
               />
             )}
 
-            {/* Password (always shown, but different order for login vs register) */}
-            {isLogin && (
-              <FormField
-                control={formInstance.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-white">Username</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                        <Input
-                          placeholder="Username"
-                          {...field}
-                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
-                          data-testid="input-username"
-                        />
+            {/* Username/Email Field */}
+            <FormField
+              control={formInstance.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem className="space-y-2.5">
+                  <FormLabel className="text-[14px] font-bold text-zinc-400 ml-1">
+                    {isLogin ? "Username" : "Username"}
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative group">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 text-zinc-500 group-focus-within:text-purple-500">
+                        {isLogin ? <User className="w-[18px] h-[18px]" /> : <div className="text-[14px] font-black opacity-50">@</div>}
                       </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+                      <Input
+                        placeholder={isLogin ? "Username" : "lab.dev/"}
+                        {...field}
+                        className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 focus:ring-purple-500/20 rounded-2xl pl-12 text-white font-medium placeholder:text-zinc-600 transition-all"
+                        data-testid="input-username"
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-[12px] font-bold text-red-400" />
+                </FormItem>
+              )}
+            />
 
             {/* Password */}
             <FormField
               control={formInstance.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-white">Password</FormLabel>
+                <FormItem className="space-y-2.5">
+                  <div className="flex items-center justify-between ml-1">
+                    <FormLabel className="text-[14px] font-bold text-zinc-400">Password</FormLabel>
+                    {isLogin && (
+                      <button type="button" className="text-[13px] font-bold text-zinc-500 hover:text-white transition-colors">
+                        Forgot password?
+                      </button>
+                    )}
+                  </div>
                   <FormControl>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                    <div className="relative group">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 text-zinc-500 group-focus-within:text-purple-500">
+                        <Lock className="w-[18px] h-[18px]" />
+                      </div>
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         {...field}
-                        className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 pr-10 py-2.5"
+                        className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 focus:ring-purple-500/20 rounded-2xl pl-12 pr-12 text-white font-medium placeholder:text-zinc-600 transition-all"
                         data-testid="input-password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-3 text-muted-foreground hover:text-white transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
                         data-testid="button-toggle-password-visibility"
                       >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
                       </button>
                     </div>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-[12px] font-bold text-red-400" />
                 </FormItem>
               )}
             />
-
-            {/* Username (Register only) */}
-            {!isLogin && (
-              <FormField
-                control={formInstance.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-white">Username</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
-                        <Input
-                          placeholder="thats.wtf/"
-                          {...field}
-                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 py-2.5"
-                          data-testid="input-username"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
 
             {/* Confirm Password (Register only) */}
             {!isLogin && (
@@ -237,29 +232,31 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                 control={formInstance.control}
                 name="confirmPassword"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-white">Confirm Password</FormLabel>
+                  <FormItem className="space-y-2.5">
+                    <FormLabel className="text-[14px] font-bold text-zinc-400 ml-1">Confirm Password</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                      <div className="relative group">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 text-zinc-500 group-focus-within:text-purple-500">
+                          <Lock className="w-[18px] h-[18px]" />
+                        </div>
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
                           placeholder="Confirm Password"
                           {...field}
-                          className="bg-secondary/70 border-white/10 focus:border-primary/50 rounded-lg pl-10 pr-10 py-2.5"
+                          className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 focus:ring-purple-500/20 rounded-2xl pl-12 pr-12 text-white font-medium placeholder:text-zinc-600 transition-all"
                           data-testid="input-confirm-password"
                         />
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-3 top-3 text-muted-foreground hover:text-white transition-colors"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
                           data-testid="button-toggle-confirm-visibility"
                         >
-                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          {showConfirmPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
                         </button>
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-[12px] font-bold text-red-400" />
                   </FormItem>
                 )}
               />
@@ -271,17 +268,17 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                 control={formInstance.control}
                 name="agreeToTerms"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 py-2">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="rounded"
+                        className="w-5 h-5 rounded-md border-white/10 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                         data-testid="checkbox-agree-terms"
                       />
                     </FormControl>
-                    <FormLabel className="text-sm text-muted-foreground font-normal cursor-pointer">
-                      I agree to ToS & Privacy Policy
+                    <FormLabel className="text-[14px] text-zinc-500 font-bold cursor-pointer hover:text-zinc-400 transition-colors">
+                      I agree to <span className="text-zinc-300">ToS</span> & <span className="text-zinc-300">Privacy Policy</span>
                     </FormLabel>
                     <FormMessage />
                   </FormItem>
@@ -289,24 +286,17 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
               />
             )}
 
-            {/* Error Message */}
-            {error && (
-              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg border border-destructive/20" data-testid="error-message">
-                {error}
-              </div>
-            )}
-
             {/* Submit Button */}
             <Button 
               type="submit" 
-              className="w-full mt-6 bg-transparent border-2 border-white/30 hover:border-white/50 text-white rounded-lg h-auto py-3 font-semibold transition-all" 
+              className="w-full h-14 mt-4 bg-[#1a1a1a] hover:bg-[#222] border border-white/5 text-white rounded-2xl font-bold text-base transition-all active:scale-[0.98] shadow-lg" 
               disabled={isPending}
               data-testid={isLogin ? "button-login" : "button-sign-up"}
             >
               {isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
-                isLogin ? "Sign In" : "Sign Up"
+                isLogin ? "Login" : "Sign Up"
               )}
             </Button>
           </form>
@@ -314,15 +304,15 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
 
         {/* Toggle Mode */}
         <div className="text-center pt-2">
-          <p className="text-sm text-muted-foreground">
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+          <p className="text-[15px] font-bold text-zinc-500">
+            {isLogin ? "Are you new to lab.dev? " : "Already have an account? "}
             <button
               type="button"
               onClick={onToggleMode}
-              className="text-white hover:text-primary font-semibold transition-colors"
+              className="text-purple-400 hover:text-purple-300 transition-colors decoration-2 underline-offset-4"
               data-testid="button-toggle-auth-mode"
             >
-              {isLogin ? "Sign Up" : "Sign In"}
+              {isLogin ? "Create an account" : "Sign In"}
             </button>
           </p>
         </div>
