@@ -31,7 +31,7 @@ export default function Privacy() {
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">Introduction</h2>
                 <p className="text-muted-foreground">
-                  That's.WTF ("we" or "us" or "our") operates the https://thats.wtf website (the "Service").
+                  <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> ("we" or "us" or "our") operates the https://thats.wtf website (the "Service").
                 </p>
                 <p className="text-muted-foreground">
                   This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
@@ -54,7 +54,7 @@ export default function Privacy() {
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">Use of Data</h2>
                 <p className="text-muted-foreground">
-                  That's.WTF uses the collected data for various purposes:
+                  <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> uses the collected data for various purposes:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-2 mt-2">
                   <li>To provide and maintain our Service</li>

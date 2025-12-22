@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=VT323&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -39,6 +39,7 @@
   /* Custom vars */
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
+  --font-mono-vt: 'VT323', monospace;
 }
 
 /* Gen Z Theme Variants */
@@ -115,6 +116,19 @@
     @apply border-2 border-accent shadow-lg shadow-accent/30;
   }
   
+  .brand-text {
+    font-family: var(--font-mono-vt);
+    @apply text-2xl tracking-wide;
+  }
+  .brand-text-thats {
+    color: #9b58ff;
+  }
+  .brand-text-dot {
+    color: #ffff00;
+  }
+  .brand-text-wtf {
+    color: #ffffff;
+  }
   @keyframes enter {
     0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }

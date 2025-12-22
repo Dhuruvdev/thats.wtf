@@ -113,7 +113,7 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
           ) : (
             <>
               <h1 className="text-2xl font-bold text-white">
-                Create Your That's.WTF Account
+                Create Your <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> Account
               </h1>
             </>
           )}

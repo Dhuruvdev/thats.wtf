@@ -31,19 +31,19 @@ export default function Terms() {
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">1. Agreement to Terms</h2>
                 <p className="text-muted-foreground">
-                  By accessing and using That's.WTF, you accept and agree to be bound by the terms and provision of this agreement.
+                  By accessing and using <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>, you accept and agree to be bound by the terms and provision of this agreement.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">2. Use License</h2>
                 <p className="text-muted-foreground mb-2">
-                  Permission is granted to temporarily download one copy of the materials (information or software) on That's.WTF for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+                  Permission is granted to temporarily download one copy of the materials (information or software) on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-2">
                   <li>Modifying or copying the materials</li>
                   <li>Using the materials for any commercial purpose or for any public display</li>
-                  <li>Attempting to reverse engineer any software contained on That's.WTF</li>
+                  <li>Attempting to reverse engineer any software contained on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span></li>
                   <li>Removing any copyright or other proprietary notations from the materials</li>
                   <li>Transferring the materials to another person or "mirroring" the materials on any other server</li>
                 </ul>
@@ -52,21 +52,21 @@ export default function Terms() {
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">3. Disclaimer</h2>
                 <p className="text-muted-foreground">
-                  The materials on That's.WTF are provided on an 'as is' basis. That's.WTF makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+                  The materials on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> are provided on an 'as is' basis. <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">4. Limitations</h2>
                 <p className="text-muted-foreground">
-                  In no event shall That's.WTF or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on That's.WTF, even if That's.WTF or an authorized representative has been notified orally or in writing of the possibility of such damage.
+                  In no event shall <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>, even if <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> or an authorized representative has been notified orally or in writing of the possibility of such damage.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-display font-black text-white mb-4">5. User Conduct</h2>
                 <p className="text-muted-foreground">
-                  You agree not to engage in any conduct that restricts or inhibits anyone's use or enjoyment of That's.WTF. Prohibited behavior includes: harassing or causing distress or inconvenience to any person, transmitting obscene or offensive content, or disrupting the normal flow of dialogue within our website.
+                  You agree not to engage in any conduct that restricts or inhibits anyone's use or enjoyment of <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>. Prohibited behavior includes: harassing or causing distress or inconvenience to any person, transmitting obscene or offensive content, or disrupting the normal flow of dialogue within our website.
                 </p>
               </section>
 

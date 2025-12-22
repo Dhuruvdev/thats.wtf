@@ -117,7 +117,7 @@ export default function AccountOverview() {
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel className="text-xs text-muted-foreground uppercase">
-                that's.wtf
+                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -306,7 +306,7 @@ export default function AccountOverview() {
                   <h2 className="text-2xl font-display font-black text-white mb-4">
                     Connections
                   </h2>
-                  <p className="text-sm text-muted-foreground mb-4">Link your Discord account to thats.wtf</p>
+                  <p className="text-sm text-muted-foreground mb-4">Link your Discord account to <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span></p>
                   
                   <Button className="w-full bg-blue-600/30 hover:bg-blue-600/40 border border-blue-600/30 text-white justify-start">
                     <Github className="w-4 h-4 mr-3" />
