@@ -8,6 +8,23 @@
   --danger: #ef4444;
   --radius-md: 12px;
   --block-gap: 1rem;
+  --mouse-x: 0px;
+  --mouse-y: 0px;
+  --scroll-progress: 0;
+}
+
+/* Reactive background spotlight */
+body::before {
+  content: '';
+  position: fixed;
+  top: var(--mouse-y);
+  left: var(--mouse-x);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 * {
