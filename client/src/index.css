@@ -138,7 +138,7 @@ body {
 }
 
 .profile-container {
-  min-h-screen;
+  min-height: 100vh;
   position: relative;
   padding: 4rem 2rem;
   display: flex;
