@@ -1,26 +1,27 @@
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { FolderOpen, X, ChevronRight } from "lucide-react";
+import type { User } from "@shared/schema";
 
 export default function Lab() {
   const { toast } = useToast();
-  const [config, setConfig] = useState(JSON.stringify({
-    displayName: "Identity Demo",
-    bio: "Extreme customization testing",
-    themeConfig: {
-      background: { type: "animated", value: "#0a0a0a", overlayOpacity: 0.8 },
-      cursor: { type: "trail", color: "#7c3aed" },
-      audio: { url: "", enabled: false },
-      intro: { enabled: true, type: "glitch" }
+  const { data: user } = useQuery<User>({
+    queryKey: ["/api/user"],
+  });
+
+  const [themeConfig, setThemeConfig] = useState<User["themeConfig"] | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      setThemeConfig(user.themeConfig);
     }
-  }, null, 2));
+  }, [user]);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
-      const res = await apiRequest("PATCH", "/api/user", data);
+    mutationFn: async (config: User["themeConfig"]) => {
+      const res = await apiRequest("PATCH", "/api/user", { themeConfig: config });
       return res.json();
     },
     onSuccess: () => {
@@ -29,32 +30,76 @@ export default function Lab() {
     }
   });
 
+  const updateAsset = (path: string[], value: any) => {
+    if (!themeConfig) return;
+    const newConfig = JSON.parse(JSON.stringify(themeConfig));
+    let current = newConfig;
+    for (let i = 0; i < path.length - 1; i++) {
+      current = current[path[i]];
+    }
+    current[path[path.length - 1]] = value;
+    setThemeConfig(newConfig);
+    mutation.mutate(newConfig);
+  };
+
+  if (!themeConfig) return null;
+
   return (
-    <div className="dopamine-container">
-      <div className="identity-block w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-4">Identity Builder (JSON)</h1>
-        <Textarea
-          value={config}
-          onChange={(e) => setConfig(e.target.value)}
-          className="min-h-[400px] font-mono bg-black/50 text-accent"
-        />
-        <div className="mt-4 flex gap-2">
-          <Button 
-            onClick={() => mutation.mutate(JSON.parse(config))}
-            disabled={mutation.isPending}
-          >
-            Deploy Identity
-          </Button>
-          <Button variant="outline" onClick={() => {
-            const blob = new Blob([config], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'identity.json';
-            a.click();
-          }}>
-            Export JSON
-          </Button>
+    <div className="lab-container">
+      <h1 className="section-title">Assets Uploader</h1>
+      
+      <div className="uploader-card">
+        {/* Background Section */}
+        <div className="asset-group">
+          <label className="asset-label">Background</label>
+          <div className="preview-box">
+            {themeConfig.background.type === 'animated' ? (
+              <video autoPlay loop muted src={themeConfig.background.value || ''} />
+            ) : (
+              <img src={themeConfig.background.value || ''} alt="" />
+            )}
+            <span className="asset-tag">.MP4</span>
+            <button className="remove-btn" onClick={() => updateAsset(['background', 'value'], '')}>
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Audio Section */}
+        <div className="asset-group">
+          <label className="asset-label">Audio</label>
+          <div className="preview-box">
+            <div className="audio-manager-btn">
+              <FolderOpen size={48} strokeWidth={1} />
+              <p style={ { fontSize: '0.875rem', marginTop: '0.5rem' } }>Click to open audio manager</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Avatar Section */}
+        <div className="asset-group">
+          <label className="asset-label">Profile Avatar</label>
+          <div className="preview-box">
+            <img src={user?.avatarUrl || ''} alt="" />
+            <span className="asset-tag">.WEBP</span>
+            <button className="remove-btn" onClick={() => {}}>
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Custom Cursor Section */}
+        <div className="asset-group">
+          <label className="asset-label">Custom Cursor</label>
+          <div className="preview-box">
+             <div className="audio-manager-btn">
+               <div style={ { width: '40px', height: '40px', background: themeConfig.cursor.color, borderRadius: '50%', boxShadow: '0 0 20px var(--accent)' } } />
+               <p style={ { fontSize: '0.875rem', marginTop: '0.5rem' } }>Type: {themeConfig.cursor.type}</p>
+             </div>
+             <button className="remove-btn" onClick={() => updateAsset(['cursor', 'type'], 'default')}>
+              <X size={16} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
