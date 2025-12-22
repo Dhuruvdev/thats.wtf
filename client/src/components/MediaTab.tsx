@@ -35,153 +35,176 @@ export function MediaTab() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between px-2">
-        <h2 className="text-xl font-bold tracking-tight text-white">Assets Uploader</h2>
-        <div className="bg-purple-500/10 text-purple-400 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md border border-purple-500/20">
-          Cloud Storage
+        <h2 className="text-xl font-bold tracking-tight text-white">Assets Library</h2>
+        <div className="flex items-center gap-2">
+           <div className="bg-purple-500/10 text-purple-400 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border border-purple-500/20">
+            Cloud
+          </div>
+          <div className="bg-zinc-900 text-zinc-500 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border border-white/5">
+            2.4 MB / 50 MB
+          </div>
         </div>
       </div>
 
-      <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-        <CardContent className="p-8 space-y-10">
-          
-          {/* Background Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-[15px] font-bold text-zinc-300 ml-1">Background</Label>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Presets</span>
-                <div className="flex gap-1.5">
-                  {["#7c3aed", "#ec4899", "#06b6d4"].map(color => (
-                    <button key={color} className="w-3 h-3 rounded-full border border-white/10" style={{ backgroundColor: color }} />
-                  ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl md:col-span-2">
+          <CardContent className="p-8 space-y-10">
+            
+            {/* Background Section */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-[17px] font-bold text-white ml-1">Profile Background</Label>
+                  <p className="text-xs text-zinc-500 font-medium ml-1 mt-0.5">MP4, WebM, or static imagery</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-black text-zinc-600 uppercase tracking-widest">Presets</span>
+                  <div className="flex gap-1.5 p-1 bg-black/40 rounded-full border border-white/5">
+                    {["#7c3aed", "#ec4899", "#06b6d4"].map(color => (
+                      <button key={color} className="w-3 h-3 rounded-full border border-white/10" style={{ backgroundColor: color }} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="relative group">
+                <div className="h-56 w-full bg-black/60 rounded-[32px] border border-white/5 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 overflow-hidden relative shadow-inner">
+                  {media.videoUrl ? (
+                    <>
+                      <video src={media.videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-40" muted loop autoPlay />
+                      <div className="absolute top-6 right-6 flex gap-2">
+                        <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
+                          .MP4
+                        </div>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
+                          onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
+                        >
+                          <X className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-16 h-16 rounded-[24px] bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
+                        <Video className="w-8 h-8 text-zinc-500" />
+                      </div>
+                      <p className="text-[15px] font-bold text-zinc-500">Drop media here</p>
+                      <p className="text-[11px] font-black text-zinc-700 uppercase tracking-widest mt-1">or click to browse</p>
+                      <Input
+                        type="text"
+                        placeholder="Paste URL (MP4, WEBM, JPG)"
+                        value={media.videoUrl}
+                        onChange={(e) => setMedia((prev: any) => ({ ...prev, videoUrl: e.target.value }))}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>
-            
-            <div className="relative group">
-              <div className="h-44 w-full bg-black/60 rounded-3xl border border-white/5 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 overflow-hidden relative">
-                {media.videoUrl ? (
-                  <>
-                    <video src={media.videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-40" muted loop autoPlay />
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
-                        .MP4
-                      </div>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="w-8 h-8 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                        onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Video className="w-7 h-7 text-zinc-500" />
-                    </div>
-                    <p className="text-sm font-bold text-zinc-500">Drop background media here</p>
-                    <Input
-                      type="text"
-                      placeholder="Paste URL (MP4, WEBM, JPG)"
-                      value={media.videoUrl}
-                      onChange={(e) => setMedia((prev: any) => ({ ...prev, videoUrl: e.target.value }))}
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
 
-          {/* Audio Section */}
-          <div className="space-y-4">
-            <Label className="text-[15px] font-bold text-zinc-300 ml-1">Audio</Label>
-            <div className="h-36 w-full bg-black/60 rounded-3xl border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group">
-              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <FolderOpen className="w-7 h-7 text-zinc-500" />
-              </div>
-              <p className="text-sm font-bold text-zinc-500">Click to open audio manager</p>
-              <Input
-                type="text"
-                placeholder="Audio URL"
-                value={media.audioUrl}
-                onChange={(e) => setMedia((prev: any) => ({ ...prev, audioUrl: e.target.value }))}
-                className="absolute opacity-0 cursor-pointer"
-              />
-            </div>
-          </div>
-
-          {/* Avatar Section */}
-          <div className="space-y-4">
-            <Label className="text-[15px] font-bold text-zinc-300 ml-1">Profile Avatar</Label>
-            <div className="h-44 w-full bg-black/60 rounded-3xl border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group relative overflow-hidden">
-              {profile?.avatarUrl ? (
-                <>
-                  <img src={profile.avatarUrl} className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale" alt="Avatar" />
-                  <div className="absolute top-4 right-4 flex gap-2">
-                    <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
-                      .WEBP
-                    </div>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="w-8 h-8 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                      onClick={() => handleUpdateAvatar("")}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Audio Section */}
+              <div className="space-y-4">
+                <Label className="text-[15px] font-bold text-zinc-400 ml-1">Audio Track</Label>
+                <div className="h-44 w-full bg-black/60 rounded-[28px] border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group relative">
                   <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <User className="w-7 h-7 text-zinc-500" />
+                    <Music className="w-7 h-7 text-zinc-500" />
                   </div>
-                  <p className="text-sm font-bold text-zinc-500">Upload custom avatar</p>
+                  <p className="text-sm font-bold text-zinc-500">Audio manager</p>
+                  <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mt-1">MP3, WAV, OGG</p>
                   <Input
                     type="text"
-                    placeholder="Avatar URL"
-                    value={profile?.avatarUrl || ""}
-                    onChange={(e) => handleUpdateAvatar(e.target.value)}
+                    placeholder="Audio URL"
+                    value={media.audioUrl}
+                    onChange={(e) => setMedia((prev: any) => ({ ...prev, audioUrl: e.target.value }))}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
-                </>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
 
-          {/* Cursor Section */}
-          <div className="space-y-4">
-            <Label className="text-[15px] font-bold text-zinc-300 ml-1">Custom Cursor</Label>
-            <div className="h-28 w-full bg-black/60 rounded-3xl border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group">
-               <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:rotate-12 transition-transform">
-                    <MousePointer2 className="w-6 h-6 text-zinc-500" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-zinc-400">Custom Mouse Cursor</span>
-                    <span className="text-[11px] font-bold text-zinc-600 uppercase tracking-widest">Upload .PNG or .SVG</span>
-                  </div>
-               </div>
+              {/* Avatar Section */}
+              <div className="space-y-4">
+                <Label className="text-[15px] font-bold text-zinc-400 ml-1">Identity Avatar</Label>
+                <div className="h-44 w-full bg-black/60 rounded-[28px] border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group relative overflow-hidden">
+                  {profile?.avatarUrl ? (
+                    <>
+                      <img src={profile.avatarUrl} className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500" alt="Avatar" />
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="w-8 h-8 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
+                          onClick={() => handleUpdateAvatar("")}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <User className="w-7 h-7 text-zinc-500" />
+                      </div>
+                      <p className="text-sm font-bold text-zinc-500">Upload avatar</p>
+                      <Input
+                        type="text"
+                        placeholder="Avatar URL"
+                        value={profile?.avatarUrl || ""}
+                        onChange={(e) => handleUpdateAvatar(e.target.value)}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
 
-        </CardContent>
-      </Card>
+            {/* Cursor Section */}
+            <div className="space-y-4">
+              <Label className="text-[15px] font-bold text-zinc-400 ml-1">Custom Hardware</Label>
+              <div className="p-6 w-full bg-black/60 rounded-[28px] border border-white/5 flex items-center justify-between transition-all hover:border-purple-500/30 group">
+                 <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg">
+                      <MousePointer2 className="w-7 h-7 text-zinc-500" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[15px] font-bold text-white">Interactive Cursor</span>
+                      <span className="text-[11px] font-black text-zinc-600 uppercase tracking-[0.15em] mt-0.5">Upload .PNG or .SVG</span>
+                    </div>
+                 </div>
+                 <Button variant="ghost" className="h-10 px-5 rounded-xl border border-white/5 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
+                    Select File
+                 </Button>
+              </div>
+            </div>
+
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Control Panel */}
       <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl mt-8">
-        <CardContent className="p-8 space-y-6">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label className="text-[13px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1">
-                Video Volume
-              </Label>
+        <CardContent className="p-8 space-y-8">
+          <div className="flex items-center gap-3 ml-1">
+             <div className="p-2 bg-purple-500/10 rounded-xl border border-purple-500/20">
+                <Music className="w-4 h-4 text-purple-400" />
+             </div>
+             <h4 className="text-[15px] font-bold text-white">Level Controls</h4>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center px-1">
+                <Label className="text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em]">
+                  Video Gain
+                </Label>
+                <span className="text-[11px] font-black text-purple-400">{Math.round(media.videoVolume * 100)}%</span>
+              </div>
               <div className="relative pt-2">
                 <input
                   type="range"
@@ -190,14 +213,17 @@ export function MediaTab() {
                   step="0.01"
                   value={media.videoVolume}
                   onChange={(e) => setMedia((prev: any) => ({ ...prev, videoVolume: parseFloat(e.target.value) }))}
-                  className="w-full accent-purple-500"
+                  className="w-full accent-purple-500 h-1.5 bg-zinc-900 rounded-full cursor-pointer"
                 />
               </div>
             </div>
-            <div className="space-y-3">
-              <Label className="text-[13px] font-black text-zinc-500 uppercase tracking-[0.2em] ml-1">
-                Audio Volume
-              </Label>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center px-1">
+                <Label className="text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em]">
+                  Audio Gain
+                </Label>
+                <span className="text-[11px] font-black text-purple-400">{Math.round(media.audioVolume * 100)}%</span>
+              </div>
               <div className="relative pt-2">
                 <input
                   type="range"
@@ -206,7 +232,7 @@ export function MediaTab() {
                   step="0.01"
                   value={media.audioVolume}
                   onChange={(e) => setMedia((prev: any) => ({ ...prev, audioVolume: parseFloat(e.target.value) }))}
-                  className="w-full accent-purple-500"
+                  className="w-full accent-purple-500 h-1.5 bg-zinc-900 rounded-full cursor-pointer"
                 />
               </div>
             </div>
