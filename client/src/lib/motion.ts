@@ -54,6 +54,29 @@ export const idlePulse = (el: HTMLElement) => {
 
 export const introPacman = (container: HTMLElement) => {
   const tl = gsap.timeline();
-  // Animation logic for Pacman style intro
+  
+  // Create Pacman element
+  const pacman = document.createElement("div");
+  pacman.className = "pacman-intro";
+  container.appendChild(pacman);
+
+  tl.set(pacman, { 
+    position: "fixed",
+    top: "50%",
+    left: "-100px",
+    width: "100px",
+    height: "100px",
+    backgroundColor: "#FFD700",
+    borderRadius: "50%",
+    zIndex: 9999,
+    clipPath: "polygon(100% 50%, 0% 0%, 0% 100%)" // Mock mouth
+  })
+  .to(pacman, {
+    left: "110%",
+    duration: 2,
+    ease: "power1.inOut",
+    onComplete: () => pacman.remove()
+  });
+
   return tl;
 };

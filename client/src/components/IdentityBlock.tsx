@@ -1,7 +1,9 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Block } from "@shared/schema";
 import { blockHover, blockLeave } from "@/lib/motion";
+import { useLogicEngine } from "@/hooks/use-logic-engine";
 import { ExternalLink, Twitter, Github, Instagram, Youtube, Globe } from "lucide-react";
+import { gsap } from "gsap";
 
 interface IdentityBlockProps {
   block: Block;
@@ -9,6 +11,19 @@ interface IdentityBlockProps {
 
 export function IdentityBlock({ block }: IdentityBlockProps) {
   const blockRef = useRef<HTMLDivElement>(null);
+  const logic = useLogicEngine();
+
+  useEffect(() => {
+    if (blockRef.current && logic.scrollSpeed > 20) {
+      gsap.to(blockRef.current, {
+        skewX: logic.scrollSpeed * 0.1,
+        duration: 0.1,
+        overwrite: "auto"
+      });
+    } else if (blockRef.current) {
+      gsap.to(blockRef.current, { skewX: 0, duration: 0.4 });
+    }
+  }, [logic.scrollSpeed]);
 
   const handleMouseEnter = () => {
     if (blockRef.current) {
