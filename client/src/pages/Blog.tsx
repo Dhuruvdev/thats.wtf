@@ -22,7 +22,7 @@ export default function Blog() {
     },
     {
       title: "Creator Stories: From Zero to 100K Followers",
-      excerpt: "Real stories from creators who built their community using That's.WTF.",
+      excerpt: "Real stories from creators who built their community using thats.wtf.",
       date: "Dec 10, 2025",
       readTime: "8 min read",
       category: "Stories"
@@ -43,7 +43,7 @@ export default function Blog() {
     },
     {
       title: "Getting Started with Custom Domains",
-      excerpt: "Step-by-step guide to connecting your custom domain to your That's.WTF profile.",
+      excerpt: "Step-by-step guide to connecting your custom domain to your thats.wtf profile.",
       date: "Dec 1, 2025",
       readTime: "4 min read",
       category: "Tutorial"

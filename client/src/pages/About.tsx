@@ -25,7 +25,7 @@ export default function About() {
             className="text-center mb-16"
           >
             <h1 className="text-5xl sm:text-6xl font-display font-black text-white mb-4">
-              About That's.WTF
+              About <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Empowering creators to own their digital presence
@@ -45,7 +45,7 @@ export default function About() {
                 Our Mission
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                At That's.WTF, we believe every creator deserves a stunning, interactive digital presence. We're building the next generation of bio link platforms—one that's not just functional, but truly premium. With gamified progression, cinematic animations, and complete customization, we're helping creators and professionals build digital identities that stand out and convert.
+                At <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>, we believe every creator deserves a stunning, interactive digital presence. We're building the next generation of bio link platforms—one that's not just functional, but truly premium. With gamified progression, cinematic animations, and complete customization, we're helping creators and professionals build digital identities that stand out and convert.
               </p>
             </Card>
           </motion.div>
@@ -105,10 +105,10 @@ export default function About() {
                 Our Story
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                That's.WTF started with a simple observation: bio link platforms are boring. They're functional, sure, but they lack personality and polish. We saw an opportunity to create something different—something that felt premium and exciting.
+                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> started with a simple observation: bio link platforms are boring. They're functional, sure, but they lack personality and polish. We saw an opportunity to create something different—something that felt premium and exciting.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Today, we're proud to have 10,000+ active creators using That's.WTF to build stunning profiles. From content creators to indie developers to small businesses, creators are leveling up their digital presence with our platform. And we're just getting started.
+                Today, we're proud to have 10,000+ active creators using <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> to build stunning profiles. From content creators to indie developers to small businesses, creators are leveling up their digital presence with our platform. And we're just getting started.
               </p>
             </Card>
           </motion.div>

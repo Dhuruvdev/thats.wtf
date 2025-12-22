@@ -63,7 +63,7 @@ export default function Auth() {
 
       <Card className="relative w-full max-w-md border-white/10 bg-black/40 backdrop-blur-md p-8 rounded-2xl">
         <div className="flex justify-center mb-6">
-          <img src={iconImg} alt="That's.WTF" className="w-24 h-24" />
+          <img src={iconImg} alt="thats.wtf" className="w-24 h-24" />
         </div>
         
         <h1 className="text-2xl font-bold text-white text-center mb-1">

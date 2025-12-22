@@ -115,7 +115,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="border-t border-white/5 pt-8">
           <p className="text-xs text-muted-foreground">
-            © 2025 That's.WTF. All rights reserved.
+            © 2025 <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>. All rights reserved.
           </p>
         </div>
       </div>

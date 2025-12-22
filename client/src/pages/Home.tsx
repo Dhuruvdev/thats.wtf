@@ -104,7 +104,7 @@ export default function Home() {
               </h1>
               
               <p className="hero-desc text-lg text-muted-foreground mb-10 max-w-2xl leading-relaxed">
-                That's.WTF is the premium bio link platform where creators and professionals build stunning, interactive profiles with gamified progression and cinematic animations. Level up your digital identity.
+                <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span> is the premium bio link platform where creators and professionals build stunning, interactive profiles with gamified progression and cinematic animations. Level up your digital identity.
               </p>
               
               <div className="hero-btns flex flex-col sm:flex-row items-start gap-4 mb-12">
@@ -358,7 +358,7 @@ export default function Home() {
                 Ready to Level Up?
               </h2>
               <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
-                Join thousands of creators building their premium digital presence on That's.WTF
+                Join thousands of creators building their premium digital presence on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
               </p>
               <Link href="/login">
                 <Button 
@@ -383,7 +383,7 @@ export default function Home() {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-display font-black text-white mb-4">
-              Why Choose That's.WTF?
+              Why Choose <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>?
             </h2>
           </motion.div>
 
