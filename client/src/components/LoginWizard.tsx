@@ -26,7 +26,7 @@ const registerSchema = z.object({
 });
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  username: z.string().min(1, "Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -165,15 +165,15 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
               render={({ field }) => (
                 <FormItem className="space-y-2.5">
                   <FormLabel className="text-[14px] font-bold text-zinc-400 ml-1">
-                    {isLogin ? "Username" : "Username"}
+                    {isLogin ? "Email" : "Username"}
                   </FormLabel>
                   <FormControl>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 text-zinc-500 group-focus-within:text-purple-500">
-                        {isLogin ? <User className="w-[18px] h-[18px]" /> : <div className="text-[14px] font-black opacity-50">@</div>}
+                        {isLogin ? <Mail className="w-[18px] h-[18px]" /> : <div className="text-[14px] font-black opacity-50">@</div>}
                       </div>
                       <Input
-                        placeholder={isLogin ? "Username" : "lab.dev/"}
+                        placeholder={isLogin ? "Email" : "lab.dev/"}
                         {...field}
                         className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 focus:ring-purple-500/20 rounded-2xl pl-12 text-white font-medium placeholder:text-zinc-600 transition-all"
                         data-testid="input-username"
