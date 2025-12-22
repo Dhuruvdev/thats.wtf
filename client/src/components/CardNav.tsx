@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X, HelpCircle, MessageCircle, DollarSign, Globe } from "lucide-react";
+import { Menu, X, HelpCircle, MessageCircle, DollarSign, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import logoImg from "/logo.png";
 
