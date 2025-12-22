@@ -15,15 +15,15 @@ import iconImg from "/icon.png";
 import LoadingPage from "@/components/LoadingPage";
 
 const loginSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
 });
 
 const signupSchema = z.object({
-  email: z.string(),
-  password: z.string(),
-  username: z.string(),
-  agreeToTerms: z.boolean(),
+  email: z.string().min(1, "Email is required"),
+  password: z.string().min(1, "Password is required"),
+  username: z.string().min(1, "Username is required"),
+  agreeToTerms: z.boolean().refine(val => val === true, "You must agree to terms"),
 });
 
 export default function Auth() {
@@ -34,6 +34,7 @@ export default function Auth() {
   const { mutateAsync: register, isPending: isRegisterPending } = useRegister();
 
   const form = useForm({
+    resolver: zodResolver(isLogin ? loginSchema : signupSchema),
     defaultValues: {
       username: "",
       email: "",
