@@ -83,10 +83,13 @@ export function BackgroundMediaManager() {
     }
   }, [media.videoVolume]);
 
-  const setAudioUrl = (url: string) =>
-    setMedia((prev) => ({ ...prev, audioUrl: url }));
-  const setVideoUrl = (url: string) =>
-    setMedia((prev) => ({ ...prev, videoUrl: url }));
+  const setAudioUrl = (url: string) => {
+    setMedia((prev) => ({ ...prev, audioUrl: url, audioPlaying: true }));
+  };
+  
+  const setVideoUrl = (url: string) => {
+    setMedia((prev) => ({ ...prev, videoUrl: url, videoPlaying: true }));
+  };
 
   return (
     <>

@@ -7,6 +7,7 @@ import { z } from "zod";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import express from "express";
 import type { Multer } from "multer";
 
 // Create uploads directory if it doesn't exist
@@ -35,6 +36,9 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  // Serve uploads directory
+  app.use("/uploads", express.static(uploadsDir));
+  
   // Set up Auth (defined in auth.ts which I will write in this batch)
   await setupAuth(app);
   

@@ -47,6 +47,9 @@ export function MediaTab() {
   };
 
   const handleAvatarUploadComplete = (fileUrl: string) => {
+    // Update local state immediately for instant feedback
+    const newProfile = { ...profile, avatarUrl: fileUrl };
+    // Refetch will happen automatically
     updateProfile({ avatarUrl: fileUrl });
   };
 
