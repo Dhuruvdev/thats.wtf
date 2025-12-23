@@ -1,9 +1,10 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { Block, User } from "@shared/schema";
 import { IdentityBlock } from "@/components/IdentityBlock";
 import { springReveal, idlePulse } from "@/lib/motion";
 import { useLogicEngine } from "@/hooks/use-logic-engine";
 import { gsap } from "gsap";
+import { Play, Volume2, VolumeX } from "lucide-react";
 
 interface ProfileRendererProps {
   user: User;
@@ -12,8 +13,11 @@ interface ProfileRendererProps {
 
 export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const logic = useLogicEngine();
   const idleAnimationRef = useRef<gsap.core.Tween | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   // Apply logic rules
   const activeTheme = useMemo(() => {
@@ -63,15 +67,98 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
     }
   }, [activeTheme]);
 
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isAudioPlaying) {
+        audioRef.current.pause();
+        setIsAudioPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsAudioPlaying(true);
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <div 
       ref={containerRef}
       className="profile-container min-h-screen w-full flex flex-col items-center justify-center py-16 px-4 transition-colors duration-500 relative overflow-hidden"
       style={{
-        backgroundColor: "var(--profile-bg, #000)",
+        backgroundColor: user.backgroundUrl ? "transparent" : "var(--profile-bg, #000)",
         fontFamily: "var(--body-font, sans-serif)"
       }}
     >
+      {/* Background Image/GIF */}
+      {user.backgroundUrl && (
+        <div className="absolute inset-0 -z-20">
+          {user.backgroundUrl.toLowerCase().endsWith('.gif') ? (
+            <img 
+              src={user.backgroundUrl} 
+              alt="Profile background" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <video
+              src={user.backgroundUrl}
+              className="w-full h-full object-cover"
+              muted
+              loop
+              autoPlay
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/10 pointer-events-none" />
+        </div>
+      )}
+
+      {/* Audio Player */}
+      {user.audioUrl && (
+        <>
+          <audio 
+            ref={audioRef}
+            src={user.audioUrl}
+            onPlay={() => setIsAudioPlaying(true)}
+            onPause={() => setIsAudioPlaying(false)}
+          />
+          <div className="absolute top-6 left-6 z-40 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 hover:border-white/20 transition-all duration-200">
+            <button
+              onClick={toggleAudio}
+              className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200 group"
+              data-testid="button-audio-play"
+              title={isAudioPlaying ? "Pause" : "Play"}
+            >
+              {isAudioPlaying ? (
+                <div className="flex items-center gap-1">
+                  <div className="w-1 h-3 bg-purple-400 animate-pulse" />
+                  <div className="w-1 h-5 bg-purple-400 animate-pulse" style={{ animationDelay: "0.1s" }} />
+                  <div className="w-1 h-3 bg-purple-400 animate-pulse" style={{ animationDelay: "0.2s" }} />
+                </div>
+              ) : (
+                <Play className="w-4 h-4 text-white" fill="white" />
+              )}
+            </button>
+            <button
+              onClick={toggleMute}
+              className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
+              data-testid="button-audio-mute"
+              title={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-4 h-4 text-white/60" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-white" />
+              )}
+            </button>
+          </div>
+        </>
+      )}
+
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/5 pointer-events-none" />
       
       <div className="relative z-10 max-w-md w-full space-y-8">
