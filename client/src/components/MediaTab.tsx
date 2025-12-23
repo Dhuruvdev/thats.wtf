@@ -6,14 +6,12 @@ import { Music, Video, X, User, MousePointer2, Trash2, FolderOpen, Upload } from
 import { useState, useEffect } from "react";
 import { useUpdateProfile, useProfile } from "@/hooks/use-profile";
 import { useUser } from "@/hooks/use-auth";
-import { ObjectUploader } from "@/components/ObjectUploader";
-import { useUpload } from "@/hooks/use-upload";
+import { AdvancedUploader } from "@/components/AdvancedUploader";
 
 export function MediaTab() {
   const { data: user } = useUser();
   const { data: profile } = useProfile(user?.username || "");
   const { mutate: updateProfile } = useUpdateProfile();
-  const { getUploadParameters } = useUpload();
 
   const [media, setMedia] = useState(() => {
     const stored = localStorage.getItem("backgroundMedia");
@@ -37,15 +35,8 @@ export function MediaTab() {
     updateProfile({ avatarUrl: url });
   };
 
-  const handleUploadComplete = (result: any) => {
-    if (result.successful && result.successful.length > 0) {
-      const uploadedFile = result.successful[0];
-      // Get file URL from response or meta
-      const fileUrl = uploadedFile.response?.url || uploadedFile.meta?.url;
-      if (fileUrl) {
-        setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl }));
-      }
-    }
+  const handleUploadComplete = (fileUrl: string) => {
+    setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl }));
   };
 
   return (
@@ -84,38 +75,25 @@ export function MediaTab() {
               </div>
               
               <div className="relative group">
-                <div className="h-56 w-full bg-black/60 rounded-[32px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 overflow-hidden relative shadow-inner">
-                  {media.videoUrl ? (
-                    <>
-                      <video src={media.videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-40" muted loop autoPlay />
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
-                        onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
-                      >
-                        <X className="w-5 h-5" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-16 h-16 rounded-[24px] bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                        <Video className="w-8 h-8 text-zinc-500" />
-                      </div>
-                      <p className="text-[15px] font-bold text-zinc-500">Drop media here</p>
-                      <p className="text-[11px] font-black text-zinc-700 uppercase tracking-widest mt-1">or click to upload</p>
-                      <ObjectUploader
-                        maxNumberOfFiles={1}
-                        maxFileSize={52428800}
-                        onGetUploadParameters={getUploadParameters}
-                        onComplete={handleUploadComplete}
-                        buttonClassName="absolute inset-0 opacity-0"
-                      >
-                        Upload Video
-                      </ObjectUploader>
-                    </>
-                  )}
-                </div>
+                {media.videoUrl ? (
+                  <div className="h-56 w-full bg-black/60 rounded-[32px] overflow-hidden relative shadow-inner flex items-center justify-center">
+                    <video src={media.videoUrl} className="w-full h-full object-cover" muted loop autoPlay />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
+                      onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <AdvancedUploader 
+                    onComplete={handleUploadComplete}
+                    maxSize={500 * 1024 * 1024}
+                    accept="video/*,image/*"
+                  />
+                )}
               </div>
             </div>
 
