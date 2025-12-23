@@ -162,23 +162,27 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
     >
       {/* Background Image/GIF */}
       {backgroundUrl && (
-        <div className="absolute inset-0 -z-20">
+        <div className="absolute inset-0 -z-20 bg-video-container" style={{ contain: 'strict', willChange: 'transform' }}>
           {backgroundUrl.toLowerCase().endsWith('.gif') ? (
             <img 
               src={backgroundUrl} 
               alt="Profile background" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover bg-video-element"
               crossOrigin="anonymous"
+              loading="eager"
               onError={(e) => console.error("Background image failed to load:", backgroundUrl)}
             />
           ) : (
             <video
               src={backgroundUrl}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover bg-video-element"
               muted
               loop
               autoPlay
+              playsInline
+              preload="metadata"
               crossOrigin="anonymous"
+              style={{ transform: 'translate3d(0, 0, 0)', backfaceVisibility: 'hidden' }}
               onError={(e) => console.error("Background video failed to load:", backgroundUrl)}
             />
           )}
