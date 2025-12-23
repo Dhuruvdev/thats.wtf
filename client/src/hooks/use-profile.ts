@@ -8,12 +8,14 @@ export function useProfile(username: string) {
     queryKey: [api.users.get.path, username],
     queryFn: async () => {
       const url = buildUrl(api.users.get.path, { username });
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.status === 404) return null;
       if (!res.ok) throw new Error("Failed to fetch profile");
       return api.users.get.responses[200].parse(await res.json());
     },
     enabled: !!username,
+    staleTime: 0,
+    gcTime: 0,
   });
 }
 

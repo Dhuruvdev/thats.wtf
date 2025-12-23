@@ -147,6 +147,14 @@ export async function registerRoutes(
     }
     
     const blocks = await storage.getBlocksByUserId(user.id);
+    
+    // Prevent caching to ensure latest profile data is always shown
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+    
     res.json({ ...user, blocks });
   });
 
