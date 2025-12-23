@@ -33,8 +33,8 @@ export function useUpdateProfile() {
     },
     onSuccess: (updatedUser) => {
       queryClient.setQueryData([api.auth.me.path], updatedUser);
-      // Invalidate public profile too if we knew the username
-      queryClient.invalidateQueries({ queryKey: [api.users.get.path] });
+      // Invalidate all public profile queries (matches any /api/u/:username query)
+      queryClient.invalidateQueries({ queryKey: [api.users.get.path], exact: false });
     },
   });
 }
@@ -65,7 +65,7 @@ export function useCreateLink() {
       return api.blocks.create.responses[201].parse(await res.json());
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.users.get.path] });
+      queryClient.invalidateQueries({ queryKey: [api.users.get.path], exact: false });
       queryClient.invalidateQueries({ queryKey: [api.auth.me.path] }); 
     }
   });
@@ -81,7 +81,7 @@ export function useDeleteLink() {
       if (!res.ok) throw new Error("Failed to delete block");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.users.get.path] });
+      queryClient.invalidateQueries({ queryKey: [api.users.get.path], exact: false });
     }
   });
 }
