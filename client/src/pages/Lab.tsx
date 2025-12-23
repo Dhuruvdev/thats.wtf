@@ -5,6 +5,7 @@ import { ProfileRenderer } from "@/components/ProfileRenderer";
 import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
 import { ProfileOverlays } from "@/components/ProfileOverlays";
 import { MediaTab } from "@/components/MediaTab";
+import { IdentityCard } from "@/components/IdentityCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLocation } from "wouter";
 import { Loader2, Plus, Trash2, Wand2, Link as LinkIcon, Palette, Music, ExternalLink, Upload, Type, Sparkles, Music as MusicIcon } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertBlockSchema } from "@shared/schema";
@@ -27,6 +28,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { motion } from "framer-motion";
+import Lenis from "lenis";
 
 import LoadingPage from "@/components/LoadingPage";
 import { MediaPlayer } from "@/components/MediaPlayer";
@@ -39,6 +42,26 @@ const blockSchema = insertBlockSchema.omit({ userId: true });
 export default function Lab() {
   const { data: user, isLoading: isUserLoading } = useUser();
   const [, setLocation] = useLocation();
+  
+  // Initialize smooth scrolling with Lenis
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    } as any);
+
+    const raf = (time: number) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
+  }, []);
   
   if (!isUserLoading && !user) {
     setLocation("/login");
@@ -67,6 +90,14 @@ export default function Lab() {
     audioVolume: 0.5,
     audioDuration: 0,
   });
+
+  // Update state when profile loads
+  useEffect(() => {
+    if (profile) {
+      setDisplayName(profile.displayName || "");
+      setBio(profile.bio || "");
+    }
+  }, [profile?.displayName, profile?.bio]);
 
   const FONTS = [
     { name: "Space Grotesk", value: "Space Grotesk" },
@@ -441,7 +472,7 @@ export default function Lab() {
                                     ...profile.themeConfig,
                                     motion: {
                                       ...profile.themeConfig.motion,
-                                      decorations: newDecorations
+                                      ...(newDecorations && { decorations: newDecorations })
                                     }
                                   }
                                 });
@@ -462,61 +493,87 @@ export default function Lab() {
 
             {/* MEDIA TAB */}
             <TabsContent value="media" className="space-y-4 mt-4">
-              <MediaTab media={media} setMedia={setMedia} />
+              <MediaTab media={media} setMedia={setMedia as any} />
             </TabsContent>
 
             {/* IDENTITY TAB */}
             <TabsContent value="profile" className="space-y-6 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-                <CardContent className="p-8 space-y-8">
-                  <div>
-                    <h3 className="text-lg font-bold text-white">Identity Profile</h3>
-                    <p className="text-xs text-zinc-500 font-medium">How the multiverse sees you</p>
-                  </div>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="space-y-6">
+                {/* Identity Card Preview */}
+                {profile && <IdentityCard user={profile} />}
 
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-400 ml-1">Display Name</Label>
-                      <div className="relative group">
-                        <Input 
-                          value={displayName} 
-                          onChange={(e) => setDisplayName(e.target.value)}
-                          onBlur={(e) => updateProfile({ displayName: e.target.value })}
-                          className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 text-white font-medium placeholder:text-zinc-600 transition-all"
-                          placeholder="Your display name"
-                          data-testid="input-display-name"
+                {/* Edit Identity Information */}
+                <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
+                  <CardContent className="p-8 space-y-8">
+                    <div>
+                      <h3 className="text-lg font-bold text-white">Edit Profile</h3>
+                      <p className="text-xs text-zinc-500 font-medium">Customize how you appear to the world</p>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div className="space-y-3">
+                        <Label className="text-[14px] font-bold text-zinc-400 ml-1">Display Name</Label>
+                        <motion.div whileHover={{ scale: 1.02 }} className="relative group">
+                          <Input 
+                            value={displayName} 
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            onBlur={(e) => {
+                              updateProfile({ displayName: e.target.value });
+                            }}
+                            className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 text-white font-medium placeholder:text-zinc-600 transition-all"
+                            placeholder="Your display name"
+                            data-testid="input-display-name"
+                            disabled={isUpdating}
+                          />
+                        </motion.div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label className="text-[14px] font-bold text-zinc-400 ml-1">Bio / About</Label>
+                        <Textarea 
+                          value={bio}
+                          onChange={(e) => setBio(e.target.value)} 
+                          onBlur={(e) => {
+                            updateProfile({ bio: e.target.value });
+                          }}
+                          className="bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 py-4 text-white font-medium placeholder:text-zinc-600 transition-all min-h-[120px] resize-none"
+                          placeholder="Tell the multiverse about yourself..."
+                          data-testid="textarea-bio"
                           disabled={isUpdating}
                         />
                       </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-400 ml-1">Bio</Label>
-                      <Textarea 
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)} 
-                        onBlur={(e) => updateProfile({ bio: e.target.value })}
-                        className="bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 py-4 text-white font-medium placeholder:text-zinc-600 transition-all min-h-[120px] resize-none"
-                        placeholder="Tell the multiverse about yourself..."
-                        data-testid="textarea-bio"
-                        disabled={isUpdating}
-                      />
-                    </div>
 
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-400 ml-1">Custom URL</Label>
-                      <div className="flex items-center gap-2 p-4 rounded-2xl bg-black/40 border border-white/5">
-                        <span className="text-zinc-500 font-bold text-sm">lab.dev/</span>
-                        <span className="text-white font-bold text-sm">{profile.username}</span>
-                        <div className="ml-auto flex items-center gap-2">
-                           <div className="w-2 h-2 rounded-full bg-green-500" />
-                           <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Active</span>
+                      <div className="space-y-3">
+                        <Label className="text-[14px] font-bold text-zinc-400 ml-1">Public Profile URL</Label>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex items-center gap-2 p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-purple-500/20 transition-colors">
+                          <span className="text-zinc-500 font-bold text-sm">lab.dev/u/</span>
+                          <span className="text-white font-bold text-sm">{profile?.username}</span>
+                          <div className="ml-auto flex items-center gap-2">
+                             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                             <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Live</span>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* Quick Stats */}
+                      <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-black/40 border border-white/5">
+                        <div className="text-center">
+                          <div className="text-2xl font-black text-white">{profile?.level || 1}</div>
+                          <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Level</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-black text-white">{profile?.xp || 0}</div>
+                          <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">XP</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-black text-white">{profile?.views || 0}</div>
+                          <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Views</div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </TabsContent>
           </Tabs>
         </div>
