@@ -120,6 +120,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
               src={user.backgroundUrl} 
               alt="Profile background" 
               className="w-full h-full object-cover"
+              crossOrigin="anonymous"
             />
           ) : (
             <video
@@ -128,6 +129,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
               muted
               loop
               autoPlay
+              crossOrigin="anonymous"
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/10 pointer-events-none" />
@@ -140,6 +142,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
           <audio 
             ref={audioRef}
             src={user.audioUrl}
+            crossOrigin="anonymous"
             onPlay={() => setIsAudioPlaying(true)}
             onPause={() => setIsAudioPlaying(false)}
           />

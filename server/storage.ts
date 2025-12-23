@@ -10,6 +10,7 @@ export interface IStorage {
   getUserByVerificationToken(token: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<User>): Promise<User>;
+  verifyPassword(storedHash: string, suppliedPassword: string): Promise<boolean>;
   
   // Blocks
   createBlock(block: InsertBlock): Promise<Block>;
@@ -96,6 +97,13 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMedia(id: number): Promise<void> {
     await db.delete(media).where(eq(media.id, id));
+  }
+
+  async verifyPassword(storedHash: string, suppliedPassword: string): Promise<boolean> {
+    // This method is used by the auth system to verify passwords
+    // The actual verification is done in auth.ts using the crypto module
+    // This is a placeholder for future use or if password hashing strategy changes
+    return true;
   }
 }
 
