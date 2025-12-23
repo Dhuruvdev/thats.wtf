@@ -6,11 +6,14 @@ import { Music, Video, X, User, MousePointer2, Trash2, FolderOpen, Upload } from
 import { useState, useEffect } from "react";
 import { useUpdateProfile, useProfile } from "@/hooks/use-profile";
 import { useUser } from "@/hooks/use-auth";
+import { ObjectUploader } from "@/components/ObjectUploader";
+import { useUpload } from "@/hooks/use-upload";
 
 export function MediaTab() {
   const { data: user } = useUser();
   const { data: profile } = useProfile(user?.username || "");
   const { mutate: updateProfile } = useUpdateProfile();
+  const { getUploadParameters } = useUpload();
 
   const [media, setMedia] = useState(() => {
     const stored = localStorage.getItem("backgroundMedia");
@@ -32,6 +35,18 @@ export function MediaTab() {
 
   const handleUpdateAvatar = (url: string) => {
     updateProfile({ avatarUrl: url });
+  };
+
+  const handleUploadComplete = (result: any) => {
+    if (result.successful && result.successful.length > 0) {
+      const uploadedFile = result.successful[0];
+      const objectPath = uploadedFile.meta?.objectPath;
+      if (objectPath) {
+        // Serve from the objects endpoint
+        const fileUrl = `/objects/${objectPath.replace(/^\/objects\//, '')}`;
+        setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl }));
+      }
+    }
   };
 
   return (
@@ -69,23 +84,8 @@ export function MediaTab() {
                 </div>
               </div>
               
-              <div 
-                className="relative group"
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.classList.add('dragover');
-                }}
-                onDragLeave={(e) => {
-                  e.currentTarget.classList.remove('dragover');
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.classList.remove('dragover');
-                  const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text');
-                  if (url) setMedia((prev: any) => ({ ...prev, videoUrl: url }));
-                }}
-              >
-                <div className="h-56 w-full bg-black/60 rounded-[32px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 group-[.dragover]:border-purple-500/50 group-[.dragover]:bg-purple-500/5 overflow-hidden relative shadow-inner cursor-grab active:cursor-grabbing">
+              <div className="relative group">
+                <div className="h-56 w-full bg-black/60 rounded-[32px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 overflow-hidden relative shadow-inner">
                   {media.videoUrl ? (
                     <>
                       <video src={media.videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-40" muted loop autoPlay />
@@ -104,14 +104,16 @@ export function MediaTab() {
                         <Video className="w-8 h-8 text-zinc-500" />
                       </div>
                       <p className="text-[15px] font-bold text-zinc-500">Drop media here</p>
-                      <p className="text-[11px] font-black text-zinc-700 uppercase tracking-widest mt-1">or click to browse</p>
-                      <Input
-                        type="text"
-                        placeholder="Paste URL (MP4, WEBM, JPG)"
-                        value={media.videoUrl}
-                        onChange={(e) => setMedia((prev: any) => ({ ...prev, videoUrl: e.target.value }))}
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                      />
+                      <p className="text-[11px] font-black text-zinc-700 uppercase tracking-widest mt-1">or click to upload</p>
+                      <ObjectUploader
+                        maxNumberOfFiles={1}
+                        maxFileSize={52428800}
+                        onGetUploadParameters={getUploadParameters}
+                        onComplete={handleUploadComplete}
+                        buttonClassName="absolute inset-0 opacity-0"
+                      >
+                        Upload Video
+                      </ObjectUploader>
                     </>
                   )}
                 </div>

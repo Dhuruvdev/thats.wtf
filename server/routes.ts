@@ -4,6 +4,7 @@ import { setupAuth } from "./auth"; // We'll create this or inline it
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
+import { registerObjectStorageRoutes } from "./replit_integrations/object_storage";
 
 // We need to implement setupAuth or inline it. 
 // For "that's.wtf", let's inline the basic Passport setup here or in a separate file.
@@ -17,6 +18,9 @@ export async function registerRoutes(
 ): Promise<Server> {
   // Set up Auth (defined in auth.ts which I will write in this batch)
   await setupAuth(app);
+  
+  // Register Object Storage routes for file uploads
+  registerObjectStorageRoutes(app);
 
   // === User Routes ===
   
