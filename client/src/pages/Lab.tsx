@@ -535,17 +535,9 @@ export default function Lab() {
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent pointer-events-none" />
             
             {/* Profile Preview Content */}
-            <ProfileOverlays 
-              activeOverlay={activeOverlay} 
-              onOverlayChange={(overlay) => {
-                setActiveOverlay(overlay);
-                // Save overlay selection to profile
-                updateProfile({ activeOverlay: overlay });
-              }} 
-              showSelector={true} 
-            />
+            <ProfileOverlays activeOverlay={activeOverlay} onOverlayChange={setActiveOverlay} showSelector={true} />
             <div className="relative z-10 max-h-[820px] overflow-y-auto scrollbar-hide">
-              <ProfileRenderer user={profile} blocks={profile.blocks || []} activeOverlay={activeOverlay} />
+              <ProfileRenderer user={profile} blocks={profile.blocks || []} />
             </div>
           </div>
         </div>

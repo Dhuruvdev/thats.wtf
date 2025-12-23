@@ -74,7 +74,7 @@ export default function Profile() {
 
       <main className="absolute inset-0 flex flex-col items-center justify-center relative z-10 overflow-auto">
         <div className="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <ProfileRenderer user={profile} blocks={profile.blocks || []} activeOverlay={profile.activeOverlay} />
+          <ProfileRenderer user={profile} blocks={profile.blocks || []} />
         </div>
         
         <div className="mt-12 text-center text-xs text-white/30 font-display tracking-widest uppercase pb-4">
