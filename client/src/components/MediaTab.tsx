@@ -50,10 +50,10 @@ export function MediaTab() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between px-2">
-        <h2 className="text-xl font-bold tracking-tight text-white">Assets Library</h2>
-        <div className="flex items-center gap-2">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 px-2 sm:px-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-2">
+        <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white">Assets Library</h2>
+        <div className="flex flex-wrap items-center gap-2">
            <div className="bg-purple-500/10 text-purple-400 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border border-purple-500/20">
             Cloud
           </div>
@@ -63,7 +63,7 @@ export function MediaTab() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl md:col-span-2">
           <CardContent className="p-8 space-y-10">
             

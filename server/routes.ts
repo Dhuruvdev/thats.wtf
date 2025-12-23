@@ -1,16 +1,35 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { setupAuth } from "./auth"; // We'll create this or inline it
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import { registerObjectStorageRoutes } from "./replit_integrations/object_storage";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import type { Multer } from "multer";
 
-// We need to implement setupAuth or inline it. 
-// For "that's.wtf", let's inline the basic Passport setup here or in a separate file.
-// Since I can only write server/routes.ts in this batch, I'll put it here or create auth.ts if I could.
-// But I can't create auth.ts in this tool call block easily without splitting logic?
-// No, I can write multiple files. I will write server/auth.ts as well.
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(process.cwd(), "public", "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for file uploads
+const storage_multer = multer.diskStorage({
+  destination: uploadsDir,
+  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    const name = path.basename(file.originalname, ext);
+    cb(null, name + "-" + uniqueSuffix + ext);
+  },
+});
+
+const upload: Multer = multer({
+  storage: storage_multer,
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
+});
 
 export async function registerRoutes(
   httpServer: Server,
@@ -19,8 +38,24 @@ export async function registerRoutes(
   // Set up Auth (defined in auth.ts which I will write in this batch)
   await setupAuth(app);
   
-  // Register Object Storage routes for file uploads
-  registerObjectStorageRoutes(app);
+  // === Custom File Upload Routes ===
+  
+  // Upload file endpoint
+  app.post("/api/upload", upload.single("file"), async (req: Request, res) => {
+    const file = (req as any).file as Express.Multer.File | undefined;
+    if (!file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+    
+    const fileUrl = `/uploads/${file.filename}`;
+    res.json({ 
+      success: true,
+      url: fileUrl,
+      filename: file.filename,
+      originalName: file.originalname,
+      size: file.size
+    });
+  });
 
   // === User Routes ===
   

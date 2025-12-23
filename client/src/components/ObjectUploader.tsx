@@ -19,7 +19,7 @@ interface ObjectUploaderProps {
   onGetUploadParameters: (
     file: UppyFile<Record<string, unknown>, Record<string, unknown>>
   ) => Promise<{
-    method: "PUT";
+    method: "POST" | "PUT";
     url: string;
     headers?: Record<string, string>;
   }>;
@@ -67,23 +67,27 @@ export function ObjectUploader({
 }: ObjectUploaderProps) {
   const [showModal, setShowModal] = useState(false);
   
-  const uppy = useMemo(() =>
-    new Uppy({
+  const uppy = useMemo(() => {
+    const uppyInstance = new Uppy({
       restrictions: {
         maxNumberOfFiles,
         maxFileSize,
       },
       autoProceed: false,
-    })
-      .use(AwsS3, {
-        shouldUseMultipart: false,
-        getUploadParameters: onGetUploadParameters,
-      })
-      .on("complete", (result) => {
-        onComplete?.(result);
-      }),
-    [maxNumberOfFiles, maxFileSize, onGetUploadParameters, onComplete]
-  );
+    });
+
+    // Use XHR upload for both POST and PUT
+    uppyInstance.use(AwsS3, {
+      shouldUseMultipart: false,
+      getUploadParameters: onGetUploadParameters,
+    });
+
+    uppyInstance.on("complete", (result) => {
+      onComplete?.(result);
+    });
+
+    return uppyInstance;
+  }, [maxNumberOfFiles, maxFileSize, onGetUploadParameters, onComplete]);
 
   return (
     <div>
