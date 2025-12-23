@@ -23,7 +23,7 @@ export function BackgroundMediaManager() {
       audioVolume: 0.3,
       videoVolume: 0.5,
       audioPlaying: false,
-      videoPlaying: false,
+      videoPlaying: true, // Auto-play videos by default
       showControls: false,
     };
     
@@ -37,7 +37,7 @@ export function BackgroundMediaManager() {
         audioVolume: isFinite(parsed.audioVolume) ? parsed.audioVolume : 0.3,
         videoVolume: isFinite(parsed.videoVolume) ? parsed.videoVolume : 0.5,
         audioPlaying: parsed.audioPlaying || false,
-        videoPlaying: parsed.videoPlaying || false,
+        videoPlaying: parsed.videoPlaying !== false, // Default to true (auto-play)
         showControls: parsed.showControls || false,
       };
     } catch {
@@ -97,12 +97,19 @@ export function BackgroundMediaManager() {
           src={media.videoUrl}
           loop
           muted={media.videoVolume === 0}
+          autoPlay
           className="fixed inset-0 w-full h-full object-cover -z-10"
           style={{
-            opacity: media.videoPlaying ? 1 : 0,
-            transition: "opacity 0.5s ease-in-out",
+            opacity: media.videoPlaying ? 1 : 0.2,
+            transition: "opacity 0.3s ease-in-out",
           }}
+          data-testid="video-background"
         />
+      )}
+
+      {/* Background Image as fallback */}
+      {!media.videoUrl && media.audioUrl && (
+        <div className="fixed inset-0 w-full h-full object-cover -z-10 bg-gradient-to-br from-slate-900 to-slate-800" />
       )}
 
       {/* Background Audio (hidden) */}

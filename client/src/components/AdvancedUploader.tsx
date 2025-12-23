@@ -139,17 +139,24 @@ export function AdvancedUploader({
     }
   };
 
+  const handleClick = () => {
+    if (fileInputRef.current && !isUploading) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="w-full">
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`relative group rounded-[32px] border-2 border-dashed transition-all duration-300 overflow-hidden ${
+        onClick={handleClick}
+        className={`relative group rounded-[32px] border-2 border-dashed transition-all duration-300 cursor-pointer ${
           isDragging
             ? "border-purple-500 bg-purple-500/10"
             : "border-white/10 bg-black/60 hover:border-purple-500/30"
-        } ${isUploading || status === "uploading" ? "pointer-events-none" : ""}`}
+        } ${isUploading || status === "uploading" ? "cursor-not-allowed opacity-60" : ""}`}
       >
         {/* Background Video/Image Preview */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-transparent to-black/20" />
@@ -203,14 +210,15 @@ export function AdvancedUploader({
             </>
           )}
 
-          {/* Hidden File Input */}
+          {/* Hidden File Input - always available for clicking */}
           <input
             ref={fileInputRef}
             type="file"
             accept={accept}
             onChange={handleFileSelect}
             disabled={isUploading}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            data-testid="input-file-upload"
+            className="hidden"
           />
         </div>
 
@@ -220,7 +228,8 @@ export function AdvancedUploader({
             size="icon"
             variant="ghost"
             className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setStatus("idle");
               setProgress(0);
               setFileName("");
