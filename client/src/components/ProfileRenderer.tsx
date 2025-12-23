@@ -89,12 +89,19 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   };
 
   const toggleMute = () => {
-    if (!isUnlocked) return;
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
     }
   };
+
+  // Auto-play audio on mount
+  useEffect(() => {
+    if (audioUrl && audioRef.current && !isMuted) {
+      audioRef.current.play().catch(() => {});
+      setIsAudioPlaying(true);
+    }
+  }, [audioUrl, isMuted]);
 
   const handleUnlock = () => {
     if (overlayRef.current) {
@@ -161,7 +168,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
             title={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
-              <VolumeX className="w-6 h-6 text-white/60" />
+              <VolumeX className="w-6 h-6 text-white/50" />
             ) : (
               <Volume2 className="w-6 h-6 text-white" />
             )}

@@ -2,7 +2,6 @@ import { useParams, useLocation } from "wouter";
 import { useProfile, useAddView } from "@/hooks/use-profile";
 import { ProfileRenderer } from "@/components/ProfileRenderer";
 import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
-import { ProfileOverlays } from "@/components/ProfileOverlays";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -21,8 +20,6 @@ export default function Profile() {
     audioDuration: 0,
   });
 
-  // Overlay state
-  const [activeOverlay, setActiveOverlay] = useState<"none" | "snowfall" | "particles" | "sparkles" | "aurora" | "rain" | "floating-orbs" | "light-streaks">("none");
 
   useEffect(() => {
     if (username) {
@@ -62,7 +59,6 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <BackgroundMediaManager media={media} setMedia={setMedia} playAudio={true} />
-      <ProfileOverlays activeOverlay={activeOverlay} onOverlayChange={setActiveOverlay} />
       
       {/* Accent gradient glow effect */}
       <div className="fixed inset-0 pointer-events-none -z-10">

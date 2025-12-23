@@ -3,6 +3,7 @@ import { useUpdateProfile, useCreateLink, useDeleteLink, useProfile } from "@/ho
 import { Navigation } from "@/components/Navigation";
 import { ProfileRenderer } from "@/components/ProfileRenderer";
 import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
+import { ProfileOverlays } from "@/components/ProfileOverlays";
 import { MediaTab } from "@/components/MediaTab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,6 +56,7 @@ export default function Lab() {
   const dragRef = useRef<HTMLDivElement>(null);
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
   const [audioUrl, setAudioUrl] = useState<string>("");
+  const [activeOverlay, setActiveOverlay] = useState<"none" | "snowfall" | "particles" | "sparkles" | "aurora" | "rain" | "floating-orbs" | "light-streaks">("none");
   
   // Lab-specific media state (supports GIFs, video, and audio)
   const [media, setMedia] = useState({
@@ -533,6 +535,7 @@ export default function Lab() {
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent pointer-events-none" />
             
             {/* Profile Preview Content */}
+            <ProfileOverlays activeOverlay={activeOverlay} onOverlayChange={setActiveOverlay} showSelector={true} />
             <div className="relative z-10 max-h-[820px] overflow-y-auto scrollbar-hide">
               <ProfileRenderer user={profile} blocks={profile.blocks || []} />
             </div>
