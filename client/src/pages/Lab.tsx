@@ -40,11 +40,13 @@ export default function Lab() {
   }
 
   const { data: profile } = useProfile(user?.username || "");
-  const { mutate: updateProfile } = useUpdateProfile();
-  const { mutate: createLink } = useCreateLink();
-  const { mutate: deleteLink } = useDeleteLink();
+  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
+  const { mutate: createLink, isPending: isCreating } = useCreateLink();
+  const { mutate: deleteLink, isPending: isDeleting } = useDeleteLink();
 
   const [activeTab, setActiveTab] = useState("content");
+  const [displayName, setDisplayName] = useState(profile?.displayName || "");
+  const [bio, setBio] = useState(profile?.bio || "");
 
   if (isUserLoading || !profile) {
     return <LoadingPage />;
@@ -338,11 +340,13 @@ export default function Lab() {
                       <Label className="text-[14px] font-bold text-zinc-400 ml-1">Display Name</Label>
                       <div className="relative group">
                         <Input 
-                          defaultValue={profile.displayName || ""} 
-                          onChange={(e) => updateProfile({ displayName: e.target.value })}
+                          value={displayName} 
+                          onChange={(e) => setDisplayName(e.target.value)}
                           onBlur={(e) => updateProfile({ displayName: e.target.value })}
                           className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 text-white font-medium placeholder:text-zinc-600 transition-all"
+                          placeholder="Your display name"
                           data-testid="input-display-name"
+                          disabled={isUpdating}
                         />
                       </div>
                     </div>
@@ -350,12 +354,13 @@ export default function Lab() {
                     <div className="space-y-3">
                       <Label className="text-[14px] font-bold text-zinc-400 ml-1">Bio</Label>
                       <Textarea 
-                        defaultValue={profile.bio || ""}
-                        onChange={(e) => updateProfile({ bio: e.target.value })} 
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)} 
                         onBlur={(e) => updateProfile({ bio: e.target.value })}
                         className="bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 py-4 text-white font-medium placeholder:text-zinc-600 transition-all min-h-[120px] resize-none"
                         placeholder="Tell the multiverse about yourself..."
                         data-testid="textarea-bio"
+                        disabled={isUpdating}
                       />
                     </div>
 
@@ -408,21 +413,23 @@ export default function Lab() {
 
 function AddBlockDialog({ onCreate }: { onCreate: (data: any) => void }) {
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof blockSchema>>({
-    resolver: zodResolver(blockSchema),
-    defaultValues: {
-      type: "link",
-      content: { title: "", url: "", icon: "default" },
+  const [blockType, setBlockType] = useState("link");
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onCreate({
+      type: blockType,
+      content: { title, url, icon: "default" },
       animationConfig: { intensity: 0.5, delay: 0, ease: "power2.out", trigger: "hover" },
       order: 0,
       visible: true
-    }
-  });
-
-  const onSubmit = (data: z.infer<typeof blockSchema>) => {
-    onCreate(data);
+    });
     setOpen(false);
-    form.reset();
+    setTitle("");
+    setUrl("");
+    setBlockType("link");
   };
 
   return (
@@ -430,44 +437,48 @@ function AddBlockDialog({ onCreate }: { onCreate: (data: any) => void }) {
       <DialogTrigger asChild>
         <Button size="sm" className="gap-2" data-testid="button-add-link"><Plus className="w-4 h-4" /> Add Block</Button>
       </DialogTrigger>
-      <DialogContent className="bg-card border-white/10">
+      <DialogContent className="bg-[#0a0a0a] border border-white/10 rounded-2xl">
         <DialogHeader>
-          <DialogTitle>Add New Block</DialogTitle>
+          <DialogTitle className="text-white">Add New Block</DialogTitle>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="space-y-2">
-            <Label>Type</Label>
+            <Label className="text-zinc-300">Block Type</Label>
             <select 
-              {...form.register("type")}
-              className="w-full h-10 rounded-md border border-input bg-background/50 px-3 py-2 text-sm"
+              value={blockType}
+              onChange={(e) => setBlockType(e.target.value)}
+              className="w-full h-10 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
+              data-testid="select-block-type"
             >
               <option value="link">Link</option>
               <option value="bio">Bio</option>
             </select>
           </div>
           <div className="space-y-2">
-            <Label>Title</Label>
+            <Label className="text-zinc-300">Title</Label>
             <Input 
-              onChange={(e) => {
-                const content = form.getValues("content") as any;
-                form.setValue("content", { ...content, title: e.target.value });
-              }} 
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="My Portfolio" 
-              className="bg-background/50" 
+              className="bg-black/40 border-white/10 rounded-xl text-white"
+              data-testid="input-block-title"
+              required
             />
           </div>
           <div className="space-y-2">
-            <Label>URL</Label>
+            <Label className="text-zinc-300">URL</Label>
             <Input 
-              onChange={(e) => {
-                const content = form.getValues("content") as any;
-                form.setValue("content", { ...content, url: e.target.value });
-              }} 
-              placeholder="https://..." 
-              className="bg-background/50" 
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://example.com" 
+              className="bg-black/40 border-white/10 rounded-xl text-white"
+              data-testid="input-block-url"
+              required
             />
           </div>
-          <Button type="submit" className="w-full" data-testid="button-create-link">Create Block</Button>
+          <Button type="submit" className="w-full rounded-xl bg-purple-600 hover:bg-purple-700" data-testid="button-create-link">
+            Create Block
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
