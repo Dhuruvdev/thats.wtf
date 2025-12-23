@@ -69,24 +69,34 @@ export function MediaTab() {
                 </div>
               </div>
               
-              <div className="relative group">
-                <div className="h-56 w-full bg-black/60 rounded-[32px] border border-white/5 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 overflow-hidden relative shadow-inner">
+              <div 
+                className="relative group"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.add('dragover');
+                }}
+                onDragLeave={(e) => {
+                  e.currentTarget.classList.remove('dragover');
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('dragover');
+                  const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text');
+                  if (url) setMedia((prev: any) => ({ ...prev, videoUrl: url }));
+                }}
+              >
+                <div className="h-56 w-full bg-black/60 rounded-[32px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all group-hover:border-purple-500/30 group-[.dragover]:border-purple-500/50 group-[.dragover]:bg-purple-500/5 overflow-hidden relative shadow-inner cursor-grab active:cursor-grabbing">
                   {media.videoUrl ? (
                     <>
                       <video src={media.videoUrl} className="absolute inset-0 w-full h-full object-cover opacity-40" muted loop autoPlay />
-                      <div className="absolute top-6 right-6 flex gap-2">
-                        <div className="bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
-                          .MP4
-                        </div>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                          onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
-                        >
-                          <X className="w-5 h-5" />
-                        </Button>
-                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
+                        onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
+                      >
+                        <X className="w-5 h-5" />
+                      </Button>
                     </>
                   ) : (
                     <>
@@ -110,9 +120,24 @@ export function MediaTab() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Audio Section */}
-              <div className="space-y-4">
+              <div 
+                className="space-y-4"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.querySelector('div')?.classList.add('dragover');
+                }}
+                onDragLeave={(e) => {
+                  e.currentTarget.querySelector('div')?.classList.remove('dragover');
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.querySelector('div')?.classList.remove('dragover');
+                  const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text');
+                  if (url) setMedia((prev: any) => ({ ...prev, audioUrl: url }));
+                }}
+              >
                 <Label className="text-[15px] font-bold text-zinc-400 ml-1">Audio Track</Label>
-                <div className="h-44 w-full bg-black/60 rounded-[28px] border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group relative">
+                <div className="h-44 w-full bg-black/60 rounded-[28px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group-[.dragover]:border-purple-500/50 group-[.dragover]:bg-purple-500/5 group relative cursor-grab active:cursor-grabbing">
                   <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <Music className="w-7 h-7 text-zinc-500" />
                   </div>
@@ -129,22 +154,35 @@ export function MediaTab() {
               </div>
 
               {/* Avatar Section */}
-              <div className="space-y-4">
+              <div 
+                className="space-y-4"
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.querySelector('div[class*="bg-black"]')?.classList.add('dragover');
+                }}
+                onDragLeave={(e) => {
+                  e.currentTarget.querySelector('div[class*="bg-black"]')?.classList.remove('dragover');
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.querySelector('div[class*="bg-black"]')?.classList.remove('dragover');
+                  const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text');
+                  if (url) handleUpdateAvatar(url);
+                }}
+              >
                 <Label className="text-[15px] font-bold text-zinc-400 ml-1">Identity Avatar</Label>
-                <div className="h-44 w-full bg-black/60 rounded-[28px] border border-white/5 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group relative overflow-hidden">
+                <div className="h-44 w-full bg-black/60 rounded-[28px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group-[.dragover]:border-purple-500/50 group-[.dragover]:bg-purple-500/5 group relative overflow-hidden cursor-grab active:cursor-grabbing">
                   {profile?.avatarUrl ? (
                     <>
                       <img src={profile.avatarUrl} className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500" alt="Avatar" />
-                      <div className="absolute top-4 right-4 flex gap-2">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="w-8 h-8 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20"
-                          onClick={() => handleUpdateAvatar("")}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
+                        onClick={() => handleUpdateAvatar("")}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
                     </>
                   ) : (
                     <>

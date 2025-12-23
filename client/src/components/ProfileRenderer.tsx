@@ -66,41 +66,62 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   return (
     <div 
       ref={containerRef}
-      className="profile-container min-h-screen w-full flex flex-col items-center py-20 px-4 transition-colors duration-500"
+      className="profile-container min-h-screen w-full flex flex-col items-center justify-center py-16 px-4 transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: "var(--profile-bg, #000)",
         fontFamily: "var(--body-font, sans-serif)"
       }}
     >
-      <div className="max-w-2xl w-full space-y-6">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/5 pointer-events-none" />
+      
+      <div className="relative z-10 max-w-md w-full space-y-8">
         {/* Profile Header */}
-        <div className="flex flex-col items-center mb-12 profile-header identity-block">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--accent-color)] mb-4">
-            <img 
-              src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
-              alt={user.username}
-              className="w-full h-full object-cover"
-            />
+        <div className="flex flex-col items-center pt-12 profile-header">
+          <div className="relative mb-8 group">
+            <div className="absolute inset-0 bg-[var(--accent-color)] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+            <div className="relative w-28 h-28 rounded-full overflow-hidden border-3 border-[var(--accent-color)]/50 hover:border-[var(--accent-color)] transition-all duration-300 shadow-2xl">
+              <img 
+                src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
+                alt={user.username}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
+          
           <h1 
-            className="text-4xl font-bold mb-2 text-white"
+            className="text-5xl font-black mb-4 text-white text-center tracking-tight"
             style={{ fontFamily: "var(--heading-font)" }}
           >
             {user.displayName || user.username}
           </h1>
-          <p className="text-gray-400 text-center max-w-md">
-            {user.bio}
-          </p>
+          
+          {user.bio && (
+            <p className="text-[15px] text-zinc-400 text-center max-w-sm leading-relaxed font-medium">
+              {user.bio}
+            </p>
+          )}
+          
+          <div className="flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-[11px] font-black text-zinc-500 uppercase tracking-widest">Level {user.level}</span>
+          </div>
         </div>
 
         {/* Dynamic Blocks */}
-        {blocks
-          .filter(b => b.visible)
-          .sort((a, b) => a.order - b.order)
-          .map((block) => (
-            <IdentityBlock key={block.id} block={block} />
-          ))
-        }
+        <div className="space-y-4 pb-8">
+          {blocks.length === 0 && (
+            <div className="py-12 flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-white/10">
+              <p className="text-sm font-bold text-zinc-600">No links published yet</p>
+            </div>
+          )}
+          {blocks
+            .filter(b => b.visible)
+            .sort((a, b) => a.order - b.order)
+            .map((block) => (
+              <IdentityBlock key={block.id} block={block} />
+            ))
+          }
+        </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
@@ -109,15 +130,31 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
           color: white;
         }
         .identity-block {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.06);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 24px;
           padding: 1.5rem;
-          transition: border-color 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          position: relative;
+          overflow: hidden;
+        }
+        .identity-block::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+          opacity: 0;
+          transition: opacity 0.3s ease;
         }
         .identity-block:hover {
-          border-color: var(--accent-color);
+          border-color: rgba(var(--accent-color-rgb, 124, 58, 237), 0.4);
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .identity-block:hover::before {
+          opacity: 1;
         }
       `}} />
     </div>
