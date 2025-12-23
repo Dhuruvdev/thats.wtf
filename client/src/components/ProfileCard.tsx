@@ -1,4 +1,4 @@
-import { User, Link as LinkType } from "@shared/schema";
+import { User, Block } from "@shared/schema";
 import { ExternalLink, Twitter, Github, Linkedin, Globe, Youtube, Twitch, Instagram, Play, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -7,7 +7,7 @@ import gsap from "gsap";
 
 interface ProfileCardProps {
   user: User;
-  links: LinkType[];
+  links: Block[];
   isPreview?: boolean;
 }
 
@@ -198,42 +198,8 @@ export function ProfileCard({ user, links, isPreview = false }: ProfileCardProps
         </div>
       </div>
 
-      {/* Links */}
+      {/* Links - Rendered from blocks */}
       <div className="space-y-3">
-        {links.map((link) => (
-          <a
-            key={link.id}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link-item block w-full group"
-          >
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-4 overflow-hidden"
-              style={{
-                borderColor: "rgba(255,255,255,0.05)"
-              }}
-            >
-              <div 
-                className="absolute left-0 top-0 bottom-0 w-1 transition-all duration-300 opacity-0 group-hover:opacity-100"
-                style={{ background: accentColor }}
-              />
-              
-              <div className="text-white/70 group-hover:text-white transition-colors">
-                {iconMap[link.icon.toLowerCase()] || <ExternalLink className="w-5 h-5" />}
-              </div>
-              
-              <span className="font-medium text-white/90 group-hover:text-white flex-1 text-left">
-                {link.title}
-              </span>
-
-              <ExternalLink className="w-4 h-4 text-white/30 group-hover:text-white/70 transition-colors opacity-0 group-hover:opacity-100" />
-            </motion.div>
-          </a>
-        ))}
-
         {links.length === 0 && (
           <div className="text-center py-8 text-muted-foreground text-sm italic">
             No links added yet.

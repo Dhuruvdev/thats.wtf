@@ -151,10 +151,10 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
               title={isAudioPlaying ? "Pause" : "Play"}
             >
               {isAudioPlaying ? (
-                <div className="flex items-center gap-1">
-                  <div className="w-1 h-3 bg-purple-400 animate-pulse" />
-                  <div className="w-1 h-5 bg-purple-400 animate-pulse" style={{ animationDelay: "0.1s" }} />
-                  <div className="w-1 h-3 bg-purple-400 animate-pulse" style={{ animationDelay: "0.2s" }} />
+                <div className="flex items-center gap-0.5">
+                  <div className="w-0.5 h-2 bg-white animate-pulse" />
+                  <div className="w-0.5 h-4 bg-white animate-pulse" style={{ animationDelay: "0.1s" }} />
+                  <div className="w-0.5 h-2 bg-white animate-pulse" style={{ animationDelay: "0.2s" }} />
                 </div>
               ) : (
                 <Play className="w-4 h-4 text-white" fill="white" />

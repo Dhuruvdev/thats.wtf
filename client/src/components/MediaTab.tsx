@@ -264,7 +264,7 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
                 <Label className="text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em]">
                   Audio Gain
                 </Label>
-                <span className="text-[11px] font-black text-purple-400">{Math.round(safeMedia.audioVolume * 100)}%</span>
+                <span className="text-[11px] font-black text-purple-400">{Math.round((safeMedia.audioVolume ?? 0.5) * 100)}%</span>
               </div>
               <div className="relative pt-2">
                 <input
@@ -272,7 +272,7 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
                   min="0"
                   max="1"
                   step="0.01"
-                  value={safeMedia.audioVolume}
+                  value={safeMedia.audioVolume ?? 0.5}
                   onChange={(e) => safeSetMedia((prev: any) => ({ ...prev, audioVolume: parseFloat(e.target.value) }))}
                   className="w-full accent-purple-500 h-1.5 bg-zinc-900 rounded-full cursor-pointer"
                 />
