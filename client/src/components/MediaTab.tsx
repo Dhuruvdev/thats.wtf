@@ -36,11 +36,22 @@ export function MediaTab() {
   };
 
   const handleVideoUploadComplete = (fileUrl: string) => {
+    // Immediately set the video to play
     setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl, videoPlaying: true }));
+    // Update profile background if needed
+    updateProfile({ backgroundUrl: fileUrl });
   };
 
   const handleAudioUploadComplete = (fileUrl: string) => {
     setMedia((prev: any) => ({ ...prev, audioUrl: fileUrl, audioPlaying: true }));
+  };
+
+  const handleAvatarUploadComplete = (fileUrl: string) => {
+    updateProfile({ avatarUrl: fileUrl });
+  };
+
+  const handleCursorUploadComplete = (fileUrl: string) => {
+    updateProfile({ cursorUrl: fileUrl });
   };
 
   return (
@@ -133,72 +144,39 @@ export function MediaTab() {
               </div>
 
               {/* Avatar Section */}
-              <div 
-                className="space-y-4"
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.querySelector('div[class*="bg-black"]')?.classList.add('dragover');
-                }}
-                onDragLeave={(e) => {
-                  e.currentTarget.querySelector('div[class*="bg-black"]')?.classList.remove('dragover');
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.querySelector('div[class*="bg-black"]')?.classList.remove('dragover');
-                  const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text');
-                  if (url) handleUpdateAvatar(url);
-                }}
-              >
+              <div className="space-y-4">
                 <Label className="text-[15px] font-bold text-zinc-400 ml-1">Identity Avatar</Label>
-                <div className="h-44 w-full bg-black/60 rounded-[28px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group-[.dragover]:border-purple-500/50 group-[.dragover]:bg-purple-500/5 group relative overflow-hidden cursor-grab active:cursor-grabbing">
-                  {profile?.avatarUrl ? (
-                    <>
-                      <img src={profile.avatarUrl} className="absolute inset-0 w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-500" alt="Avatar" />
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="absolute top-4 right-4 w-8 h-8 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
-                        onClick={() => handleUpdateAvatar("")}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <User className="w-7 h-7 text-zinc-500" />
-                      </div>
-                      <p className="text-sm font-bold text-zinc-500">Upload avatar</p>
-                      <Input
-                        type="text"
-                        placeholder="Avatar URL"
-                        value={profile?.avatarUrl || ""}
-                        onChange={(e) => handleUpdateAvatar(e.target.value)}
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                      />
-                    </>
-                  )}
-                </div>
+                {profile?.avatarUrl ? (
+                  <div className="h-44 w-full bg-black/60 rounded-[28px] overflow-hidden relative shadow-inner flex items-center justify-center">
+                    <img src={profile.avatarUrl} className="absolute inset-0 w-full h-full object-cover" alt="Avatar" />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
+                      onClick={() => handleUpdateAvatar("")}
+                      data-testid="button-remove-avatar"
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <AdvancedUploader 
+                    onComplete={handleAvatarUploadComplete}
+                    maxSize={50 * 1024 * 1024}
+                    accept="image/*"
+                  />
+                )}
               </div>
             </div>
 
             {/* Cursor Section */}
             <div className="space-y-4">
               <Label className="text-[15px] font-bold text-zinc-400 ml-1">Custom Hardware</Label>
-              <div className="p-6 w-full bg-black/60 rounded-[28px] border border-white/5 flex items-center justify-between transition-all hover:border-purple-500/30 group">
-                 <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg">
-                      <MousePointer2 className="w-7 h-7 text-zinc-500" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[15px] font-bold text-white">Interactive Cursor</span>
-                      <span className="text-[11px] font-black text-zinc-600 uppercase tracking-[0.15em] mt-0.5">Upload .PNG or .SVG</span>
-                    </div>
-                 </div>
-                 <Button variant="ghost" className="h-10 px-5 rounded-xl border border-white/5 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white hover:bg-white/5 transition-all">
-                    Select File
-                 </Button>
-              </div>
+              <AdvancedUploader 
+                onComplete={handleCursorUploadComplete}
+                maxSize={10 * 1024 * 1024}
+                accept="image/*"
+              />
             </div>
 
           </CardContent>
