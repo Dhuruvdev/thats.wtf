@@ -1,8 +1,8 @@
 import { User, Link as LinkType } from "@shared/schema";
-import { ExternalLink, Twitter, Github, Linkedin, Globe, Youtube, Twitch, Instagram } from "lucide-react";
+import { ExternalLink, Twitter, Github, Linkedin, Globe, Youtube, Twitch, Instagram, Play, Volume2, VolumeX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 interface ProfileCardProps {
@@ -23,11 +23,31 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export function ProfileCard({ user, links, isPreview = false }: ProfileCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   
   // Custom styles based on user preferences
   const accentColor = user.accentColor || "#7c3aed";
   const glowEnabled = user.glowEnabled;
   const frameStyle = user.frame || "none";
+  
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isAudioPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
   
   useEffect(() => {
     if (containerRef.current && !isPreview) {
@@ -63,6 +83,72 @@ export function ProfileCard({ user, links, isPreview = false }: ProfileCardProps
         background: frameStyle === "glass" ? undefined : `linear-gradient(180deg, rgba(17,24,39,0.8) 0%, rgba(11,14,20,0.95) 100%)`
       }}
     >
+      {/* Background Video/Image */}
+      {user.backgroundUrl && (
+        <div className="absolute inset-0 -z-20">
+          {user.backgroundUrl.toLowerCase().endsWith('.gif') ? (
+            <img 
+              src={user.backgroundUrl} 
+              alt="Profile background" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <video
+              src={user.backgroundUrl}
+              className="w-full h-full object-cover"
+              muted
+              loop
+              autoPlay
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/10 pointer-events-none" />
+        </div>
+      )}
+
+      {/* Background Audio */}
+      {user.audioUrl && (
+        <audio 
+          ref={audioRef}
+          src={user.audioUrl}
+          onPlay={() => setIsAudioPlaying(true)}
+          onPause={() => setIsAudioPlaying(false)}
+        />
+      )}
+
+      {/* Audio Controls */}
+      {user.audioUrl && (
+        <div className="absolute top-6 left-6 z-40 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 hover:border-white/20 transition-all duration-200">
+          <button
+            onClick={toggleAudio}
+            className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200 group"
+            data-testid="button-audio-play"
+            title={isAudioPlaying ? "Pause" : "Play"}
+          >
+            {isAudioPlaying ? (
+              <div className="flex items-center gap-1">
+                <div className="w-1 h-3 bg-purple-400 animate-pulse" />
+                <div className="w-1 h-5 bg-purple-400 animate-pulse" style={{ animationDelay: "0.1s" }} />
+                <div className="w-1 h-3 bg-purple-400 animate-pulse" style={{ animationDelay: "0.2s" }} />
+              </div>
+            ) : (
+              <Play className="w-4 h-4 text-white" fill="white" />
+            )}
+          </button>
+          <button
+            onClick={toggleMute}
+            className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
+            data-testid="button-audio-mute"
+            title={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <VolumeX className="w-4 h-4 text-white/60" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-white" />
+            )}
+          </button>
+        </div>
+      )}
+
       {/* Decorative background elements */}
       <div 
         className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-[100px] -z-10 opacity-30 pointer-events-none"
