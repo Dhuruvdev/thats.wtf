@@ -35,8 +35,12 @@ export function MediaTab() {
     updateProfile({ avatarUrl: url });
   };
 
-  const handleUploadComplete = (fileUrl: string) => {
-    setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl }));
+  const handleVideoUploadComplete = (fileUrl: string) => {
+    setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl, videoPlaying: true }));
+  };
+
+  const handleAudioUploadComplete = (fileUrl: string) => {
+    setMedia((prev: any) => ({ ...prev, audioUrl: fileUrl, audioPlaying: true }));
   };
 
   return (
@@ -89,7 +93,7 @@ export function MediaTab() {
                   </div>
                 ) : (
                   <AdvancedUploader 
-                    onComplete={handleUploadComplete}
+                    onComplete={handleVideoUploadComplete}
                     maxSize={500 * 1024 * 1024}
                     accept="video/*,image/*"
                   />
@@ -99,37 +103,33 @@ export function MediaTab() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Audio Section */}
-              <div 
-                className="space-y-4"
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.querySelector('div')?.classList.add('dragover');
-                }}
-                onDragLeave={(e) => {
-                  e.currentTarget.querySelector('div')?.classList.remove('dragover');
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  e.currentTarget.querySelector('div')?.classList.remove('dragover');
-                  const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text');
-                  if (url) setMedia((prev: any) => ({ ...prev, audioUrl: url }));
-                }}
-              >
+              <div className="space-y-4">
                 <Label className="text-[15px] font-bold text-zinc-400 ml-1">Audio Track</Label>
-                <div className="h-44 w-full bg-black/60 rounded-[28px] border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all hover:border-purple-500/30 group-[.dragover]:border-purple-500/50 group-[.dragover]:bg-purple-500/5 group relative cursor-grab active:cursor-grabbing">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Music className="w-7 h-7 text-zinc-500" />
+                {media.audioUrl ? (
+                  <div className="h-44 w-full bg-black/60 rounded-[28px] overflow-hidden relative shadow-inner flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center animate-pulse">
+                        <Music className="w-6 h-6 text-purple-400" />
+                      </div>
+                      <p className="text-sm font-bold text-zinc-400 text-center">{media.audioUrl.split('/').pop()}</p>
+                    </div>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
+                      onClick={() => setMedia((prev: any) => ({ ...prev, audioUrl: "" }))}
+                      data-testid="button-remove-audio"
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
                   </div>
-                  <p className="text-sm font-bold text-zinc-500">Audio manager</p>
-                  <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mt-1">MP3, WAV, OGG</p>
-                  <Input
-                    type="text"
-                    placeholder="Audio URL"
-                    value={media.audioUrl}
-                    onChange={(e) => setMedia((prev: any) => ({ ...prev, audioUrl: e.target.value }))}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
+                ) : (
+                  <AdvancedUploader 
+                    onComplete={handleAudioUploadComplete}
+                    maxSize={200 * 1024 * 1024}
+                    accept="audio/*"
                   />
-                </div>
+                )}
               </div>
 
               {/* Avatar Section */}
