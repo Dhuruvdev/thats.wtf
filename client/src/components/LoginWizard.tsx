@@ -93,7 +93,7 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
         {/* Title */}
         <div className="text-center space-y-2">
           <h1 className="text-[28px] font-bold text-white tracking-tight leading-tight">
-            {isLogin ? "Log in to your account" : `Create a lab.dev account`}
+            {isLogin ? "Log in to your account" : `Create a thats.wtf account`}
           </h1>
           {isLogin && (
             <p className="text-[15px] text-zinc-400 font-medium">

@@ -12,13 +12,13 @@ export function Footer() {
           <div className="flex items-center gap-3">
             <img 
               src={iconImg}
-              alt="Lab.dev Icon"
+              alt="thats.wtf Icon"
               className="w-24 h-24 rounded-lg object-contain"
               data-testid="footer-logo-icon"
             />
             <img 
               src={logoImg}
-              alt="Lab.dev Logo"
+              alt="thats.wtf Logo"
               className="h-24 w-24 object-contain"
               data-testid="footer-logo-image"
             />
