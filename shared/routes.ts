@@ -71,6 +71,9 @@ export const api = {
         glowEnabled: z.boolean().optional(),
         displayName: z.string().optional(),
         bio: z.string().optional(),
+        backgroundUrl: z.string().optional(),
+        audioUrl: z.string().optional(),
+        cursorUrl: z.string().optional(),
       }),
       responses: {
         200: z.custom<typeof users.$inferSelect>(),

@@ -17,6 +17,9 @@ export const users = pgTable("users", {
   accentColor: text("accent_color").default("#7c3aed"),
   frame: text("frame").default("none"),
   glowEnabled: boolean("glow_enabled").default(true),
+  backgroundUrl: text("background_url"),
+  audioUrl: text("audio_url"),
+  cursorUrl: text("cursor_url"),
   
   // High-Fidelity Identity Config
   themeConfig: jsonb("theme_config").$type<{

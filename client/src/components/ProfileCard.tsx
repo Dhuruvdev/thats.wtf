@@ -117,18 +117,18 @@ export function ProfileCard({ user, links, isPreview = false }: ProfileCardProps
 
       {/* Audio Controls */}
       {user.audioUrl && (
-        <div className="absolute top-6 left-6 z-40 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 hover:border-white/20 transition-all duration-200">
+        <div className="absolute top-6 left-6 z-40 flex items-center gap-1 bg-black/50 backdrop-blur-md rounded-full p-2 border border-white/20 hover:border-white/40 transition-all duration-200">
           <button
             onClick={toggleAudio}
-            className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200 group"
+            className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
             data-testid="button-audio-play"
             title={isAudioPlaying ? "Pause" : "Play"}
           >
             {isAudioPlaying ? (
-              <div className="flex items-center gap-1">
-                <div className="w-1 h-3 bg-purple-400 animate-pulse" />
-                <div className="w-1 h-5 bg-purple-400 animate-pulse" style={{ animationDelay: "0.1s" }} />
-                <div className="w-1 h-3 bg-purple-400 animate-pulse" style={{ animationDelay: "0.2s" }} />
+              <div className="flex items-center gap-0.5">
+                <div className="w-0.5 h-2 bg-white animate-pulse" />
+                <div className="w-0.5 h-4 bg-white animate-pulse" style={{ animationDelay: "0.1s" }} />
+                <div className="w-0.5 h-2 bg-white animate-pulse" style={{ animationDelay: "0.2s" }} />
               </div>
             ) : (
               <Play className="w-4 h-4 text-white" fill="white" />
@@ -141,7 +141,7 @@ export function ProfileCard({ user, links, isPreview = false }: ProfileCardProps
             title={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? (
-              <VolumeX className="w-4 h-4 text-white/60" />
+              <VolumeX className="w-4 h-4 text-white" />
             ) : (
               <Volume2 className="w-4 h-4 text-white" />
             )}
