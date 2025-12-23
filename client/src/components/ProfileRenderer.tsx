@@ -13,6 +13,40 @@ interface ProfileRendererProps {
   blocks: Block[];
 }
 
+function hexToRgb(hex: string): string {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result 
+    ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+    : '124, 58, 237';
+}
+
+function getFrameStyles(activeTheme: any): string {
+  const style = activeTheme?.frameOverlay?.style || 'none';
+  if (style === 'none') return '';
+  
+  const colorRgb = hexToRgb(activeTheme?.frameOverlay?.color || '#7c3aed');
+  const opacity = activeTheme?.frameOverlay?.opacity || 0.5;
+  const blur = activeTheme?.frameOverlay?.blur || 10;
+  
+  let css = `.profile-header { backdrop-filter: blur(${blur}px); `;
+  
+  if (style === 'glass') {
+    css += `background: rgba(${colorRgb}, ${opacity * 0.1}); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 40px; padding: 40px 30px; }`;
+  } else if (style === 'neon') {
+    css += `background: rgba(${colorRgb}, ${opacity * 0.15}); border: 2px solid rgba(${colorRgb}, 0.6); border-radius: 40px; padding: 40px 30px; box-shadow: 0 0 40px rgba(${colorRgb}, 0.3); }`;
+  } else if (style === 'minimal') {
+    css += `border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; padding: 40px 30px; }`;
+  } else if (style === 'transparent') {
+    css += `background: rgba(0, 0, 0, ${opacity * 0.3}); border: 1px solid rgba(${colorRgb}, 0.2); border-radius: 40px; padding: 40px 30px; }`;
+  } else if (style === 'glowing-border') {
+    css += `border: 2px solid rgba(${colorRgb}, 0.4); border-radius: 40px; padding: 40px 30px; box-shadow: inset 0 0 30px rgba(${colorRgb}, 0.2); }`;
+  } else {
+    css += '}';
+  }
+  
+  return css;
+}
+
 export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -243,45 +277,16 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        .profile-container {
+      <style dangerouslySetInnerHTML={{ __html: `.profile-container {
           background: var(--profile-bg);
           color: white;
         }
         
         .profile-header {
-          backdrop-filter: ${activeTheme.frameOverlay?.style !== 'none' ? `blur(${activeTheme.frameOverlay?.blur || 10}px)` : 'none'};
-          ${activeTheme.frameOverlay?.style === 'glass' ? `
-            background: rgba(255, 255, 255, ${(activeTheme.frameOverlay?.opacity || 0.5) * 0.1});
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 40px;
-            padding: 40px 30px;
-          ` : ''}
-          ${activeTheme.frameOverlay?.style === 'neon' ? `
-            background: rgba(124, 58, 237, ${(activeTheme.frameOverlay?.opacity || 0.5) * 0.15});
-            border: 2px solid rgba(124, 58, 237, 0.6);
-            border-radius: 40px;
-            padding: 40px 30px;
-            box-shadow: 0 0 40px rgba(124, 58, 237, 0.3);
-          ` : ''}
-          ${activeTheme.frameOverlay?.style === 'minimal' ? `
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 40px 30px;
-          ` : ''}
-          ${activeTheme.frameOverlay?.style === 'transparent' ? `
-            background: rgba(0, 0, 0, ${(activeTheme.frameOverlay?.opacity || 0.5) * 0.3});
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 40px;
-            padding: 40px 30px;
-          ` : ''}
-          ${activeTheme.frameOverlay?.style === 'glowing-border' ? `
-            border: 2px solid rgba(124, 58, 237, 0.4);
-            border-radius: 40px;
-            padding: 40px 30px;
-            box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.2);
-          ` : ''}
+          transition: all 0.3s ease;
         }
+        
+        ` + getFrameStyles(activeTheme) + `
         
         .identity-block {
           background: rgba(255, 255, 255, 0.06);

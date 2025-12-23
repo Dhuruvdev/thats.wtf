@@ -537,6 +537,84 @@ export default function Lab() {
                   </div>
 
                   <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Opacity</Label>
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/40 border border-white/5">
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={profile.themeConfig?.frameOverlay?.opacity ?? 0.5}
+                        onChange={(e) => updateProfile({
+                          themeConfig: {
+                            ...profile.themeConfig,
+                            frameOverlay: {
+                              ...profile.themeConfig?.frameOverlay,
+                              opacity: parseFloat(e.target.value)
+                            }
+                          }
+                        })}
+                        className="flex-1 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                        data-testid="slider-overlay-opacity"
+                      />
+                      <span className="text-sm font-bold text-white w-12 text-right">
+                        {Math.round((profile.themeConfig?.frameOverlay?.opacity ?? 0.5) * 100)}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Blur</Label>
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/40 border border-white/5">
+                      <input
+                        type="range"
+                        min="0"
+                        max="30"
+                        step="1"
+                        value={profile.themeConfig?.frameOverlay?.blur ?? 10}
+                        onChange={(e) => updateProfile({
+                          themeConfig: {
+                            ...profile.themeConfig,
+                            frameOverlay: {
+                              ...profile.themeConfig?.frameOverlay,
+                              blur: parseInt(e.target.value)
+                            }
+                          }
+                        })}
+                        className="flex-1 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                        data-testid="slider-overlay-blur"
+                      />
+                      <span className="text-sm font-bold text-white w-12 text-right">
+                        {profile.themeConfig?.frameOverlay?.blur ?? 10}px
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Color</Label>
+                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                      {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => updateProfile({
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              frameOverlay: {
+                                ...profile.themeConfig?.frameOverlay,
+                                color: color
+                              }
+                            }
+                          })}
+                          className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${(profile.themeConfig?.frameOverlay as any)?.color === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
+                          style={{ background: color }}
+                          data-testid={`frame-overlay-color-${color.slice(1)}`}
+                          title="Frame overlay color"
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
                     <Label className="text-[15px] font-bold text-zinc-300 ml-1">Display Name Animation</Label>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">

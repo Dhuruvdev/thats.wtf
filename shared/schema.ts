@@ -46,10 +46,10 @@ export const users = pgTable("users", {
       reduced: boolean;
     };
     frameOverlay: {
-      style: "none" | "glass" | "neon" | "minimal" | "transparent" | "glowing-border" | "gradient-border";
+      style: "none" | "glass" | "neon" | "minimal" | "transparent" | "glowing-border";
       opacity: number;
       blur: number;
-      borderGlow: boolean;
+      color?: string;
     };
     animations: {
       displayName: {
@@ -68,7 +68,7 @@ export const users = pgTable("users", {
     cursor: { type: "default", color: "#ffffff", size: 24 },
     typography: { headingFont: "Space Grotesk", bodyFont: "Inter", displayNameFont: "Space Grotesk", bioFont: "Inter", accentColor: "#7c3aed" },
     motion: { intensity: 1, reduced: false },
-    frameOverlay: { style: "glass", opacity: 0.5, blur: 10, borderGlow: false },
+    frameOverlay: { style: "glass", opacity: 0.5, blur: 10, color: "#7c3aed" },
     animations: {
       displayName: { enabled: true, type: "fade", duration: 0.6 },
       bio: { enabled: true, type: "fade", duration: 0.8 }
