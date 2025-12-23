@@ -65,7 +65,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md"
             >
               <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-widest text-primary">The Next Generation of Bio Links</span>
+              <span className="text-xs font-black uppercase tracking-widest text-primary">Stop Living in Links. Start Living in Experiences.</span>
             </motion.div>
 
             <motion.h1
@@ -74,8 +74,8 @@ export default function Home() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="text-5xl sm:text-7xl lg:text-9xl font-display font-black tracking-tighter leading-[0.85] lg:leading-[0.8]"
             >
-              Master Your <br />
-              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x text-glow">Digital Empire</span>
+              Your Profile <br />
+              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x text-glow">Just Got Insane</span>
             </motion.h1>
             
             <motion.p
@@ -84,8 +84,9 @@ export default function Home() {
               transition={{ delay: 0.2 }}
               className="text-lg sm:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-medium px-4"
             >
-              Cinema-grade profiles for elite creators. 
-              Join the new standard on <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span>
+              Bio links are so 2020. We're building the internet's most dangerous creative playground. 
+              <br />
+              <span className="text-white font-semibold">Forget boring. Welcome to <span className="brand-text"><span className="brand-text-thats">thats</span><span className="brand-text-dot">.</span><span className="brand-text-wtf">wtf</span></span></span>
             </motion.p>
             
             <motion.div
@@ -99,7 +100,7 @@ export default function Home() {
                   size="lg" 
                   className="w-full sm:w-auto h-16 sm:h-20 px-12 text-xl font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_0_50px_rgba(155,88,255,0.4)] transition-all hover:scale-105 active:scale-95 group"
                 >
-                  Start Building <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-2 transition-transform" />
+                  Enter the Lab <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-2 transition-transform" />
                 </Button>
               </Link>
               <Link href="/u/demo" className="w-full sm:w-auto">
@@ -108,7 +109,7 @@ export default function Home() {
                   size="lg" 
                   className="w-full sm:w-auto h-16 sm:h-20 px-12 text-xl font-bold rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-xl transition-all"
                 >
-                  Live Demo
+                  See It in Action
                 </Button>
               </Link>
             </motion.div>
@@ -134,9 +135,9 @@ export default function Home() {
                   <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-8 border border-primary/30 shadow-[0_0_30px_rgba(155,88,255,0.2)]">
                     <Layout className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-4xl font-display font-black mb-4 tracking-tight">Customization Lab</h3>
+                  <h3 className="text-4xl font-display font-black mb-4 tracking-tight">Identity Lab</h3>
                   <p className="text-muted-foreground text-xl max-w-md font-medium leading-relaxed">
-                    A high-performance theme engine with full-spectrum control over colors, custom fonts, and cinematic animations.
+                    Full creative control. Custom cursors, shader backgrounds, responsive theme logic, and animations that would make Hollywood jealous. Your imagination is the only limit.
                   </p>
                 </div>
               </Card>
@@ -148,8 +149,8 @@ export default function Home() {
                 <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30">
                   <TrendingUp className="w-8 h-8 text-accent" />
                 </div>
-                <h3 className="text-4xl font-display font-black tracking-tight">100%</h3>
-                <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Aesthetic Score</p>
+                <h3 className="text-4xl font-display font-black tracking-tight">FIRE</h3>
+                <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Confidence Meter</p>
               </Card>
             </motion.div>
 
@@ -159,8 +160,8 @@ export default function Home() {
                 <div className="mb-6">
                   <Flame className="w-10 h-10 text-orange-500 animate-bounce" />
                 </div>
-                <h3 className="text-2xl font-display font-black mb-2">Gamified XP</h3>
-                <p className="text-sm text-muted-foreground font-medium">Earn XP from every visit. Level up to unlock elite profile themes.</p>
+                <h3 className="text-2xl font-display font-black mb-2">Heat Up</h3>
+                <p className="text-sm text-muted-foreground font-medium">Every visitor = XP. Stack levels. Unlock themes only the elite get.</p>
               </Card>
             </motion.div>
 
@@ -172,9 +173,9 @@ export default function Home() {
                   <div className="mx-auto w-20 h-20 rounded-3xl bg-primary/20 flex items-center justify-center mb-8 border border-primary/30 group-hover:scale-110 transition-transform">
                     <MousePointer2 className="w-10 h-10 text-primary" />
                   </div>
-                  <h3 className="text-4xl font-display font-black mb-4 tracking-tight">Interactive Effects</h3>
+                  <h3 className="text-4xl font-display font-black mb-4 tracking-tight">Effects That Hit Different</h3>
                   <p className="text-muted-foreground text-lg max-w-xl mx-auto font-medium">
-                    Premium cursor effects, background animations, and GSAP-powered transitions that captivate your audience.
+                    Custom cursors, shader effects, GSAP animations, and interactive transitions. Make people stop scrolling and actually remember you.
                   </p>
                 </div>
               </Card>
@@ -190,7 +191,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="space-y-12"
           >
-            <h2 className="text-5xl lg:text-6xl font-display font-black tracking-tight">Built for the <span className="text-primary">Creator Economy</span></h2>
+            <h2 className="text-5xl lg:text-6xl font-display font-black tracking-tight">Made for Creators Who <span className="text-primary">Give a WTF</span></h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
                 { icon: Gamepad2, label: "Gamers", color: "text-red-500" },
@@ -220,7 +221,7 @@ export default function Home() {
             <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
             <div className="relative z-10 space-y-10 max-w-2xl">
               <h2 className="text-5xl sm:text-7xl font-display font-black tracking-tighter text-white leading-[0.9]">
-                Claim Your Unique <br /> Space Today.
+                Don't Have a Profile. <br /> Have an <span className="text-accent">Experience.</span>
               </h2>
               <Link href="/login">
                 <Button size="lg" className="h-16 px-12 text-xl font-black rounded-2xl bg-white text-primary hover:bg-white/90 shadow-2xl transition-all hover:scale-105 active:scale-95">
