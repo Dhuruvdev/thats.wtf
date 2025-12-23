@@ -118,7 +118,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   return (
     <div 
       ref={containerRef}
-      className="profile-container min-h-screen w-full flex flex-col items-center justify-center py-16 px-4 transition-colors duration-500 relative overflow-hidden"
+      className="profile-container w-full min-h-screen flex flex-col items-center justify-center transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: user.backgroundUrl ? "transparent" : "var(--profile-bg, #000)",
         fontFamily: "var(--body-font, sans-serif)"
@@ -178,7 +178,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/5 pointer-events-none" />
       
-      <div className="relative z-10 max-w-md w-full space-y-8">
+      <div className="relative z-10 max-w-md w-full space-y-8 px-4">
         {/* Profile Header */}
         <div className="flex flex-col items-center pt-12 profile-header">
           <div className="relative mb-8 group">

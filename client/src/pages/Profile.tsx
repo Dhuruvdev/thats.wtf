@@ -57,7 +57,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden">
+    <div className="fixed inset-0 bg-black relative overflow-hidden">
       <BackgroundMediaManager media={media} setMedia={setMedia} playAudio={true} />
       
       {/* Accent gradient glow effect */}
@@ -72,12 +72,12 @@ export default function Profile() {
         />
       </div>
 
-      <main className="pt-16 pb-12 px-4 flex flex-col items-center justify-center min-h-[calc(100vh-64px)] relative z-10">
+      <main className="absolute inset-0 flex flex-col items-center justify-center relative z-10 overflow-auto">
         <div className="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
           <ProfileRenderer user={profile} blocks={profile.blocks || []} />
         </div>
         
-        <div className="mt-12 text-center text-xs text-white/30 font-display tracking-widest uppercase">
+        <div className="mt-12 text-center text-xs text-white/30 font-display tracking-widest uppercase pb-4">
           Powered by Lab.dev
         </div>
       </main>
