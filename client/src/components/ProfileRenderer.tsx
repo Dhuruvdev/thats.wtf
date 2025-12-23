@@ -69,6 +69,8 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
     root.style.setProperty("--accent-color", activeTheme.typography.accentColor);
     root.style.setProperty("--heading-font", activeTheme.typography.headingFont);
     root.style.setProperty("--body-font", activeTheme.typography.bodyFont);
+    root.style.setProperty("--displayname-font", activeTheme.typography.displayNameFont || activeTheme.typography.headingFont);
+    root.style.setProperty("--bio-font", activeTheme.typography.bioFont || activeTheme.typography.bodyFont);
     
     if (activeTheme.background.type === "static") {
       root.style.setProperty("--profile-bg", activeTheme.background.value);
@@ -193,14 +195,27 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
           </div>
           
           <h1 
-            className="text-5xl font-black mb-4 text-white text-center tracking-tight"
-            style={{ fontFamily: "var(--heading-font)" }}
+            className="text-5xl font-black mb-4 text-white text-center tracking-tight displayname-text"
+            style={{ 
+              fontFamily: "var(--displayname-font)",
+              animation: activeTheme.animations?.displayName?.enabled 
+                ? `${activeTheme.animations.displayName.type}-in ${activeTheme.animations.displayName.duration}s ease-out forwards`
+                : 'none'
+            }}
           >
             {user.displayName || user.username}
           </h1>
           
           {user.bio && (
-            <p className="text-[15px] text-zinc-400 text-center max-w-sm leading-relaxed font-medium">
+            <p 
+              className="text-[15px] text-zinc-400 text-center max-w-sm leading-relaxed font-medium bio-text"
+              style={{ 
+                fontFamily: "var(--bio-font)",
+                animation: activeTheme.animations?.bio?.enabled 
+                  ? `${activeTheme.animations.bio.type}-in ${activeTheme.animations.bio.duration}s ease-out forwards`
+                  : 'none'
+              }}
+            >
               {user.bio}
             </p>
           )}
@@ -233,6 +248,41 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
           background: var(--profile-bg);
           color: white;
         }
+        
+        .profile-header {
+          backdrop-filter: ${activeTheme.frameOverlay?.style !== 'none' ? `blur(${activeTheme.frameOverlay?.blur || 10}px)` : 'none'};
+          ${activeTheme.frameOverlay?.style === 'glass' ? `
+            background: rgba(255, 255, 255, ${(activeTheme.frameOverlay?.opacity || 0.5) * 0.1});
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            padding: 40px 30px;
+          ` : ''}
+          ${activeTheme.frameOverlay?.style === 'neon' ? `
+            background: rgba(124, 58, 237, ${(activeTheme.frameOverlay?.opacity || 0.5) * 0.15});
+            border: 2px solid rgba(124, 58, 237, 0.6);
+            border-radius: 40px;
+            padding: 40px 30px;
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.3);
+          ` : ''}
+          ${activeTheme.frameOverlay?.style === 'minimal' ? `
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 40px 30px;
+          ` : ''}
+          ${activeTheme.frameOverlay?.style === 'transparent' ? `
+            background: rgba(0, 0, 0, ${(activeTheme.frameOverlay?.opacity || 0.5) * 0.3});
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
+            padding: 40px 30px;
+          ` : ''}
+          ${activeTheme.frameOverlay?.style === 'glowing-border' ? `
+            border: 2px solid rgba(124, 58, 237, 0.4);
+            border-radius: 40px;
+            padding: 40px 30px;
+            box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.2);
+          ` : ''}
+        }
+        
         .identity-block {
           background: rgba(255, 255, 255, 0.06);
           backdrop-filter: blur(16px);
@@ -259,6 +309,27 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         }
         .identity-block:hover::before {
           opacity: 1;
+        }
+        
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slide-in {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scale-in {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes wave-in {
+          0% { opacity: 0; transform: skewY(-5deg); }
+          100% { opacity: 1; transform: skewY(0); }
+        }
+        @keyframes glow-pulse-in {
+          0% { opacity: 0; text-shadow: 0 0 0 rgba(124, 58, 237, 0); }
+          100% { opacity: 1; text-shadow: 0 0 20px rgba(124, 58, 237, 0.5); }
         }
       `}} />
     </div>

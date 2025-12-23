@@ -37,17 +37,42 @@ export const users = pgTable("users", {
     typography: {
       headingFont: string;
       bodyFont: string;
+      displayNameFont: string;
+      bioFont: string;
       accentColor: string;
     };
     motion: {
       intensity: number; // 0 to 1
       reduced: boolean;
     };
+    frameOverlay: {
+      style: "none" | "glass" | "neon" | "minimal" | "transparent" | "glowing-border" | "gradient-border";
+      opacity: number;
+      blur: number;
+      borderGlow: boolean;
+    };
+    animations: {
+      displayName: {
+        enabled: boolean;
+        type: "fade" | "slide" | "scale" | "wave" | "glow-pulse";
+        duration: number;
+      };
+      bio: {
+        enabled: boolean;
+        type: "fade" | "slide" | "scale" | "wave" | "glow-pulse";
+        duration: number;
+      };
+    };
   }>().default({
     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
     cursor: { type: "default", color: "#ffffff", size: 24 },
-    typography: { headingFont: "Space Grotesk", bodyFont: "Inter", accentColor: "#7c3aed" },
-    motion: { intensity: 1, reduced: false }
+    typography: { headingFont: "Space Grotesk", bodyFont: "Inter", displayNameFont: "Space Grotesk", bioFont: "Inter", accentColor: "#7c3aed" },
+    motion: { intensity: 1, reduced: false },
+    frameOverlay: { style: "glass", opacity: 0.5, blur: 10, borderGlow: false },
+    animations: {
+      displayName: { enabled: true, type: "fade", duration: 0.6 },
+      bio: { enabled: true, type: "fade", duration: 0.8 }
+    }
   }).notNull(),
 
   logicRules: jsonb("logic_rules").$type<Array<{

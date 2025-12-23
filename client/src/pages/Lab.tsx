@@ -460,9 +460,9 @@ export default function Lab() {
                   </div>
 
                   <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Font Customization</Label>
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Display Name Font</Label>
                     <div className="grid grid-cols-2 gap-3">
-                      {FONTS.slice(0, 4).map((font) => (
+                      {FONTS.map((font) => (
                         <Button
                           key={font.value}
                           variant="outline"
@@ -471,17 +471,168 @@ export default function Lab() {
                               ...profile.themeConfig,
                               typography: {
                                 ...profile.themeConfig.typography,
-                                bodyFont: font.value
+                                displayNameFont: font.value
                               }
                             }
                           })}
-                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.bodyFont === font.value ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.displayNameFont === font.value ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
                           style={{ fontFamily: font.value }}
-                          data-testid={`button-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
+                          data-testid={`button-displayname-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
                         >
                           {font.name}
                         </Button>
                       ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Bio Font</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {FONTS.map((font) => (
+                        <Button
+                          key={font.value}
+                          variant="outline"
+                          onClick={() => updateProfile({ 
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              typography: {
+                                ...profile.themeConfig.typography,
+                                bioFont: font.value
+                              }
+                            }
+                          })}
+                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.bioFont === font.value ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                          style={{ fontFamily: font.value }}
+                          data-testid={`button-bio-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          {font.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Style</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {["none", "glass", "neon", "minimal", "transparent", "glowing-border"].map((style) => (
+                        <Button
+                          key={style}
+                          variant="outline"
+                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.frameOverlay?.style === style ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                          onClick={() => updateProfile({ 
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              frameOverlay: {
+                                ...profile.themeConfig?.frameOverlay,
+                                style: style as any
+                              }
+                            }
+                          })}
+                          data-testid={`frame-overlay-${style}`}
+                        >
+                          {style}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Display Name Animation</Label>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
+                        <span className="text-sm font-bold text-zinc-300">Enabled</span>
+                        <Switch 
+                          checked={profile.themeConfig?.animations?.displayName?.enabled ?? true}
+                          onCheckedChange={(checked) => updateProfile({ 
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              animations: {
+                                ...profile.themeConfig?.animations,
+                                displayName: {
+                                  ...profile.themeConfig?.animations?.displayName,
+                                  enabled: checked
+                                }
+                              }
+                            }
+                          })}
+                          data-testid="switch-displayname-animation"
+                        />
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {["fade", "slide", "scale", "wave", "glow-pulse"].map((type) => (
+                          <Button
+                            key={type}
+                            variant="ghost"
+                            size="sm"
+                            className={`capitalize text-xs ${profile.themeConfig?.animations?.displayName?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white"}`}
+                            onClick={() => updateProfile({ 
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                animations: {
+                                  ...profile.themeConfig?.animations,
+                                  displayName: {
+                                    ...profile.themeConfig?.animations?.displayName,
+                                    type: type as any
+                                  }
+                                }
+                              }
+                            })}
+                            data-testid={`displayname-animation-${type}`}
+                          >
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Bio Animation</Label>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
+                        <span className="text-sm font-bold text-zinc-300">Enabled</span>
+                        <Switch 
+                          checked={profile.themeConfig?.animations?.bio?.enabled ?? true}
+                          onCheckedChange={(checked) => updateProfile({ 
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              animations: {
+                                ...profile.themeConfig?.animations,
+                                bio: {
+                                  ...profile.themeConfig?.animations?.bio,
+                                  enabled: checked
+                                }
+                              }
+                            }
+                          })}
+                          data-testid="switch-bio-animation"
+                        />
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {["fade", "slide", "scale", "wave", "glow-pulse"].map((type) => (
+                          <Button
+                            key={type}
+                            variant="ghost"
+                            size="sm"
+                            className={`capitalize text-xs ${profile.themeConfig?.animations?.bio?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white"}`}
+                            onClick={() => updateProfile({ 
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                animations: {
+                                  ...profile.themeConfig?.animations,
+                                  bio: {
+                                    ...profile.themeConfig?.animations?.bio,
+                                    type: type as any
+                                  }
+                                }
+                              }
+                            })}
+                            data-testid={`bio-animation-${type}`}
+                          >
+                            {type}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
