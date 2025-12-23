@@ -238,17 +238,6 @@ export function BackgroundMediaManager({ media: externalMedia, setMedia: externa
         </div>
       )}
 
-      {/* Toggle Controls Button */}
-      <button
-        onClick={() =>
-          setMedia((prev) => ({ ...prev, showControls: !prev.showControls }))
-        }
-        className="fixed bottom-4 left-4 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-accent to-primary hover-elevate active-elevate-2 flex items-center justify-center text-white transition-all duration-300 shadow-lg"
-        data-testid="button-media-controls-toggle"
-        title="Toggle Media Controls"
-      >
-        <span className="text-xl font-bold">♪</span>
-      </button>
     </>
   );
 }

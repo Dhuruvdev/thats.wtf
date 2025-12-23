@@ -154,36 +154,18 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
             onPause={() => setIsAudioPlaying(false)}
             onError={(e) => console.error("Audio failed to load:", audioUrl)}
           />
-          <div className="absolute top-6 left-6 z-40 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 hover:border-white/20 transition-all duration-200">
-            <button
-              onClick={toggleAudio}
-              className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200 group"
-              data-testid="button-audio-play"
-              title={isAudioPlaying ? "Pause" : "Play"}
-            >
-              {isAudioPlaying ? (
-                <div className="flex items-center gap-0.5">
-                  <div className="w-0.5 h-2 bg-white animate-pulse" />
-                  <div className="w-0.5 h-4 bg-white animate-pulse" style={{ animationDelay: "0.1s" }} />
-                  <div className="w-0.5 h-2 bg-white animate-pulse" style={{ animationDelay: "0.2s" }} />
-                </div>
-              ) : (
-                <Play className="w-4 h-4 text-white" fill="white" />
-              )}
-            </button>
-            <button
-              onClick={toggleMute}
-              className="p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
-              data-testid="button-audio-mute"
-              title={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? (
-                <VolumeX className="w-4 h-4 text-white/60" />
-              ) : (
-                <Volume2 className="w-4 h-4 text-white" />
-              )}
-            </button>
-          </div>
+          <button
+            onClick={toggleMute}
+            className="absolute top-6 right-6 z-40 p-3 rounded-full hover:bg-white/10 transition-all duration-200 group"
+            data-testid="button-audio-toggle-mute"
+            title={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <VolumeX className="w-6 h-6 text-white/60" />
+            ) : (
+              <Volume2 className="w-6 h-6 text-white" />
+            )}
+          </button>
         </>
       )}
 
