@@ -36,8 +36,29 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // Serve uploads directory
-  app.use("/uploads", express.static(uploadsDir));
+  // Serve uploads directory with proper CORS and caching headers
+  app.use("/uploads", (req, res, next) => {
+    // Set CORS headers for media files
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    // Disable caching for media files to ensure fresh content
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", "0");
+    next();
+  }, express.static(uploadsDir, {
+    // Allow all file types
+    setHeaders: (res, path) => {
+      // Ensure media files are served with correct content-type
+      if (path.endsWith('.gif')) res.type('image/gif');
+      if (path.endsWith('.mp4')) res.type('video/mp4');
+      if (path.endsWith('.webm')) res.type('video/webm');
+      if (path.endsWith('.mp3')) res.type('audio/mpeg');
+      if (path.endsWith('.wav')) res.type('audio/wav');
+      if (path.endsWith('.ogg')) res.type('audio/ogg');
+    }
+  }));
   
   // Set up Auth (defined in auth.ts which I will write in this batch)
   await setupAuth(app);

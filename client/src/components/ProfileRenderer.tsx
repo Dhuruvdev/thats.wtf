@@ -3,6 +3,7 @@ import { Block, User } from "@shared/schema";
 import { IdentityBlock } from "@/components/IdentityBlock";
 import { springReveal, idlePulse } from "@/lib/motion";
 import { useLogicEngine } from "@/hooks/use-logic-engine";
+import { resolveMediaUrl } from "@/lib/url-utils";
 import { gsap } from "gsap";
 import { Play, Volume2, VolumeX, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,10 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+
+  // Resolve media URLs to absolute paths for iframe compatibility
+  const backgroundUrl = useMemo(() => resolveMediaUrl(user.backgroundUrl), [user.backgroundUrl]);
+  const audioUrl = useMemo(() => resolveMediaUrl(user.audioUrl), [user.audioUrl]);
 
   // Apply logic rules
   const activeTheme = useMemo(() => {
@@ -113,23 +118,25 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
       }}
     >
       {/* Background Image/GIF */}
-      {user.backgroundUrl && (
+      {backgroundUrl && (
         <div className="absolute inset-0 -z-20">
-          {user.backgroundUrl.toLowerCase().endsWith('.gif') ? (
+          {backgroundUrl.toLowerCase().endsWith('.gif') ? (
             <img 
-              src={user.backgroundUrl} 
+              src={backgroundUrl} 
               alt="Profile background" 
               className="w-full h-full object-cover"
               crossOrigin="anonymous"
+              onError={(e) => console.error("Background image failed to load:", backgroundUrl)}
             />
           ) : (
             <video
-              src={user.backgroundUrl}
+              src={backgroundUrl}
               className="w-full h-full object-cover"
               muted
               loop
               autoPlay
               crossOrigin="anonymous"
+              onError={(e) => console.error("Background video failed to load:", backgroundUrl)}
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/10 pointer-events-none" />
@@ -137,14 +144,15 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
       )}
 
       {/* Audio Player */}
-      {user.audioUrl && (
+      {audioUrl && (
         <>
           <audio 
             ref={audioRef}
-            src={user.audioUrl}
+            src={audioUrl}
             crossOrigin="anonymous"
             onPlay={() => setIsAudioPlaying(true)}
             onPause={() => setIsAudioPlaying(false)}
+            onError={(e) => console.error("Audio failed to load:", audioUrl)}
           />
           <div className="absolute top-6 left-6 z-40 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full p-3 border border-white/10 hover:border-white/20 transition-all duration-200">
             <button
