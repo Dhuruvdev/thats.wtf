@@ -3,33 +3,40 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Music, Video, X, User, MousePointer2, Trash2, FolderOpen, Upload } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useUpdateProfile, useProfile } from "@/hooks/use-profile";
 import { useUser } from "@/hooks/use-auth";
 import { AdvancedUploader } from "@/components/AdvancedUploader";
 
-export function MediaTab() {
+interface MediaState {
+  audioUrl: string;
+  videoUrl: string;
+  audioVolume: number;
+  videoVolume: number;
+  audioPlaying: boolean;
+  videoPlaying: boolean;
+}
+
+interface MediaTabProps {
+  media: MediaState;
+  setMedia: React.Dispatch<React.SetStateAction<MediaState>>;
+}
+
+export function MediaTab({ media, setMedia }: MediaTabProps) {
   const { data: user } = useUser();
   const { data: profile } = useProfile(user?.username || "");
   const { mutate: updateProfile } = useUpdateProfile();
 
-  const [media, setMedia] = useState(() => {
-    const stored = localStorage.getItem("backgroundMedia");
-    return stored
-      ? JSON.parse(stored)
-      : {
-          audioUrl: "",
-          videoUrl: "",
-          audioVolume: 0.3,
-          videoVolume: 0.5,
-          audioPlaying: false,
-          videoPlaying: false,
-        };
-  });
+  // Provide default media state if not passed
+  const safeMedia = media || {
+    audioUrl: "",
+    videoUrl: "",
+    audioVolume: 0.3,
+    videoVolume: 0.5,
+    audioPlaying: false,
+    videoPlaying: false,
+  };
 
-  useEffect(() => {
-    localStorage.setItem("backgroundMedia", JSON.stringify(media));
-  }, [media]);
+  const safeSetMedia = setMedia || (() => {});
 
   const handleUpdateAvatar = (url: string) => {
     updateProfile({ avatarUrl: url });
@@ -37,19 +44,16 @@ export function MediaTab() {
 
   const handleVideoUploadComplete = (fileUrl: string) => {
     // Immediately set the video to play
-    setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl, videoPlaying: true }));
+    safeSetMedia((prev: any) => ({ ...prev, videoUrl: fileUrl, videoPlaying: true }));
     // Update profile background if needed
     updateProfile({ backgroundUrl: fileUrl });
   };
 
   const handleAudioUploadComplete = (fileUrl: string) => {
-    setMedia((prev: any) => ({ ...prev, audioUrl: fileUrl, audioPlaying: true }));
+    safeSetMedia((prev: any) => ({ ...prev, audioUrl: fileUrl, audioPlaying: true }));
   };
 
   const handleAvatarUploadComplete = (fileUrl: string) => {
-    // Update local state immediately for instant feedback
-    const newProfile = { ...profile, avatarUrl: fileUrl };
-    // Refetch will happen automatically
     updateProfile({ avatarUrl: fileUrl });
   };
 
@@ -93,14 +97,14 @@ export function MediaTab() {
               </div>
               
               <div className="relative group">
-                {media.videoUrl ? (
+                {safeMedia.videoUrl ? (
                   <div className="h-56 w-full bg-black/60 rounded-[32px] overflow-hidden relative shadow-inner flex items-center justify-center">
-                    <video src={media.videoUrl} className="w-full h-full object-cover" muted loop autoPlay />
+                    <video src={safeMedia.videoUrl} className="w-full h-full object-cover" muted loop autoPlay />
                     <Button
                       size="icon"
                       variant="ghost"
                       className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
-                      onClick={() => setMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
+                      onClick={() => safeSetMedia((prev: any) => ({ ...prev, videoUrl: "" }))}
                     >
                       <X className="w-5 h-5" />
                     </Button>
@@ -119,19 +123,19 @@ export function MediaTab() {
               {/* Audio Section */}
               <div className="space-y-4">
                 <Label className="text-[15px] font-bold text-zinc-400 ml-1">Audio Track</Label>
-                {media.audioUrl ? (
+                {safeMedia.audioUrl ? (
                   <div className="h-44 w-full bg-black/60 rounded-[28px] overflow-hidden relative shadow-inner flex items-center justify-center">
                     <div className="flex flex-col items-center gap-4">
                       <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center animate-pulse">
                         <Music className="w-6 h-6 text-purple-400" />
                       </div>
-                      <p className="text-sm font-bold text-zinc-400 text-center">{media.audioUrl.split('/').pop()}</p>
+                      <p className="text-sm font-bold text-zinc-400 text-center">{safeMedia.audioUrl.split('/').pop()}</p>
                     </div>
                     <Button
                       size="icon"
                       variant="ghost"
                       className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
-                      onClick={() => setMedia((prev: any) => ({ ...prev, audioUrl: "" }))}
+                      onClick={() => safeSetMedia((prev: any) => ({ ...prev, audioUrl: "" }))}
                       data-testid="button-remove-audio"
                     >
                       <X className="w-5 h-5" />
@@ -201,7 +205,7 @@ export function MediaTab() {
                 <Label className="text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em]">
                   Video Gain
                 </Label>
-                <span className="text-[11px] font-black text-purple-400">{Math.round(media.videoVolume * 100)}%</span>
+                <span className="text-[11px] font-black text-purple-400">{Math.round(safeMedia.videoVolume * 100)}%</span>
               </div>
               <div className="relative pt-2">
                 <input
@@ -209,8 +213,8 @@ export function MediaTab() {
                   min="0"
                   max="1"
                   step="0.01"
-                  value={media.videoVolume}
-                  onChange={(e) => setMedia((prev: any) => ({ ...prev, videoVolume: parseFloat(e.target.value) }))}
+                  value={safeMedia.videoVolume}
+                  onChange={(e) => safeSetMedia((prev: any) => ({ ...prev, videoVolume: parseFloat(e.target.value) }))}
                   className="w-full accent-purple-500 h-1.5 bg-zinc-900 rounded-full cursor-pointer"
                 />
               </div>
@@ -220,7 +224,7 @@ export function MediaTab() {
                 <Label className="text-[12px] font-black text-zinc-500 uppercase tracking-[0.2em]">
                   Audio Gain
                 </Label>
-                <span className="text-[11px] font-black text-purple-400">{Math.round(media.audioVolume * 100)}%</span>
+                <span className="text-[11px] font-black text-purple-400">{Math.round(safeMedia.audioVolume * 100)}%</span>
               </div>
               <div className="relative pt-2">
                 <input
@@ -228,8 +232,8 @@ export function MediaTab() {
                   min="0"
                   max="1"
                   step="0.01"
-                  value={media.audioVolume}
-                  onChange={(e) => setMedia((prev: any) => ({ ...prev, audioVolume: parseFloat(e.target.value) }))}
+                  value={safeMedia.audioVolume}
+                  onChange={(e) => safeSetMedia((prev: any) => ({ ...prev, audioVolume: parseFloat(e.target.value) }))}
                   className="w-full accent-purple-500 h-1.5 bg-zinc-900 rounded-full cursor-pointer"
                 />
               </div>

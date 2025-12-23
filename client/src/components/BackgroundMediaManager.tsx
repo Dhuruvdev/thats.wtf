@@ -12,43 +12,28 @@ interface BackgroundMedia {
   showControls: boolean;
 }
 
-export function BackgroundMediaManager() {
+interface BackgroundMediaManagerProps {
+  media?: BackgroundMedia;
+  setMedia?: React.Dispatch<React.SetStateAction<BackgroundMedia>>;
+}
+
+export function BackgroundMediaManager({ media: externalMedia, setMedia: externalSetMedia }: BackgroundMediaManagerProps = {}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [media, setMedia] = useState<BackgroundMedia>(() => {
-    const stored = localStorage.getItem("backgroundMedia");
-    const defaultMedia = {
-      audioUrl: "",
-      videoUrl: "",
-      audioVolume: 0.3,
-      videoVolume: 0.5,
-      audioPlaying: false,
-      videoPlaying: true, // Auto-play videos by default
-      showControls: false,
-    };
-    
-    if (!stored) return defaultMedia;
-    
-    try {
-      const parsed = JSON.parse(stored);
-      return {
-        audioUrl: parsed.audioUrl || "",
-        videoUrl: parsed.videoUrl || "",
-        audioVolume: isFinite(parsed.audioVolume) ? parsed.audioVolume : 0.3,
-        videoVolume: isFinite(parsed.videoVolume) ? parsed.videoVolume : 0.5,
-        audioPlaying: parsed.audioPlaying || false,
-        videoPlaying: parsed.videoPlaying !== false, // Default to true (auto-play)
-        showControls: parsed.showControls || false,
-      };
-    } catch {
-      return defaultMedia;
-    }
+  
+  // Use external media state if provided (from Lab), otherwise use local state
+  const [localMedia, setLocalMedia] = useState<BackgroundMedia>({
+    audioUrl: "",
+    videoUrl: "",
+    audioVolume: 0.3,
+    videoVolume: 0.5,
+    audioPlaying: false,
+    videoPlaying: true,
+    showControls: false,
   });
-
-  // Persist to localStorage
-  useEffect(() => {
-    localStorage.setItem("backgroundMedia", JSON.stringify(media));
-  }, [media]);
+  
+  const media = externalMedia || localMedia;
+  const setMedia = externalSetMedia || setLocalMedia;
 
   // Sync audio state
   useEffect(() => {

@@ -47,6 +47,16 @@ export default function Lab() {
   const [activeTab, setActiveTab] = useState("content");
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [bio, setBio] = useState(profile?.bio || "");
+  
+  // Lab-specific media state (not global localStorage)
+  const [media, setMedia] = useState({
+    audioUrl: "",
+    videoUrl: "",
+    audioVolume: 0.3,
+    videoVolume: 0.5,
+    audioPlaying: false,
+    videoPlaying: false,
+  });
 
   if (isUserLoading || !profile) {
     return <LoadingPage />;
@@ -54,7 +64,7 @@ export default function Lab() {
 
   return (
     <div className="min-h-screen bg-black pb-20 overflow-x-hidden">
-      <BackgroundMediaManager />
+      <BackgroundMediaManager media={media} setMedia={setMedia} />
       <Navigation />
       
       <main className="pt-28 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -323,7 +333,7 @@ export default function Lab() {
 
             {/* MEDIA TAB */}
             <TabsContent value="media" className="space-y-4 mt-4">
-              <MediaTab />
+              <MediaTab media={media} setMedia={setMedia} />
             </TabsContent>
 
             {/* IDENTITY TAB */}
