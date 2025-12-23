@@ -5,19 +5,20 @@ import { Button } from "@/components/ui/button";
 interface BackgroundMedia {
   audioUrl?: string;
   videoUrl?: string;
-  audioVolume: number;
+  audioVolume?: number;
   videoVolume: number;
-  audioPlaying: boolean;
+  audioPlaying?: boolean;
   videoPlaying: boolean;
-  showControls: boolean;
+  showControls?: boolean;
 }
 
 interface BackgroundMediaManagerProps {
   media?: BackgroundMedia;
-  setMedia?: React.Dispatch<React.SetStateAction<BackgroundMedia>>;
+  setMedia?: React.Dispatch<React.SetStateAction<any>>;
+  playAudio?: boolean; // Only play audio on profile page, not in Lab
 }
 
-export function BackgroundMediaManager({ media: externalMedia, setMedia: externalSetMedia }: BackgroundMediaManagerProps = {}) {
+export function BackgroundMediaManager({ media: externalMedia, setMedia: externalSetMedia, playAudio = true }: BackgroundMediaManagerProps = {}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   
@@ -35,15 +36,15 @@ export function BackgroundMediaManager({ media: externalMedia, setMedia: externa
   const media = externalMedia || localMedia;
   const setMedia = externalSetMedia || setLocalMedia;
 
-  // Sync audio state
+  // Sync audio state (only when playAudio is true - i.e., on profile page)
   useEffect(() => {
-    if (!audioRef.current || !media.audioUrl) return;
+    if (!audioRef.current || !media.audioUrl || !playAudio) return;
     if (media.audioPlaying) {
       audioRef.current.play().catch(() => {});
     } else {
       audioRef.current.pause();
     }
-  }, [media.audioPlaying]);
+  }, [media.audioPlaying, playAudio]);
 
   // Sync video state
   useEffect(() => {

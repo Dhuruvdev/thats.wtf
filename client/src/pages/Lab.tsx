@@ -48,13 +48,10 @@ export default function Lab() {
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [bio, setBio] = useState(profile?.bio || "");
   
-  // Lab-specific media state (not global localStorage)
+  // Lab-specific media state (VIDEO ONLY - audio plays on profile page)
   const [media, setMedia] = useState({
-    audioUrl: "",
     videoUrl: "",
-    audioVolume: 0.3,
     videoVolume: 0.5,
-    audioPlaying: false,
     videoPlaying: false,
   });
 
@@ -64,7 +61,8 @@ export default function Lab() {
 
   return (
     <div className="min-h-screen bg-black pb-20 overflow-x-hidden">
-      <BackgroundMediaManager media={media} setMedia={setMedia} />
+      {/* Video only in Lab, audio disabled */}
+      <BackgroundMediaManager media={media} setMedia={setMedia} playAudio={false} />
       <Navigation />
       
       <main className="pt-28 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">

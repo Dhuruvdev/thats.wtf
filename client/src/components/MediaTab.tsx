@@ -8,11 +8,8 @@ import { useUser } from "@/hooks/use-auth";
 import { AdvancedUploader } from "@/components/AdvancedUploader";
 
 interface MediaState {
-  audioUrl: string;
   videoUrl: string;
-  audioVolume: number;
   videoVolume: number;
-  audioPlaying: boolean;
   videoPlaying: boolean;
 }
 
@@ -28,11 +25,8 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
 
   // Provide default media state if not passed
   const safeMedia = media || {
-    audioUrl: "",
     videoUrl: "",
-    audioVolume: 0.3,
     videoVolume: 0.5,
-    audioPlaying: false,
     videoPlaying: false,
   };
 
@@ -50,7 +44,8 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
   };
 
   const handleAudioUploadComplete = (fileUrl: string) => {
-    safeSetMedia((prev: any) => ({ ...prev, audioUrl: fileUrl, audioPlaying: true }));
+    // Audio is stored on profile, not in media state (only plays on profile page)
+    updateProfile({ audioUrl: fileUrl });
   };
 
   const handleAvatarUploadComplete = (fileUrl: string) => {
