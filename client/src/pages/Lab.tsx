@@ -482,27 +482,22 @@ export default function Lab() {
           </Tabs>
         </div>
 
-        {/* Live Preview Panel */}
+        {/* Live Preview Panel - Discord Style */}
         <div className="lg:col-span-7 sticky top-28 h-fit animate-in fade-in slide-in-from-right-4 duration-700">
           <div className="flex items-center justify-between mb-6 px-2">
-            <h2 className="text-[13px] font-black text-zinc-500 uppercase tracking-[0.2em]">Real-time Preview</h2>
+            <h2 className="text-[13px] font-black text-zinc-500 uppercase tracking-[0.2em]">Live Preview</h2>
             <Button variant="ghost" size="sm" className="h-9 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 font-bold" onClick={() => window.open(`/u/${profile.username}`, '_blank')} data-testid="button-open-public">
               View Profile <ExternalLink className="w-3.5 h-3.5 ml-2" />
             </Button>
           </div>
           
-          <div className="rounded-[40px] border border-white/5 bg-[#0a0a0a] p-12 min-h-[750px] flex items-center justify-center relative overflow-hidden shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]">
-            <div className="absolute inset-0 bg-purple-500/5 blur-[120px] rounded-full translate-y-1/2" />
+          {/* Clean Discord-style Profile Card */}
+          <div className="relative rounded-[32px] border border-white/10 bg-gradient-to-b from-white/5 to-black/40 overflow-hidden shadow-2xl backdrop-blur-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent pointer-events-none" />
             
-            <div className="w-[340px] h-[680px] bg-black rounded-[3.5rem] border-[12px] border-zinc-900 overflow-hidden relative shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_30px_60px_rgba(0,0,0,0.8)] transform transition-transform hover:scale-[1.02] duration-500">
-              <div className="absolute top-0 left-0 right-0 h-full overflow-y-auto scrollbar-hide bg-black">
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-zinc-900 rounded-b-2xl z-50">
-                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-zinc-800 rounded-full" />
-                 </div>
-                 <div className="p-4 pt-12">
-                    <ProfileRenderer user={profile} blocks={profile.blocks || []} />
-                 </div>
-              </div>
+            {/* Profile Preview Content */}
+            <div className="relative z-10 max-h-[820px] overflow-y-auto scrollbar-hide">
+              <ProfileRenderer user={profile} blocks={profile.blocks || []} />
             </div>
           </div>
         </div>
