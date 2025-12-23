@@ -20,6 +20,7 @@ export const users = pgTable("users", {
   backgroundUrl: text("background_url"),
   audioUrl: text("audio_url"),
   cursorUrl: text("cursor_url"),
+  activeOverlay: text("active_overlay").default("none"),
   
   // High-Fidelity Identity Config
   themeConfig: jsonb("theme_config").$type<{
@@ -102,7 +103,10 @@ export const insertUserSchema = createInsertSchema(users).omit({
   level: true, 
   xp: true, 
   views: true, 
-  isEmailVerified: true 
+  isEmailVerified: true,
+  activeOverlay: true
+}).extend({
+  activeOverlay: z.enum(["none", "snowfall", "particles", "sparkles", "aurora", "rain", "floating-orbs", "light-streaks"]).optional()
 });
 export const insertBlockSchema = createInsertSchema(blocks).omit({ id: true });
 export const insertMediaSchema = createInsertSchema(media).omit({ id: true, createdAt: true });
