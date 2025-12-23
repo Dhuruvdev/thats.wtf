@@ -108,8 +108,12 @@ export default function Lab() {
         const data = await res.json();
         if (file.type.startsWith("image/") || file.type === "image/gif") {
           setBackgroundUrl(data.url);
+          // Persist background image/gif to database
+          updateProfile({ backgroundUrl: data.url });
         } else if (file.type.startsWith("audio/")) {
           setAudioUrl(data.url);
+          // Persist audio to database
+          updateProfile({ audioUrl: data.url });
         }
       } catch (error) {
         console.error("Upload failed:", error);
@@ -395,8 +399,18 @@ export default function Lab() {
                         <Button
                           key={font.value}
                           variant="outline"
-                          className="h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 bg-zinc-900/50 text-zinc-400"
+                          onClick={() => updateProfile({ 
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              typography: {
+                                ...profile.themeConfig.typography,
+                                bodyFont: font.value
+                              }
+                            }
+                          })}
+                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.bodyFont === font.value ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
                           style={{ fontFamily: font.value }}
+                          data-testid={`button-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
                         >
                           {font.name}
                         </Button>
@@ -407,14 +421,37 @@ export default function Lab() {
                   <div className="space-y-4">
                     <Label className="text-[15px] font-bold text-zinc-300 ml-1">Discord-like Decorations</Label>
                     <div className="space-y-2">
-                      {DECORATIONS.map((deco) => (
-                        <div key={deco.id} className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5">
-                          <Checkbox id={deco.id} className="rounded-lg" />
-                          <label htmlFor={deco.id} className="text-sm font-medium text-zinc-300 cursor-pointer">
-                            {deco.name}
-                          </label>
-                        </div>
-                      ))}
+                      {DECORATIONS.map((deco) => {
+                        const decorations = (profile.themeConfig?.motion as any)?.decorations || [];
+                        const isChecked = decorations.includes(deco.id);
+                        return (
+                          <div key={deco.id} className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5">
+                            <Checkbox 
+                              id={deco.id} 
+                              className="rounded-lg"
+                              checked={isChecked}
+                              onCheckedChange={(checked) => {
+                                const newDecorations = checked 
+                                  ? [...decorations, deco.id]
+                                  : decorations.filter((d: string) => d !== deco.id);
+                                updateProfile({ 
+                                  themeConfig: {
+                                    ...profile.themeConfig,
+                                    motion: {
+                                      ...profile.themeConfig.motion,
+                                      decorations: newDecorations
+                                    }
+                                  }
+                                });
+                              }}
+                              data-testid={`checkbox-decoration-${deco.id}`}
+                            />
+                            <label htmlFor={deco.id} className="text-sm font-medium text-zinc-300 cursor-pointer">
+                              {deco.name}
+                            </label>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </CardContent>
