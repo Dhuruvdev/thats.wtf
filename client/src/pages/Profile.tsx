@@ -1,8 +1,9 @@
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import { useProfile, useAddView } from "@/hooks/use-profile";
 import { Navigation } from "@/components/Navigation";
 import { ProfileRenderer } from "@/components/ProfileRenderer";
-import { useEffect } from "react";
+import { ProfileCustomizer } from "@/components/ProfileCustomizer";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 export default function Profile() {

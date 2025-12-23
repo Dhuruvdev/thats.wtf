@@ -11,9 +11,10 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useLocation } from "wouter";
-import { Loader2, Plus, Trash2, Wand2, Link as LinkIcon, Palette, Music, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { Loader2, Plus, Trash2, Wand2, Link as LinkIcon, Palette, Music, ExternalLink, Upload, Type, Sparkles, Music as MusicIcon } from "lucide-react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertBlockSchema } from "@shared/schema";
@@ -27,6 +28,10 @@ import {
 } from "@/components/ui/dialog";
 
 import LoadingPage from "@/components/LoadingPage";
+import { MediaPlayer } from "@/components/MediaPlayer";
+import { CursorCustomizer } from "@/components/CursorCustomizer";
+import { FontCustomizer } from "@/components/FontCustomizer";
+import { DecorationsPanel } from "@/components/DecorationsPanel";
 
 const blockSchema = insertBlockSchema.omit({ userId: true });
 
@@ -47,6 +52,9 @@ export default function Lab() {
   const [activeTab, setActiveTab] = useState("content");
   const [displayName, setDisplayName] = useState(profile?.displayName || "");
   const [bio, setBio] = useState(profile?.bio || "");
+  const dragRef = useRef<HTMLDivElement>(null);
+  const [backgroundUrl, setBackgroundUrl] = useState<string>("");
+  const [audioUrl, setAudioUrl] = useState<string>("");
   
   // Lab-specific media state (VIDEO ONLY - audio plays on profile page)
   const [media, setMedia] = useState({
@@ -54,6 +62,57 @@ export default function Lab() {
     videoVolume: 0.5,
     videoPlaying: false,
   });
+
+  const FONTS = [
+    { name: "Space Grotesk", value: "Space Grotesk" },
+    { name: "Inter", value: "Inter" },
+    { name: "Poppins", value: "Poppins" },
+    { name: "Playfair Display", value: "Playfair Display" },
+  ];
+
+  const PREMADE_CURSORS = [
+    { name: "Default", value: "default" },
+    { name: "Pointer", value: "pointer" },
+    { name: "Hand", value: "grab" },
+    { name: "Text", value: "text" },
+  ];
+
+  const DECORATIONS = [
+    { id: "glow", name: "Glow Effect" },
+    { id: "particles", name: "Floating Particles" },
+    { id: "gradient", name: "Gradient Overlay" },
+    { id: "shimmer", name: "Shimmer Effect" },
+  ];
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragRef.current?.classList.add("opacity-60");
+  };
+
+  const handleDragLeave = () => {
+    dragRef.current?.classList.remove("opacity-60");
+  };
+
+  const handleFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragRef.current?.classList.remove("opacity-60");
+    const files = Array.from(e.dataTransfer.files);
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (file.type.startsWith("image/") || file.type === "image/gif") {
+          setBackgroundUrl(data.url);
+        } else if (file.type.startsWith("audio/")) {
+          setAudioUrl(data.url);
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    }
+  };
 
   if (isUserLoading || !profile) {
     return <LoadingPage />;
@@ -325,6 +384,36 @@ export default function Lab() {
                       className="data-[state=checked]:bg-purple-600"
                     />
                   </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Font Customization</Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {FONTS.slice(0, 4).map((font) => (
+                        <Button
+                          key={font.value}
+                          variant="outline"
+                          className="h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 bg-zinc-900/50 text-zinc-400"
+                          style={{ fontFamily: font.value }}
+                        >
+                          {font.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Discord-like Decorations</Label>
+                    <div className="space-y-2">
+                      {DECORATIONS.map((deco) => (
+                        <div key={deco.id} className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5">
+                          <Checkbox id={deco.id} className="rounded-lg" />
+                          <label htmlFor={deco.id} className="text-sm font-medium text-zinc-300 cursor-pointer">
+                            {deco.name}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -332,6 +421,66 @@ export default function Lab() {
             {/* MEDIA TAB */}
             <TabsContent value="media" className="space-y-4 mt-4">
               <MediaTab media={media} setMedia={setMedia} />
+              
+              <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
+                <CardContent className="p-8 space-y-8">
+                  <div>
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <Upload className="w-5 h-5" /> Advanced Media Assets
+                    </h3>
+                    <p className="text-xs text-zinc-500 font-medium mt-1">GIF, Audio, Custom Cursors & Hardware</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300">Background (GIF or Image)</Label>
+                    <div
+                      ref={dragRef}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleFileDrop}
+                      className="border-2 border-dashed border-muted-foreground rounded-lg p-8 text-center cursor-pointer transition-opacity bg-zinc-900/30"
+                    >
+                      <Upload className="w-8 h-8 mx-auto mb-2 text-zinc-500" />
+                      <p className="text-sm text-zinc-400">Drag GIF or image here</p>
+                    </div>
+                    {backgroundUrl && (
+                      <div className="relative rounded-lg overflow-hidden h-32">
+                        <img src={backgroundUrl} alt="Background" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300">Profile Audio</Label>
+                    <div
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleFileDrop}
+                      className="border-2 border-dashed border-muted-foreground rounded-lg p-8 text-center cursor-pointer transition-opacity bg-zinc-900/30"
+                    >
+                      <MusicIcon className="w-8 h-8 mx-auto mb-2 text-zinc-500" />
+                      <p className="text-sm text-zinc-400">Drag audio file here</p>
+                    </div>
+                    {audioUrl && <MediaPlayer src={audioUrl} type="audio" />}
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-[15px] font-bold text-zinc-300">Cursor Style</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {PREMADE_CURSORS.map((cursor) => (
+                        <Button
+                          key={cursor.value}
+                          variant="outline"
+                          className="h-10 rounded-lg bg-zinc-900/50 text-zinc-300 font-medium text-xs transition-all border-white/5"
+                          style={{ cursor: cursor.value as any }}
+                        >
+                          {cursor.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* IDENTITY TAB */}

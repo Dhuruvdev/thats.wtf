@@ -77,6 +77,22 @@ export const blocks = pgTable("blocks", {
   visible: boolean("visible").default(true).notNull(),
 });
 
+export const media = pgTable("media", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  type: text("type").notNull(), // background, audio, hardware, cursor
+  url: text("url").notNull(),
+  name: text("name"),
+  uploadedBy: text("uploaded_by"),
+  metadata: jsonb("metadata").$type<{
+    duration?: number;
+    width?: number;
+    height?: number;
+    size?: number;
+  }>(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({ 
   id: true, 
   createdAt: true, 
@@ -86,8 +102,11 @@ export const insertUserSchema = createInsertSchema(users).omit({
   isEmailVerified: true 
 });
 export const insertBlockSchema = createInsertSchema(blocks).omit({ id: true });
+export const insertMediaSchema = createInsertSchema(media).omit({ id: true, createdAt: true });
 
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Block = typeof blocks.$inferSelect;
 export type InsertBlock = z.infer<typeof insertBlockSchema>;
+export type Media = typeof media.$inferSelect;
+export type InsertMedia = z.infer<typeof insertMediaSchema>;

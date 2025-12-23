@@ -1,4 +1,4 @@
-import { users, blocks, type User, type InsertUser, type Block, type InsertBlock } from "@shared/schema";
+import { users, blocks, media, type User, type InsertUser, type Block, type InsertBlock, type Media, type InsertMedia } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -15,6 +15,11 @@ export interface IStorage {
   createBlock(block: InsertBlock): Promise<Block>;
   deleteBlock(id: number): Promise<void>;
   getBlocksByUserId(userId: number): Promise<Block[]>;
+  
+  // Media
+  createMedia(media: InsertMedia): Promise<Media>;
+  getMediaByUserId(userId: number): Promise<Media[]>;
+  deleteMedia(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -78,6 +83,19 @@ export class DatabaseStorage implements IStorage {
   
   async getBlocksByUserId(userId: number): Promise<Block[]> {
     return await db.select().from(blocks).where(eq(blocks.userId, userId)).orderBy(blocks.order);
+  }
+
+  async createMedia(insertMedia: InsertMedia): Promise<Media> {
+    const [m] = await db.insert(media).values(insertMedia as any).returning();
+    return m;
+  }
+
+  async getMediaByUserId(userId: number): Promise<Media[]> {
+    return await db.select().from(media).where(eq(media.userId, userId));
+  }
+
+  async deleteMedia(id: number): Promise<void> {
+    await db.delete(media).where(eq(media.id, id));
   }
 }
 

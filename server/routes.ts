@@ -228,5 +228,55 @@ export async function registerRoutes(
     res.sendStatus(204);
   });
 
+  // === Media Routes (Backgrounds, Audio, Cursors, Hardware) ===
+
+  app.post("/api/media", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const { type, url, name, uploadedBy } = req.body;
+      const user = req.user as any;
+      
+      if (!type || !url) {
+        return res.status(400).json({ error: "Missing type or url" });
+      }
+      
+      const media = await storage.createMedia({
+        userId: user.id,
+        type,
+        url,
+        name: name || "Untitled",
+        uploadedBy: uploadedBy || user.username
+      });
+      
+      res.status(201).json(media);
+    } catch (err) {
+      console.error("Media create error:", err);
+      res.status(500).json({ error: "Failed to create media" });
+    }
+  });
+
+  app.get("/api/media/:userId", async (req, res) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const media = await storage.getMediaByUserId(userId);
+      res.json(media);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch media" });
+    }
+  });
+
+  app.delete("/api/media/:id", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    try {
+      const mediaId = parseInt(req.params.id);
+      await storage.deleteMedia(mediaId);
+      res.sendStatus(204);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to delete media" });
+    }
+  });
+
   return httpServer;
 }
