@@ -4,7 +4,8 @@ import { IdentityBlock } from "@/components/IdentityBlock";
 import { springReveal, idlePulse } from "@/lib/motion";
 import { useLogicEngine } from "@/hooks/use-logic-engine";
 import { gsap } from "gsap";
-import { Play, Volume2, VolumeX } from "lucide-react";
+import { Play, Volume2, VolumeX, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ProfileRendererProps {
   user: User;
@@ -14,10 +15,12 @@ interface ProfileRendererProps {
 export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const logic = useLogicEngine();
   const idleAnimationRef = useRef<gsap.core.Tween | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   // Apply logic rules
   const activeTheme = useMemo(() => {
@@ -68,6 +71,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   }, [activeTheme]);
 
   const toggleAudio = () => {
+    if (!isUnlocked) return;
     if (audioRef.current) {
       if (isAudioPlaying) {
         audioRef.current.pause();
@@ -80,10 +84,23 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   };
 
   const toggleMute = () => {
+    if (!isUnlocked) return;
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
     }
+  };
+
+  const handleUnlock = () => {
+    if (overlayRef.current) {
+      gsap.to(overlayRef.current, {
+        opacity: 0,
+        pointerEvents: "none",
+        duration: 0.6,
+        ease: "power2.inOut",
+      });
+    }
+    setIsUnlocked(true);
   };
 
   return (
