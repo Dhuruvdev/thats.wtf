@@ -40,10 +40,9 @@ export function MediaTab() {
   const handleUploadComplete = (result: any) => {
     if (result.successful && result.successful.length > 0) {
       const uploadedFile = result.successful[0];
-      const objectPath = uploadedFile.meta?.objectPath;
-      if (objectPath) {
-        // Serve from the objects endpoint
-        const fileUrl = `/objects/${objectPath.replace(/^\/objects\//, '')}`;
+      // Get file URL from response or meta
+      const fileUrl = uploadedFile.response?.url || uploadedFile.meta?.url;
+      if (fileUrl) {
         setMedia((prev: any) => ({ ...prev, videoUrl: fileUrl }));
       }
     }

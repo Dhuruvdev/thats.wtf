@@ -6,6 +6,7 @@ import { Link } from "wouter";
 
 export function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
   const menuVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -112,13 +113,16 @@ export function MobileMenu() {
                 animate="visible"
                 className="pt-4 border-t border-white/10"
               >
-                <button className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center justify-between group">
+                <button 
+                  onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                  className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 hover:border-white/20 hover:bg-white/5 text-white font-medium transition-all flex items-center justify-between group"
+                >
                   <div className="flex items-center gap-3">
                     <Globe className="w-5 h-5 text-primary group-hover:text-accent transition-colors" />
                     <span>English (US)</span>
                   </div>
                   <svg
-                    className="w-4 h-4 text-muted-foreground"
+                    className={`w-4 h-4 text-muted-foreground transition-transform ${isLanguageOpen ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
