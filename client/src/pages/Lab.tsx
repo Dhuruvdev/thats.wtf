@@ -411,214 +411,179 @@ export default function Lab() {
             <TabsContent value="design" className="space-y-6 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
                 <CardContent className="p-8 space-y-10">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between ml-1">
-                      <Label className="text-[15px] font-bold text-zinc-300">Accent Color</Label>
-                      <span className="text-[11px] font-black text-zinc-600 uppercase tracking-widest">Brand Personality</span>
-                    </div>
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-                      {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
-                        <button
-                          key={color}
-                          onClick={() => updateProfile({ accentColor: color })}
-                          className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${profile.accentColor === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
-                          style={{ background: color }}
-                          data-testid={`color-${color.slice(1)}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Style</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      {["none", "neon", "minimal", "glass"].map((frame) => (
-                        <Button
-                          key={frame}
-                          variant="outline"
-                          className={`h-14 rounded-2xl capitalize font-bold text-sm transition-all border-white/5 bg-zinc-900/50 ${profile.frame === frame ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
-                          onClick={() => updateProfile({ frame })}
-                          data-testid={`frame-${frame}`}
-                        >
-                          {frame}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between p-6 rounded-2xl bg-black/40 border border-white/5">
-                    <div className="space-y-1">
-                      <Label className="text-[15px] font-bold text-white">Ambient Glow</Label>
-                      <div className="text-[11px] font-black text-zinc-600 uppercase tracking-widest">Atmospheric background effects</div>
-                    </div>
-                    <Switch 
-                      checked={profile.glowEnabled ?? true}
-                      onCheckedChange={(checked) => updateProfile({ glowEnabled: checked })}
-                      data-testid="switch-glow"
-                      className="data-[state=checked]:bg-purple-600"
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Display Name Font</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      {FONTS.map((font) => (
-                        <Button
-                          key={font.value}
-                          variant="outline"
-                          onClick={() => updateProfile({ 
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              typography: {
-                                ...profile.themeConfig.typography,
-                                displayNameFont: font.value
-                              }
-                            }
-                          })}
-                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.displayNameFont === font.value ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
-                          style={{ fontFamily: font.value }}
-                          data-testid={`button-displayname-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
-                        >
-                          {font.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Bio Font</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      {FONTS.map((font) => (
-                        <Button
-                          key={font.value}
-                          variant="outline"
-                          onClick={() => updateProfile({ 
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              typography: {
-                                ...profile.themeConfig.typography,
-                                bioFont: font.value
-                              }
-                            }
-                          })}
-                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.bioFont === font.value ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
-                          style={{ fontFamily: font.value }}
-                          data-testid={`button-bio-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
-                        >
-                          {font.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Style</Label>
-                    <div className="grid grid-cols-2 gap-3">
-                      {["none", "glass", "neon", "minimal", "transparent", "glowing-border"].map((style) => (
-                        <Button
-                          key={style}
-                          variant="outline"
-                          className={`h-12 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.frameOverlay?.style === style ? "bg-white text-black border-white shadow-xl scale-[1.02]" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
-                          onClick={() => updateProfile({ 
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              frameOverlay: {
-                                ...profile.themeConfig?.frameOverlay,
-                                style: style as any
-                              }
-                            }
-                          })}
-                          data-testid={`frame-overlay-${style}`}
-                        >
-                          {style}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Opacity</Label>
-                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/40 border border-white/5">
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        value={profile.themeConfig?.frameOverlay?.opacity ?? 0.5}
-                        onChange={(e) => updateProfile({
-                          themeConfig: {
-                            ...profile.themeConfig,
-                            frameOverlay: {
-                              ...profile.themeConfig?.frameOverlay,
-                              opacity: parseFloat(e.target.value)
-                            }
-                          }
-                        })}
-                        className="flex-1 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
-                        data-testid="slider-overlay-opacity"
-                      />
-                      <span className="text-sm font-bold text-white w-12 text-right">
-                        {Math.round((profile.themeConfig?.frameOverlay?.opacity ?? 0.5) * 100)}%
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Blur</Label>
-                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/40 border border-white/5">
-                      <input
-                        type="range"
-                        min="0"
-                        max="30"
-                        step="1"
-                        value={profile.themeConfig?.frameOverlay?.blur ?? 10}
-                        onChange={(e) => updateProfile({
-                          themeConfig: {
-                            ...profile.themeConfig,
-                            frameOverlay: {
-                              ...profile.themeConfig?.frameOverlay,
-                              blur: parseInt(e.target.value)
-                            }
-                          }
-                        })}
-                        className="flex-1 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
-                        data-testid="slider-overlay-blur"
-                      />
-                      <span className="text-sm font-bold text-white w-12 text-right">
-                        {profile.themeConfig?.frameOverlay?.blur ?? 10}px
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Frame Overlay Color</Label>
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-                      {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
-                        <button
-                          key={color}
-                          onClick={() => updateProfile({
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              frameOverlay: {
-                                ...profile.themeConfig?.frameOverlay,
-                                color: color
-                              }
-                            }
-                          })}
-                          className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${(profile.themeConfig?.frameOverlay as any)?.color === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
-                          style={{ background: color }}
-                          data-testid={`frame-overlay-color-${color.slice(1)}`}
-                          title="Frame overlay color"
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Display Name Animation</Label>
+                  {/* Color & Theming */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-bold text-white">Colors & Theme</h3>
+                    
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
-                        <span className="text-sm font-bold text-zinc-300">Enabled</span>
+                      <Label className="text-[14px] font-bold text-zinc-300">Brand Accent Color</Label>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => updateProfile({ accentColor: color })}
+                            className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${profile.accentColor === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
+                            style={{ background: color }}
+                            data-testid={`color-${color.slice(1)}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-[14px] font-bold text-zinc-300">Username Glow Color</Label>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => updateProfile({
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                typography: {
+                                  ...profile.themeConfig.typography,
+                                  displayNameGlowColor: color
+                                }
+                              }
+                            })}
+                            className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${profile.themeConfig?.typography?.displayNameGlowColor === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
+                            style={{ background: color }}
+                            data-testid={`displayname-glow-color-${color.slice(1)}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Frame Settings */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-bold text-white">Frame & Border</h3>
+                    
+                    <div className="space-y-3">
+                      <Label className="text-[14px] font-bold text-zinc-300">Frame Style</Label>
+                      <div className="grid grid-cols-3 gap-3">
+                        {["none", "glass", "neon", "minimal", "transparent", "glowing-border"].map((style) => (
+                          <Button
+                            key={style}
+                            variant="outline"
+                            className={`h-10 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.frameOverlay?.style === style ? "bg-white text-black border-white shadow-xl" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                            onClick={() => updateProfile({ 
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                frameOverlay: {
+                                  ...profile.themeConfig?.frameOverlay,
+                                  style: style as any
+                                }
+                              }
+                            })}
+                            data-testid={`frame-overlay-${style}`}
+                          >
+                            {style}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-[14px] font-bold text-zinc-300">Frame Color</Label>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => updateProfile({
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                frameOverlay: {
+                                  ...profile.themeConfig?.frameOverlay,
+                                  color: color
+                                }
+                              }
+                            })}
+                            className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${(profile.themeConfig?.frameOverlay as any)?.color === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
+                            style={{ background: color }}
+                            data-testid={`frame-overlay-color-${color.slice(1)}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Typography */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-bold text-white">Typography</h3>
+                    
+                    <div className="space-y-3">
+                      <Label className="text-[14px] font-bold text-zinc-300">Username Font</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {FONTS.map((font) => (
+                          <Button
+                            key={font.value}
+                            variant="outline"
+                            onClick={() => updateProfile({ 
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                typography: {
+                                  ...profile.themeConfig.typography,
+                                  displayNameFont: font.value
+                                }
+                              }
+                            })}
+                            className={`h-10 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.displayNameFont === font.value ? "bg-white text-black border-white shadow-xl" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                            style={{ fontFamily: font.value }}
+                            data-testid={`button-displayname-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            {font.name}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-[14px] font-bold text-zinc-300">Bio Font</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {FONTS.map((font) => (
+                          <Button
+                            key={font.value}
+                            variant="outline"
+                            onClick={() => updateProfile({ 
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                typography: {
+                                  ...profile.themeConfig.typography,
+                                  bioFont: font.value
+                                }
+                              }
+                            })}
+                            className={`h-10 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.bioFont === font.value ? "bg-white text-black border-white shadow-xl" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                            style={{ fontFamily: font.value }}
+                            data-testid={`button-bio-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            {font.name}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Effects & Animation */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-bold text-white">Effects</h3>
+                    
+                    <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
+                      <div className="space-y-1">
+                        <Label className="text-[14px] font-bold text-white">Ambient Glow</Label>
+                        <div className="text-[11px] text-zinc-500">Background glow effect</div>
+                      </div>
+                      <Switch 
+                        checked={profile.glowEnabled ?? true}
+                        onCheckedChange={(checked) => updateProfile({ glowEnabled: checked })}
+                        data-testid="switch-glow"
+                        className="data-[state=checked]:bg-purple-600"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-[14px] font-bold text-white">Username Animation</Label>
                         <Switch 
                           checked={profile.themeConfig?.animations?.displayName?.enabled ?? true}
                           onCheckedChange={(checked) => updateProfile({ 
@@ -656,56 +621,6 @@ export default function Lab() {
                               }
                             })}
                             data-testid={`displayname-animation-${type}`}
-                          >
-                            {type}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300 ml-1">Bio Animation</Label>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
-                        <span className="text-sm font-bold text-zinc-300">Enabled</span>
-                        <Switch 
-                          checked={profile.themeConfig?.animations?.bio?.enabled ?? true}
-                          onCheckedChange={(checked) => updateProfile({ 
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              animations: {
-                                ...profile.themeConfig?.animations,
-                                bio: {
-                                  ...profile.themeConfig?.animations?.bio,
-                                  enabled: checked
-                                }
-                              }
-                            }
-                          })}
-                          data-testid="switch-bio-animation"
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        {["fade", "slide", "scale", "wave", "glow-pulse"].map((type) => (
-                          <Button
-                            key={type}
-                            variant="ghost"
-                            size="sm"
-                            className={`capitalize text-xs ${profile.themeConfig?.animations?.bio?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white"}`}
-                            onClick={() => updateProfile({ 
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                animations: {
-                                  ...profile.themeConfig?.animations,
-                                  bio: {
-                                    ...profile.themeConfig?.animations?.bio,
-                                    type: type as any
-                                  }
-                                }
-                              }
-                            })}
-                            data-testid={`bio-animation-${type}`}
                           >
                             {type}
                           </Button>

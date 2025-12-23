@@ -238,7 +238,8 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
               fontFamily: "var(--displayname-font)",
               animation: activeTheme.animations?.displayName?.enabled 
                 ? `${activeTheme.animations.displayName.type}-in ${activeTheme.animations.displayName.duration}s ease-out forwards`
-                : 'none'
+                : 'none',
+              textShadow: `0 0 20px ${activeTheme.typography?.displayNameGlowColor || '#7c3aed'}80`
             }}
           >
             {user.displayName || user.username}

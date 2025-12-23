@@ -40,6 +40,7 @@ export const users = pgTable("users", {
       displayNameFont: string;
       bioFont: string;
       accentColor: string;
+      displayNameGlowColor?: string;
     };
     motion: {
       intensity: number; // 0 to 1
@@ -66,7 +67,7 @@ export const users = pgTable("users", {
   }>().default({
     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
     cursor: { type: "default", color: "#ffffff", size: 24 },
-    typography: { headingFont: "Space Grotesk", bodyFont: "Inter", displayNameFont: "Space Grotesk", bioFont: "Inter", accentColor: "#7c3aed" },
+    typography: { headingFont: "Space Grotesk", bodyFont: "Inter", displayNameFont: "Space Grotesk", bioFont: "Inter", accentColor: "#7c3aed", displayNameGlowColor: "#7c3aed" },
     motion: { intensity: 1, reduced: false },
     frameOverlay: { style: "glass", opacity: 0.5, blur: 10, color: "#7c3aed" },
     animations: {
