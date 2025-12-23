@@ -11,6 +11,9 @@ interface MediaState {
   videoUrl: string;
   videoVolume: number;
   videoPlaying: boolean;
+  audioDuration?: number;
+  audioUrl?: string;
+  audioVolume?: number;
 }
 
 interface MediaTabProps {
@@ -28,9 +31,24 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
     videoUrl: "",
     videoVolume: 0.5,
     videoPlaying: false,
+    audioUrl: "",
+    audioVolume: 0.5,
+    audioDuration: 0,
   };
 
   const safeSetMedia = setMedia || (() => {});
+
+  const handleAudioMetadata = (e: any) => {
+    const duration = e.currentTarget.duration;
+    safeSetMedia((prev: any) => ({ ...prev, audioDuration: Math.round(duration) }));
+  };
+
+  const formatDuration = (seconds: number) => {
+    if (!seconds || isNaN(seconds)) return "-- : --";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   const handleUpdateAvatar = (url: string) => {
     updateProfile({ avatarUrl: url });
@@ -79,7 +97,7 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-[17px] font-bold text-white ml-1">Profile Background</Label>
-                  <p className="text-xs text-zinc-500 font-medium ml-1 mt-0.5">MP4, WebM, or static imagery</p>
+                  <p className="text-xs text-zinc-500 font-medium ml-1 mt-0.5">Video, GIF, or static imagery</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-black text-zinc-600 uppercase tracking-widest">Presets</span>
@@ -94,7 +112,11 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
               <div className="relative group">
                 {safeMedia.videoUrl ? (
                   <div className="h-56 w-full bg-black/60 rounded-[32px] overflow-hidden relative shadow-inner flex items-center justify-center">
-                    <video src={safeMedia.videoUrl} className="w-full h-full object-cover" muted loop autoPlay />
+                    {safeMedia.videoUrl.toLowerCase().endsWith('.gif') ? (
+                      <img src={safeMedia.videoUrl} alt="Background GIF" className="w-full h-full object-cover" />
+                    ) : (
+                      <video src={safeMedia.videoUrl} className="w-full h-full object-cover" muted loop autoPlay />
+                    )}
                     <Button
                       size="icon"
                       variant="ghost"
@@ -108,7 +130,7 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
                   <AdvancedUploader 
                     onComplete={handleVideoUploadComplete}
                     maxSize={500 * 1024 * 1024}
-                    accept="video/*,image/*"
+                    accept="video/*,image/*,.gif"
                   />
                 )}
               </div>
@@ -119,18 +141,29 @@ export function MediaTab({ media, setMedia }: MediaTabProps) {
               <div className="space-y-4">
                 <Label className="text-[15px] font-bold text-zinc-400 ml-1">Audio Track</Label>
                 {safeMedia.audioUrl ? (
-                  <div className="h-44 w-full bg-black/60 rounded-[28px] overflow-hidden relative shadow-inner flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
+                  <div className="h-44 w-full bg-black/60 rounded-[28px] overflow-hidden relative shadow-inner flex items-center justify-center p-6">
+                    <audio 
+                      onLoadedMetadata={handleAudioMetadata}
+                      src={safeMedia.audioUrl}
+                      style={{ display: "none" }}
+                    />
+                    <div className="flex flex-col items-center gap-4 w-full">
                       <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center animate-pulse">
                         <Music className="w-6 h-6 text-purple-400" />
                       </div>
-                      <p className="text-sm font-bold text-zinc-400 text-center">{safeMedia.audioUrl.split('/').pop()}</p>
+                      <div className="text-center w-full space-y-2">
+                        <p className="text-sm font-bold text-zinc-300 truncate max-w-xs">{safeMedia.audioUrl.split('/').pop()}</p>
+                        <div className="flex flex-col gap-1 text-xs text-zinc-500">
+                          <span className="text-purple-400 font-bold">{formatDuration(safeMedia.audioDuration || 0)}</span>
+                          <span>Duration: {safeMedia.audioDuration ? `${safeMedia.audioDuration}s` : "Loading..."}</span>
+                        </div>
+                      </div>
                     </div>
                     <Button
                       size="icon"
                       variant="ghost"
                       className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 z-10"
-                      onClick={() => safeSetMedia((prev: any) => ({ ...prev, audioUrl: "" }))}
+                      onClick={() => safeSetMedia((prev: any) => ({ ...prev, audioUrl: "", audioDuration: 0 }))}
                       data-testid="button-remove-audio"
                     >
                       <X className="w-5 h-5" />

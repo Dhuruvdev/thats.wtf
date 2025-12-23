@@ -56,11 +56,14 @@ export default function Lab() {
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
   const [audioUrl, setAudioUrl] = useState<string>("");
   
-  // Lab-specific media state (VIDEO ONLY - audio plays on profile page)
+  // Lab-specific media state (supports GIFs, video, and audio)
   const [media, setMedia] = useState({
     videoUrl: "",
     videoVolume: 0.5,
     videoPlaying: false,
+    audioUrl: "",
+    audioVolume: 0.5,
+    audioDuration: 0,
   });
 
   const FONTS = [
@@ -421,66 +424,6 @@ export default function Lab() {
             {/* MEDIA TAB */}
             <TabsContent value="media" className="space-y-4 mt-4">
               <MediaTab media={media} setMedia={setMedia} />
-              
-              <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-                <CardContent className="p-8 space-y-8">
-                  <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <Upload className="w-5 h-5" /> Advanced Media Assets
-                    </h3>
-                    <p className="text-xs text-zinc-500 font-medium mt-1">GIF, Audio, Custom Cursors & Hardware</p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300">Background (GIF or Image)</Label>
-                    <div
-                      ref={dragRef}
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleFileDrop}
-                      className="border-2 border-dashed border-muted-foreground rounded-lg p-8 text-center cursor-pointer transition-opacity bg-zinc-900/30"
-                    >
-                      <Upload className="w-8 h-8 mx-auto mb-2 text-zinc-500" />
-                      <p className="text-sm text-zinc-400">Drag GIF or image here</p>
-                    </div>
-                    {backgroundUrl && (
-                      <div className="relative rounded-lg overflow-hidden h-32">
-                        <img src={backgroundUrl} alt="Background" className="w-full h-full object-cover" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300">Profile Audio</Label>
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleFileDrop}
-                      className="border-2 border-dashed border-muted-foreground rounded-lg p-8 text-center cursor-pointer transition-opacity bg-zinc-900/30"
-                    >
-                      <MusicIcon className="w-8 h-8 mx-auto mb-2 text-zinc-500" />
-                      <p className="text-sm text-zinc-400">Drag audio file here</p>
-                    </div>
-                    {audioUrl && <MediaPlayer src={audioUrl} type="audio" />}
-                  </div>
-
-                  <div className="space-y-4">
-                    <Label className="text-[15px] font-bold text-zinc-300">Cursor Style</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {PREMADE_CURSORS.map((cursor) => (
-                        <Button
-                          key={cursor.value}
-                          variant="outline"
-                          className="h-10 rounded-lg bg-zinc-900/50 text-zinc-300 font-medium text-xs transition-all border-white/5"
-                          style={{ cursor: cursor.value as any }}
-                        >
-                          {cursor.name}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </TabsContent>
 
             {/* IDENTITY TAB */}
