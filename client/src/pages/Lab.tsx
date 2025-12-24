@@ -407,22 +407,40 @@ export default function Lab() {
               </Card>
             </TabsContent>
 
-            {/* DESIGN TAB */}
-            <TabsContent value="design" className="space-y-6 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-                <CardContent className="p-8 space-y-10">
-                  {/* Color & Theming */}
-                  <div className="space-y-6">
-                    <h3 className="text-lg font-bold text-white">Colors & Theme</h3>
-                    
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-300">Brand Accent Color</Label>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+            {/* DESIGN TAB - Professional Implementation */}
+            <TabsContent value="design" className="space-y-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Color Customization */}
+              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-lg bg-purple-500/20">
+                      <Palette className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">Colors</h3>
+                      <p className="text-xs text-zinc-500">Customize your color palette</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label className="text-sm font-semibold text-zinc-200">Brand Accent</Label>
+                        <input
+                          type="text"
+                          value={profile.accentColor || "#7c3aed"}
+                          onChange={(e) => updateProfile({ accentColor: e.target.value })}
+                          className="w-20 px-2 py-1 text-xs rounded-lg bg-zinc-900 border border-white/10 text-white font-mono"
+                          placeholder="#7c3aed"
+                          data-testid="input-accent-color"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                         {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
                           <button
                             key={color}
                             onClick={() => updateProfile({ accentColor: color })}
-                            className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${profile.accentColor === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
+                            className={`w-full aspect-square rounded-xl border-2 transition-all hover:scale-105 ${profile.accentColor === color ? 'border-white ring-2 ring-white/30' : 'border-white/10'}`}
                             style={{ background: color }}
                             data-testid={`color-${color.slice(1)}`}
                           />
@@ -430,9 +448,27 @@ export default function Lab() {
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-300">Username Glow Color</Label>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label className="text-sm font-semibold text-zinc-200">Username Glow</Label>
+                        <input
+                          type="text"
+                          value={profile.themeConfig?.typography?.displayNameGlowColor || "#7c3aed"}
+                          onChange={(e) => updateProfile({
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              typography: {
+                                ...profile.themeConfig.typography,
+                                displayNameGlowColor: e.target.value
+                              }
+                            }
+                          })}
+                          className="w-20 px-2 py-1 text-xs rounded-lg bg-zinc-900 border border-white/10 text-white font-mono"
+                          placeholder="#7c3aed"
+                          data-testid="input-glow-color"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
                         {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
                           <button
                             key={color}
@@ -445,27 +481,80 @@ export default function Lab() {
                                 }
                               }
                             })}
-                            className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${profile.themeConfig?.typography?.displayNameGlowColor === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
+                            className={`w-full aspect-square rounded-xl border-2 transition-all hover:scale-105 ${profile.themeConfig?.typography?.displayNameGlowColor === color ? 'border-white ring-2 ring-white/30' : 'border-white/10'}`}
                             style={{ background: color }}
                             data-testid={`displayname-glow-color-${color.slice(1)}`}
                           />
                         ))}
                       </div>
                     </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label className="text-sm font-semibold text-zinc-200">Frame Color</Label>
+                        <input
+                          type="text"
+                          value={(profile.themeConfig?.frameOverlay as any)?.color || "#7c3aed"}
+                          onChange={(e) => updateProfile({
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              frameOverlay: {
+                                ...profile.themeConfig?.frameOverlay,
+                                color: e.target.value
+                              }
+                            }
+                          })}
+                          className="w-20 px-2 py-1 text-xs rounded-lg bg-zinc-900 border border-white/10 text-white font-mono"
+                          placeholder="#7c3aed"
+                          data-testid="input-frame-color"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => updateProfile({
+                              themeConfig: {
+                                ...profile.themeConfig,
+                                frameOverlay: {
+                                  ...profile.themeConfig?.frameOverlay,
+                                  color: color
+                                }
+                              }
+                            })}
+                            className={`w-full aspect-square rounded-xl border-2 transition-all hover:scale-105 ${(profile.themeConfig?.frameOverlay as any)?.color === color ? 'border-white ring-2 ring-white/30' : 'border-white/10'}`}
+                            style={{ background: color }}
+                            data-testid={`frame-overlay-color-${color.slice(1)}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Frame Customization */}
+              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-blue-500/20">
+                      <Zap className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">Frame</h3>
+                      <p className="text-xs text-zinc-500">Profile frame style and appearance</p>
+                    </div>
                   </div>
 
-                  {/* Frame Settings */}
-                  <div className="space-y-6">
-                    <h3 className="text-lg font-bold text-white">Frame & Border</h3>
-                    
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-300">Frame Style</Label>
-                      <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-sm font-semibold text-zinc-200 mb-3 block">Style</Label>
+                      <div className="grid grid-cols-3 gap-2">
                         {["none", "glass", "neon", "minimal", "transparent", "glowing-border"].map((style) => (
                           <Button
                             key={style}
                             variant="outline"
-                            className={`h-10 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.frameOverlay?.style === style ? "bg-white text-black border-white shadow-xl" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                            className={`h-9 rounded-lg capitalize font-semibold text-xs transition-all border ${profile.themeConfig?.frameOverlay?.style === style ? "bg-white text-black border-white shadow-lg" : "bg-zinc-900/30 text-zinc-400 border-white/10 hover:border-white/20 hover:bg-zinc-900/50"}`}
                             onClick={() => updateProfile({ 
                               themeConfig: {
                                 ...profile.themeConfig,
@@ -482,38 +571,27 @@ export default function Lab() {
                         ))}
                       </div>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-300">Frame Color</Label>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => updateProfile({
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                frameOverlay: {
-                                  ...profile.themeConfig?.frameOverlay,
-                                  color: color
-                                }
-                              }
-                            })}
-                            className={`w-full aspect-square rounded-2xl border-2 transition-all hover:scale-110 active:scale-90 ${(profile.themeConfig?.frameOverlay as any)?.color === color ? 'border-white ring-4 ring-white/10 shadow-[0_0_20px_rgba(255,255,255,0.1)]' : 'border-white/5'}`}
-                            style={{ background: color }}
-                            data-testid={`frame-overlay-color-${color.slice(1)}`}
-                          />
-                        ))}
-                      </div>
+              {/* Typography */}
+              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-pink-500/20">
+                      <Type className="w-5 h-5 text-pink-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">Typography</h3>
+                      <p className="text-xs text-zinc-500">Font selections</p>
                     </div>
                   </div>
 
-                  {/* Typography */}
-                  <div className="space-y-6">
-                    <h3 className="text-lg font-bold text-white">Typography</h3>
-                    
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-300">Username Font</Label>
-                      <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-sm font-semibold text-zinc-200 mb-3 block">Username Font</Label>
+                      <div className="grid grid-cols-2 gap-2">
                         {FONTS.map((font) => (
                           <Button
                             key={font.value}
@@ -527,7 +605,7 @@ export default function Lab() {
                                 }
                               }
                             })}
-                            className={`h-10 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.displayNameFont === font.value ? "bg-white text-black border-white shadow-xl" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                            className={`h-9 rounded-lg font-semibold text-xs transition-all border ${profile.themeConfig?.typography?.displayNameFont === font.value ? "bg-white text-black border-white shadow-lg" : "bg-zinc-900/30 text-zinc-400 border-white/10 hover:border-white/20 hover:bg-zinc-900/50"}`}
                             style={{ fontFamily: font.value }}
                             data-testid={`button-displayname-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
                           >
@@ -537,9 +615,9 @@ export default function Lab() {
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label className="text-[14px] font-bold text-zinc-300">Bio Font</Label>
-                      <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-sm font-semibold text-zinc-200 mb-3 block">Bio Font</Label>
+                      <div className="grid grid-cols-2 gap-2">
                         {FONTS.map((font) => (
                           <Button
                             key={font.value}
@@ -553,7 +631,7 @@ export default function Lab() {
                                 }
                               }
                             })}
-                            className={`h-10 rounded-2xl capitalize font-bold text-xs transition-all border-white/5 ${profile.themeConfig?.typography?.bioFont === font.value ? "bg-white text-black border-white shadow-xl" : "bg-zinc-900/50 text-zinc-400 hover:border-white/20 hover:bg-white/5"}`}
+                            className={`h-9 rounded-lg font-semibold text-xs transition-all border ${profile.themeConfig?.typography?.bioFont === font.value ? "bg-white text-black border-white shadow-lg" : "bg-zinc-900/30 text-zinc-400 border-white/10 hover:border-white/20 hover:bg-zinc-900/50"}`}
                             style={{ fontFamily: font.value }}
                             data-testid={`button-bio-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
                           >
@@ -563,16 +641,25 @@ export default function Lab() {
                       </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  {/* Effects & Animation */}
-                  <div className="space-y-6">
-                    <h3 className="text-lg font-bold text-white">Effects</h3>
-                    
-                    <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5">
-                      <div className="space-y-1">
-                        <Label className="text-[14px] font-bold text-white">Ambient Glow</Label>
-                        <div className="text-[11px] text-zinc-500">Background glow effect</div>
-                      </div>
+              {/* Effects & Animation */}
+              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
+                <CardContent className="p-6 space-y-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-green-500/20">
+                      <Sparkles className="w-5 h-5 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">Effects</h3>
+                      <p className="text-xs text-zinc-500">Animations and glow effects</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 rounded-lg bg-black/40 border border-white/5">
+                      <Label className="text-sm font-semibold text-zinc-200">Ambient Glow</Label>
                       <Switch 
                         checked={profile.glowEnabled ?? true}
                         onCheckedChange={(checked) => updateProfile({ glowEnabled: checked })}
@@ -583,7 +670,7 @@ export default function Lab() {
 
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <Label className="text-[14px] font-bold text-white">Username Animation</Label>
+                        <Label className="text-sm font-semibold text-zinc-200">Username Animation</Label>
                         <Switch 
                           checked={profile.themeConfig?.animations?.displayName?.enabled ?? true}
                           onCheckedChange={(checked) => updateProfile({ 
@@ -607,7 +694,7 @@ export default function Lab() {
                             key={type}
                             variant="ghost"
                             size="sm"
-                            className={`capitalize text-xs ${profile.themeConfig?.animations?.displayName?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white"}`}
+                            className={`capitalize text-xs h-8 rounded-lg font-semibold ${profile.themeConfig?.animations?.displayName?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
                             onClick={() => updateProfile({ 
                               themeConfig: {
                                 ...profile.themeConfig,
@@ -628,7 +715,6 @@ export default function Lab() {
                       </div>
                     </div>
                   </div>
-
                 </CardContent>
               </Card>
             </TabsContent>
