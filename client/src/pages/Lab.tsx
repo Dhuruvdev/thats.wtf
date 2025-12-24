@@ -724,6 +724,80 @@ export default function Lab() {
                       </div>
                     )}
 
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-black/40 border border-white/5">
+                        <Label className="text-sm font-semibold text-zinc-200">Screen Effects</Label>
+                        <Switch 
+                          checked={profile.themeConfig?.screenEffects?.enabled ?? false}
+                          onCheckedChange={(checked) => updateProfile({
+                            themeConfig: {
+                              ...profile.themeConfig,
+                              screenEffects: {
+                                ...profile.themeConfig?.screenEffects,
+                                enabled: checked,
+                                type: profile.themeConfig?.screenEffects?.type || "cinema"
+                              }
+                            }
+                          })}
+                          data-testid="switch-screen-effects"
+                          className="data-[state=checked]:bg-purple-600"
+                        />
+                      </div>
+
+                      {profile.themeConfig?.screenEffects?.enabled && (
+                        <div className="space-y-3">
+                          <Label className="text-sm font-semibold text-zinc-200 block">Effect Type</Label>
+                          <div className="grid grid-cols-2 gap-2">
+                            {["cinema", "bloom", "vignette", "neon", "phosphor", "chromatic", "minimal"].map((type) => (
+                              <Button
+                                key={type}
+                                variant="ghost"
+                                size="sm"
+                                className={`capitalize text-xs h-8 rounded-lg font-semibold ${profile.themeConfig?.screenEffects?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
+                                onClick={() => updateProfile({
+                                  themeConfig: {
+                                    ...profile.themeConfig,
+                                    screenEffects: {
+                                      ...profile.themeConfig?.screenEffects,
+                                      type: type as any
+                                    }
+                                  }
+                                })}
+                                data-testid={`screen-effect-${type}`}
+                              >
+                                {type}
+                              </Button>
+                            ))}
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <Label className="text-xs font-semibold text-zinc-200">Intensity</Label>
+                              <span className="text-xs text-zinc-400 font-mono">{Math.round((profile.themeConfig?.screenEffects?.intensity ?? 1) * 100)}%</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="0.5"
+                              max="2"
+                              step="0.1"
+                              value={profile.themeConfig?.screenEffects?.intensity ?? 1}
+                              onChange={(e) => updateProfile({
+                                themeConfig: {
+                                  ...profile.themeConfig,
+                                  screenEffects: {
+                                    ...profile.themeConfig?.screenEffects,
+                                    intensity: parseFloat(e.target.value)
+                                  }
+                                }
+                              })}
+                              className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                              data-testid="slider-screen-effects-intensity"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex items-center justify-between p-3 rounded-lg bg-black/40 border border-white/5">
                       <Label className="text-sm font-semibold text-zinc-200">Ambient Glow</Label>
                       <Switch 

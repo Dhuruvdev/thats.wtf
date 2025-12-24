@@ -69,6 +69,11 @@ export const users = pgTable("users", {
       type: "particles" | "glitch" | "fade" | "none";
       text?: string;
     };
+    screenEffects: {
+      enabled: boolean;
+      type: "none" | "cinema" | "bloom" | "vignette" | "neon" | "phosphor" | "chromatic" | "minimal";
+      intensity: number;
+    };
   }>().default({
     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -83,6 +88,11 @@ export const users = pgTable("users", {
       enabled: false,
       type: "particles",
       text: "reveal"
+    },
+    screenEffects: {
+      enabled: false,
+      type: "none",
+      intensity: 1
     }
   }).notNull(),
 

@@ -171,13 +171,73 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const entranceType = user.themeConfig?.entranceMode?.type || "particles";
   const entranceText = user.themeConfig?.entranceMode?.text || "reveal";
 
+  // Generate screen effects CSS
+  const getScreenEffectStyles = (): React.CSSProperties => {
+    const screenEffects = user.themeConfig?.screenEffects;
+    if (!screenEffects?.enabled || screenEffects.type === "none") return {};
+    
+    const intensity = screenEffects.intensity || 1;
+    const styles: React.CSSProperties = {};
+
+    switch (screenEffects.type) {
+      case "cinema":
+        styles.filter = `saturate(${95 - intensity * 5}%) brightness(${98 + intensity}%)`;
+        return {
+          ...styles,
+          boxShadow: `inset 0 0 100px rgba(0,0,0,${0.1 * intensity})`
+        };
+      case "bloom":
+        return {
+          ...styles,
+          filter: `brightness(${102 + intensity * 3}%) contrast(${98 + intensity * 2}%)`,
+          boxShadow: `inset 0 0 60px rgba(124, 58, 237, ${0.08 * intensity})`
+        };
+      case "vignette":
+        return {
+          ...styles,
+          filter: `contrast(${100 + intensity}%)`,
+          boxShadow: `inset 0 0 120px rgba(0,0,0,${0.15 * intensity}), inset 0 0 40px rgba(0,0,0,${0.08 * intensity})`
+        };
+      case "neon":
+        return {
+          ...styles,
+          filter: `saturate(${110 + intensity * 10}%) contrast(${105 + intensity * 5}%) brightness(${100 + intensity * 2}%)`
+        };
+      case "phosphor":
+        return {
+          ...styles,
+          filter: `sepia(${20 * intensity}%) hue-rotate(${5 * intensity}deg) saturate(${110 + intensity * 10}%) brightness(${98 + intensity}%)`,
+          textShadow: `0 0 ${10 * intensity}px rgba(0, 255, 100, ${0.3 * intensity})`
+        };
+      case "chromatic":
+        return {
+          ...styles,
+          filter: `contrast(${105 + intensity * 3}%) brightness(${100 + intensity}%)`,
+          boxShadow: `
+            -${2 * intensity}px 0 0 rgba(255, 0, 100, 0.1),
+            ${2 * intensity}px 0 0 rgba(0, 150, 255, 0.1),
+            inset 0 0 ${50 * intensity}px rgba(0,0,0,0.05)
+          `
+        };
+      case "minimal":
+        return {
+          ...styles,
+          filter: `brightness(${100 + intensity}%) contrast(${101 + intensity}%)`,
+          boxShadow: `inset 0 0 50px rgba(0,0,0,${0.05 * intensity})`
+        };
+      default:
+        return styles;
+    }
+  };
+
   return (
     <div 
       ref={containerRef}
       className="profile-container w-full min-h-screen flex flex-col items-center justify-center transition-colors duration-500 relative overflow-hidden"
       style={{
         backgroundColor: user.backgroundUrl ? "transparent" : "var(--profile-bg, #000)",
-        fontFamily: "var(--body-font, sans-serif)"
+        fontFamily: "var(--body-font, sans-serif)",
+        ...getScreenEffectStyles()
       }}
     >
       {/* Background Image/GIF */}
