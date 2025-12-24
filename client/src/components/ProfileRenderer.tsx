@@ -55,7 +55,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const idleAnimationRef = useRef<gsap.core.Tween | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(!user.themeConfig?.entranceMode?.enabled);
 
   // Resolve media URLs to absolute paths for iframe compatibility
   const backgroundUrl = useMemo(() => resolveMediaUrl(user.backgroundUrl), [user.backgroundUrl]);
@@ -141,15 +141,35 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
 
   const handleUnlock = () => {
     if (overlayRef.current) {
+      const entranceType = user.themeConfig?.entranceMode?.type || "particles";
       gsap.to(overlayRef.current, {
         opacity: 0,
         pointerEvents: "none",
-        duration: 0.6,
+        duration: entranceType === "glitch" ? 0.3 : 0.6,
         ease: "power2.inOut",
       });
     }
     setIsUnlocked(true);
   };
+
+  // Particle generator for entrance
+  const generateParticles = () => {
+    const particles = [];
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        id: i,
+        left: Math.random() * 100,
+        delay: Math.random() * 0.5,
+        duration: 2 + Math.random() * 1
+      });
+    }
+    return particles;
+  };
+
+  // Determine if entrance should show
+  const showEntrance = !isUnlocked && user.themeConfig?.entranceMode?.enabled;
+  const entranceType = user.themeConfig?.entranceMode?.type || "particles";
+  const entranceText = user.themeConfig?.entranceMode?.text || "reveal";
 
   return (
     <div 
@@ -187,6 +207,75 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/10 pointer-events-none" />
+        </div>
+      )}
+
+      {/* Entrance Mode Overlay */}
+      {showEntrance && (
+        <div 
+          ref={overlayRef}
+          className="absolute inset-0 z-50 flex items-center justify-center bg-black/98 cursor-pointer"
+          onClick={handleUnlock}
+          data-testid="entrance-overlay"
+        >
+          <style>{`
+            @keyframes particle-rise {
+              to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            }
+            @keyframes glitch {
+              0%, 100% { clip-path: inset(0); }
+              20% { clip-path: inset(10% 0); }
+              40% { clip-path: inset(30% 0 20% 0); }
+              60% { clip-path: inset(50% 0 30% 0); }
+            }
+            .entrance-particle {
+              animation: particle-rise var(--duration, 2s) linear var(--delay, 0s) forwards;
+              position: absolute;
+              bottom: -20px;
+              width: 4px;
+              height: 4px;
+              background: var(--accent-color);
+              border-radius: 50%;
+              filter: blur(1px);
+            }
+            .entrance-glitch {
+              animation: glitch 0.3s ease-in-out;
+            }
+          `}</style>
+          {entranceType === "particles" && (
+            <div className="relative w-full h-full flex items-center justify-center">
+              {generateParticles().map((p) => (
+                <div
+                  key={p.id}
+                  className="entrance-particle"
+                  style={{
+                    left: `${p.left}%`,
+                    "--duration": `${p.duration}s`,
+                    "--delay": `${p.delay}s`,
+                  } as React.CSSProperties}
+                />
+              ))}
+              <div className="text-center space-y-4">
+                <div className="text-5xl font-black text-white mb-4 tracking-tight capitalize">{entranceText}</div>
+                <p className="text-sm text-zinc-500 font-medium">click anywhere to enter</p>
+              </div>
+            </div>
+          )}
+          {entranceType === "glitch" && (
+            <div className="entrance-glitch text-center space-y-4">
+              <div className="text-5xl font-black text-white mb-4 tracking-tight capitalize" style={{
+                textShadow: `2px 2px 0px ${activeTheme.typography?.displayNameGlowColor || '#7c3aed'},
+                            -2px -2px 0px rgba(${hexToRgb(activeTheme.typography?.displayNameGlowColor || '#7c3aed')}, 0.5)`
+              }}>{entranceText}</div>
+              <p className="text-sm text-zinc-500 font-medium">click to reveal</p>
+            </div>
+          )}
+          {entranceType === "fade" && (
+            <div className="text-center space-y-4 animate-pulse">
+              <div className="text-5xl font-black text-white mb-4 tracking-tight capitalize">{entranceText}</div>
+              <p className="text-sm text-zinc-500 font-medium">click to continue</p>
+            </div>
+          )}
         </div>
       )}
 

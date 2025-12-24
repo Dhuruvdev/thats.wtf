@@ -64,6 +64,11 @@ export const users = pgTable("users", {
         duration: number;
       };
     };
+    entranceMode: {
+      enabled: boolean;
+      type: "particles" | "glitch" | "fade" | "none";
+      text?: string;
+    };
   }>().default({
     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -73,6 +78,11 @@ export const users = pgTable("users", {
     animations: {
       displayName: { enabled: true, type: "fade", duration: 0.6 },
       bio: { enabled: true, type: "fade", duration: 0.8 }
+    },
+    entranceMode: {
+      enabled: false,
+      type: "particles",
+      text: "reveal"
     }
   }).notNull(),
 
