@@ -85,7 +85,7 @@ export const users = pgTable("users", {
       bio: { enabled: true, type: "fade", duration: 0.8 }
     },
     entranceMode: {
-      enabled: false,
+      enabled: true,
       type: "particles",
       text: "reveal"
     },

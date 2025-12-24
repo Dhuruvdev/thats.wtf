@@ -55,7 +55,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const idleAnimationRef = useRef<gsap.core.Tween | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [isUnlocked, setIsUnlocked] = useState(!user.themeConfig?.entranceMode?.enabled);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   // Resolve media URLs to absolute paths for iframe compatibility
   const backgroundUrl = useMemo(() => resolveMediaUrl(user.backgroundUrl), [user.backgroundUrl]);
@@ -166,10 +166,10 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
     return particles;
   };
 
-  // Determine if entrance should show
-  const showEntrance = !isUnlocked && user.themeConfig?.entranceMode?.enabled;
-  const entranceType = user.themeConfig?.entranceMode?.type || "particles";
-  const entranceText = user.themeConfig?.entranceMode?.text || "reveal";
+  // Determine if entrance should show (always show entrance mode)
+  const showEntrance = !isUnlocked;
+  const entranceType = "particles";
+  const entranceText = "enter";
 
   // Generate screen effects CSS
   const getScreenEffectStyles = (): React.CSSProperties => {
@@ -302,40 +302,23 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
               animation: glitch 0.3s ease-in-out;
             }
           `}</style>
-          {entranceType === "particles" && (
-            <div className="relative w-full h-full flex items-center justify-center">
-              {generateParticles().map((p) => (
-                <div
-                  key={p.id}
-                  className="entrance-particle"
-                  style={{
-                    left: `${p.left}%`,
-                    "--duration": `${p.duration}s`,
-                    "--delay": `${p.delay}s`,
-                  } as React.CSSProperties}
-                />
-              ))}
-              <div className="text-center space-y-4">
-                <div className="text-5xl font-black text-white mb-4 tracking-tight capitalize">{entranceText}</div>
-                <p className="text-sm text-zinc-500 font-medium">click anywhere to enter</p>
-              </div>
-            </div>
-          )}
-          {entranceType === "glitch" && (
-            <div className="entrance-glitch text-center space-y-4">
-              <div className="text-5xl font-black text-white mb-4 tracking-tight capitalize" style={{
-                textShadow: `2px 2px 0px ${activeTheme.typography?.displayNameGlowColor || '#7c3aed'},
-                            -2px -2px 0px rgba(${hexToRgb(activeTheme.typography?.displayNameGlowColor || '#7c3aed')}, 0.5)`
-              }}>{entranceText}</div>
-              <p className="text-sm text-zinc-500 font-medium">click to reveal</p>
-            </div>
-          )}
-          {entranceType === "fade" && (
-            <div className="text-center space-y-4 animate-pulse">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {generateParticles().map((p) => (
+              <div
+                key={p.id}
+                className="entrance-particle"
+                style={{
+                  left: `${p.left}%`,
+                  "--duration": `${p.duration}s`,
+                  "--delay": `${p.delay}s`,
+                } as React.CSSProperties}
+              />
+            ))}
+            <div className="text-center space-y-4">
               <div className="text-5xl font-black text-white mb-4 tracking-tight capitalize">{entranceText}</div>
-              <p className="text-sm text-zinc-500 font-medium">click to continue</p>
+              <p className="text-sm text-zinc-500 font-medium">click anywhere to enter</p>
             </div>
-          )}
+          </div>
         </div>
       )}
 
