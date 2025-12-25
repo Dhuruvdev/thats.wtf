@@ -8,6 +8,9 @@ interface LabProfilePreviewProps {
   views?: number;
   avatarInitial?: string;
   isMobilePreview?: boolean;
+  primaryColor?: string;
+  accentColor?: string;
+  backgroundColor?: string;
 }
 
 export function LabProfilePreview({
@@ -16,12 +19,15 @@ export function LabProfilePreview({
   views = 45,
   avatarInitial = "K",
   isMobilePreview = false,
+  primaryColor = "from-purple-500 to-pink-500",
+  accentColor = "from-cyan-400 to-blue-500",
+  backgroundColor = "from-slate-950 via-slate-900 to-slate-950",
 }: LabProfilePreviewProps) {
   return (
     <div className="h-full flex flex-col justify-center items-center p-8">
       <div className="w-full max-w-sm">
         {/* Glow background */}
-        <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 rounded-3xl blur-2xl opacity-40" />
+        <div className={`absolute -inset-4 bg-gradient-to-r ${primaryColor} rounded-3xl blur-2xl opacity-30`} />
         
         {/* Card */}
         <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-2xl">
@@ -29,11 +35,11 @@ export function LabProfilePreview({
           <div className="flex justify-center mb-8">
             <div className="relative w-32 h-32">
               {/* Neon glow rings */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 opacity-60 blur-lg" />
-              <div className="absolute inset-1 rounded-full bg-gradient-to-r from-pink-300 to-purple-400 opacity-40 blur-md" />
+              <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${primaryColor} opacity-60 blur-lg`} />
+              <div className={`absolute inset-1 rounded-full bg-gradient-to-r ${primaryColor} opacity-40 blur-md`} />
 
               {/* Avatar */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-slate-600 to-slate-900 flex items-center justify-center border-2 border-white/30 text-white font-bold text-5xl">
+              <div className={`absolute inset-0 rounded-full bg-gradient-to-br from-slate-600 to-slate-900 flex items-center justify-center border-2 border-white/30 text-white font-bold text-5xl`}>
                 {avatarInitial}
               </div>
             </div>
@@ -91,7 +97,7 @@ export function LabProfilePreview({
 
           {/* View Profile Button */}
           <Button 
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+            className={`w-full bg-gradient-to-r ${primaryColor} hover:opacity-90 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all`}
             data-testid="button-view-profile"
           >
             View Profile →

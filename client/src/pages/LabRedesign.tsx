@@ -6,14 +6,63 @@ import { LabCustomizationPanel } from "@/components/LabCustomizationPanel";
 
 export default function LabRedesign() {
   const [isMobilePreview, setIsMobilePreview] = useState(false);
+  const [primaryColor, setPrimaryColor] = useState("from-purple-500 to-pink-500");
+  const [accentColor, setAccentColor] = useState("from-cyan-400 to-blue-500");
+  const [backgroundColor, setBackgroundColor] = useState("from-slate-950 via-slate-900 to-slate-950");
+  
+  const [profileData, setProfileData] = useState({
+    username: "kinjal.fr",
+    tagline: "just exploring the world",
+    views: 45,
+    showViews: true,
+    showFollowButton: true,
+  });
+
+  const handleProfileChange = (data: any) => {
+    setProfileData(data);
+  };
+
+  const handleColorChange = (type: string, value: string) => {
+    if (type === "primary") setPrimaryColor(value);
+    if (type === "accent") setAccentColor(value);
+    if (type === "background") setBackgroundColor(value);
+  };
+
+  const handleUndo = () => {
+    // Undo logic would go here
+    console.log("Undo");
+  };
+
+  const handleRedo = () => {
+    // Redo logic would go here
+    console.log("Redo");
+  };
+
+  const handleSaveChanges = () => {
+    console.log("Saving changes:", { profileData, primaryColor, accentColor, backgroundColor });
+    // API call would go here
+  };
+
+  const handleReset = () => {
+    setPrimaryColor("from-purple-500 to-pink-500");
+    setAccentColor("from-cyan-400 to-blue-500");
+    setBackgroundColor("from-slate-950 via-slate-900 to-slate-950");
+    setProfileData({
+      username: "kinjal.fr",
+      tagline: "just exploring the world",
+      views: 45,
+      showViews: true,
+      showFollowButton: true,
+    });
+  };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
-      {/* Glow particles background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000" />
+    <div className={`min-h-screen w-full bg-gradient-to-br ${backgroundColor} overflow-hidden`}>
+      {/* Glow particles background - matching home page */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br ${primaryColor} rounded-full mix-blend-multiply filter blur-[160px] opacity-20 animate-pulse`} />
+        <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-bl ${accentColor} rounded-full mix-blend-multiply filter blur-[160px] opacity-15 animate-pulse`} />
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
       </div>
 
       {/* Top Navigation */}
@@ -21,7 +70,7 @@ export default function LabRedesign() {
         <div className="flex items-center justify-between px-8 py-4">
           {/* Left: Logo */}
           <div className="flex items-center gap-3" data-testid="logo-lab">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold">
+            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${primaryColor} flex items-center justify-center text-white font-bold`}>
               ⚗️
             </div>
             <h1 className="text-xl font-bold text-white">Lab</h1>
@@ -39,6 +88,7 @@ export default function LabRedesign() {
               size="icon"
               className="text-white/60 hover:text-white"
               data-testid="button-undo"
+              onClick={handleUndo}
             >
               <RotateCcw className="w-5 h-5" />
             </Button>
@@ -47,12 +97,14 @@ export default function LabRedesign() {
               size="icon"
               className="text-white/60 hover:text-white"
               data-testid="button-redo"
+              onClick={handleRedo}
             >
               <RotateCw className="w-5 h-5" />
             </Button>
             <Button
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 rounded-lg shadow-lg hover:shadow-xl transition-all"
+              className={`bg-gradient-to-r ${primaryColor} hover:opacity-90 text-white font-semibold px-6 rounded-lg shadow-lg hover:shadow-xl transition-all`}
               data-testid="button-save-changes"
+              onClick={handleSaveChanges}
             >
               Save Changes
             </Button>
@@ -66,13 +118,24 @@ export default function LabRedesign() {
         <div className="flex-1 border-r border-white/10 bg-white/[0.02] overflow-y-auto">
           <div className="p-4">
             <h3 className="text-white/60 text-sm font-semibold px-4 py-2">Profile Preview</h3>
-            <LabProfilePreview isMobilePreview={isMobilePreview} />
+            <LabProfilePreview 
+              isMobilePreview={isMobilePreview}
+              username={profileData.username}
+              tagline={profileData.tagline}
+              views={profileData.views}
+              primaryColor={primaryColor}
+              accentColor={accentColor}
+              backgroundColor={backgroundColor}
+            />
           </div>
         </div>
 
         {/* Right Panel: Customization */}
         <div className="flex-1 overflow-y-auto">
-          <LabCustomizationPanel />
+          <LabCustomizationPanel 
+            onProfileChange={handleProfileChange}
+            onColorChange={handleColorChange}
+          />
         </div>
       </div>
 
@@ -84,6 +147,7 @@ export default function LabRedesign() {
               variant="outline"
               className="bg-white/5 border-white/20 text-white/60 hover:text-white hover:bg-white/10 gap-2"
               data-testid="button-reset-footer"
+              onClick={handleReset}
             >
               <RotateCcw className="w-4 h-4" />
               Reset
