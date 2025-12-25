@@ -22,6 +22,7 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Loading from "@/pages/Loading";
 import ProfileCardDemo from "@/pages/ProfileCardDemo";
+import LabRedesign from "@/pages/LabRedesign";
 
 import LoadingPage from "@/components/LoadingPage";
 
@@ -55,7 +56,8 @@ function Router() {
         {!isLoading && !user ? <Home /> : <AccountOverview />}
       </Route>
       <Route path="/~" component={AccountOverview} />
-      <Route path="/lab" component={Lab} />
+      <Route path="/lab" component={LabRedesign} />
+      <Route path="/lab-old" component={Lab} />
       <Route path="/templates" component={Templates} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/cardnav-demo" component={CardNavDemo} />
