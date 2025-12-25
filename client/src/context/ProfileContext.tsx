@@ -21,6 +21,7 @@ export interface ProfileConfig {
   effectSpeed: number;
   layout: { showViews: boolean; showAbout: boolean; spacing: number };
   socialLinks: SocialLink[];
+  decorations?: string[];
 }
 
 const defaultConfig: ProfileConfig = {
