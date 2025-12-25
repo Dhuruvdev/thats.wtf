@@ -5,11 +5,11 @@ import { Slider } from "@/components/ui/slider";
 import { useProfile } from "@/context/ProfileContext";
 
 const EFFECTS = [
-  { id: "aura", name: "Aura Glow", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
-  { id: "sparkles", name: "Sparkles", img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=200" },
-  { id: "burst", name: "Burst Pop", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
-  { id: "cosmic", name: "Cosmic", img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=200" },
-  { id: "cyber", name: "Cyber", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
+  { id: "snowfall", name: "Snowfall", img: "https://images.unsplash.com/photo-1516912481808-846ec9b29e15?auto=format&fit=crop&q=80&w=200" },
+  { id: "rain", name: "Rain", img: "https://images.unsplash.com/photo-1433086720471-80342f3b8fed?auto=format&fit=crop&q=80&w=200" },
+  { id: "aurora", name: "Aurora", img: "https://images.unsplash.com/photo-1444080748397-f442aa95c3e5?auto=format&fit=crop&q=80&w=200" },
+  { id: "particles", name: "Particles", img: "https://images.unsplash.com/photo-1569163139394-de4798aa62b1?auto=format&fit=crop&q=80&w=200" },
+  { id: "stars", name: "Stars", img: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&q=80&w=200" },
   { id: "none", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
 ];
 
@@ -50,7 +50,7 @@ export function EffectsTab() {
         </div>
       </div>
 
-      {["aura", "sparkles", "burst", "cosmic", "cyber"].includes(config.entranceAnimation) && (
+      {["snowfall", "rain", "aurora", "particles", "stars"].includes(config.entranceAnimation) && (
         <div className="space-y-6 p-6 bg-white/5 border border-white/5 rounded-2xl">
           <div className="space-y-4">
             <div className="flex justify-between">

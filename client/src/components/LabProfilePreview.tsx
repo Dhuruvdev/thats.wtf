@@ -5,7 +5,7 @@ import stockAvatar from '@assets/stock_images/professional_portrai_594a4b95.jpg'
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { AuraGlowEffect, SparkleEffect, BurstEntranceEffect } from "@/components/effects";
+import { SnowflakeEffect, RainEffect, AuroraEffect, FloatingParticlesEffect, StarsEffect } from "@/components/effects";
 
 interface LabProfilePreviewProps {
   username?: string;
@@ -91,35 +91,23 @@ export function LabProfilePreview({
         transition: { duration: 0.5 }
       }
     },
-    aura: {
-      initial: { opacity: 0, scale: 0.9 },
-      animate: { opacity: 1, scale: 1 }
-    },
-    sparkles: {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 }
-    },
-    burst: {
-      initial: { opacity: 0, scale: 0.8 },
-      animate: { opacity: 1, scale: 1 }
-    },
-    cosmic: {
-      initial: { opacity: 0, rotate: -10 },
-      animate: { opacity: 1, rotate: 0 }
-    },
-    cyber: {
-      initial: { opacity: 0, x: -40 },
-      animate: { 
-        opacity: 1, 
-        x: [0, 5, -5, 0],
-        transition: { duration: 0.6 }
-      }
-    },
     snowfall: {
       initial: { opacity: 0, y: -30 },
       animate: { opacity: 1, y: 0 }
     },
     rain: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 }
+    },
+    aurora: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 }
+    },
+    particles: {
+      initial: { opacity: 0, scale: 0.9 },
+      animate: { opacity: 1, scale: 1 }
+    },
+    stars: {
       initial: { opacity: 0 },
       animate: { opacity: 1 }
     }
@@ -209,14 +197,30 @@ export function LabProfilePreview({
             {/* Avatar with Entrance Effects */}
             <div className="relative mb-8">
               {/* Effect layers */}
-              {["aura", "cosmic"].includes(entranceAnimation) && (
-                <AuraGlowEffect enabled={true} intensity={effectIntensity} speed={effectSpeed} />
+              {entranceAnimation === "snowfall" && (
+                <div className="absolute inset-[-50px] rounded-full overflow-hidden">
+                  <SnowflakeEffect intensity={effectIntensity} speed={effectSpeed} />
+                </div>
               )}
-              {["sparkles"].includes(entranceAnimation) && (
-                <SparkleEffect enabled={true} intensity={effectIntensity} speed={effectSpeed} />
+              {entranceAnimation === "rain" && (
+                <div className="absolute inset-[-50px] rounded-full overflow-hidden">
+                  <RainEffect intensity={effectIntensity} speed={effectSpeed} />
+                </div>
               )}
-              {["burst"].includes(entranceAnimation) && (
-                <BurstEntranceEffect enabled={true} intensity={effectIntensity} speed={effectSpeed} />
+              {entranceAnimation === "aurora" && (
+                <div className="absolute inset-[-50px] rounded-full overflow-hidden">
+                  <AuroraEffect intensity={effectIntensity} speed={effectSpeed} />
+                </div>
+              )}
+              {entranceAnimation === "particles" && (
+                <div className="absolute inset-[-50px] rounded-full overflow-hidden">
+                  <FloatingParticlesEffect intensity={effectIntensity} speed={effectSpeed} />
+                </div>
+              )}
+              {entranceAnimation === "stars" && (
+                <div className="absolute inset-[-50px] rounded-full overflow-hidden">
+                  <StarsEffect intensity={effectIntensity} />
+                </div>
               )}
               
               <div className="absolute inset-[-4px] rounded-full bg-gradient-to-tr from-purple-500/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
