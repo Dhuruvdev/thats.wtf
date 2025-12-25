@@ -122,15 +122,15 @@ export function LabProfilePreview({
       {/* Pixel Border Overlay */}
       {decorations.includes("pixel_border") && (
         <div 
-          className="absolute inset-0 pointer-events-none z-50"
+          className="absolute inset-0 pointer-events-none z-[100]"
           style={{
+            border: "32px solid transparent",
             borderImageSource: "url('/assets/borders/pixel_border.svg')",
             borderImageSlice: "40",
-            borderImageWidth: "32px",
             borderImageRepeat: "stretch",
             margin: "-16px",
             imageRendering: "pixelated",
-            filter: "drop-shadow(0 0 10px rgba(255, 230, 0, 0.3))"
+            filter: "drop-shadow(0 0 20px rgba(255, 230, 0, 0.5))"
           }}
         />
       )}
@@ -244,29 +244,13 @@ export function LabProfilePreview({
               <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-white/10 to-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
                 {/* Avatar Decoration Asset */}
                 {decorations.includes("avatar_decor") && (
-                  <>
-                    <div 
-                      className="absolute -inset-4 pointer-events-none z-10 animate-in fade-in zoom-in duration-1000"
-                      style={{
-                        border: "8px solid #FFE600",
-                        borderRadius: "50%",
-                        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 5% 5%, 5% 95%, 95% 95%, 95% 5%, 5% 5%)",
-                        imageRendering: "pixelated",
-                        filter: "drop-shadow(0 0 12px rgba(255, 230, 0, 0.6))",
-                        boxSizing: "border-box"
-                      }}
-                    />
-                    <div 
-                      className="absolute -inset-2 pointer-events-none z-10 opacity-50"
-                      style={{
-                        border: "4px solid #FFE600",
-                        borderRadius: "50%",
-                        clipPath: "polygon(0% 20%, 20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%)",
-                        imageRendering: "pixelated",
-                        boxSizing: "border-box"
-                      }}
-                    />
-                  </>
+                  <div className="absolute -inset-6 pointer-events-none z-20">
+                    <div className="absolute inset-0 rounded-full border-[6px] border-[#FFE600] opacity-90 shadow-[0_0_20px_#FFE600,inset_0_0_15px_#FFE600] animate-pulse" />
+                    <div className="absolute inset-[-4px] rounded-full border-t-4 border-r-4 border-[#FFE600] animate-[spin_3s_linear_infinite]" />
+                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#FFE600] rounded-bl-xl shadow-lg flex items-center justify-center">
+                      <div className="w-3 h-3 bg-black rounded-full animate-ping" />
+                    </div>
+                  </div>
                 )}
                 <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
                   <AvatarImage src={displayAvatar} alt={username} className="object-cover" />

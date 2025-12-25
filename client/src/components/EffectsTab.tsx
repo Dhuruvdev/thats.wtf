@@ -13,20 +13,23 @@ export function EffectsTab() {
         <div className="grid grid-cols-3 gap-3">
           {[
             { id: "pixel_border", name: "Pixel Frame", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
-            { id: "none_frame", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
+            { id: "avatar_decor", name: "Avatar Deco", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
+            { id: "none", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
           ].map((effect) => {
-            const isActive = effect.id === "none_frame" 
-              ? !config.decorations?.includes("pixel_border")
+            const isActive = effect.id === "none" 
+              ? (!config.decorations || config.decorations.length === 0)
               : config.decorations?.includes(effect.id);
             return (
               <button
                 key={effect.id}
                 onClick={() => {
-                  const currentDecs = config.decorations || [];
-                  if (effect.id === "none_frame") {
-                    updateConfig({ decorations: currentDecs.filter((d: string) => d !== "pixel_border") });
+                  if (effect.id === "none") {
+                    updateConfig({ decorations: [] });
                   } else {
-                    if (!currentDecs.includes(effect.id)) {
+                    const currentDecs = config.decorations || [];
+                    if (currentDecs.includes(effect.id)) {
+                      updateConfig({ decorations: currentDecs.filter(d => d !== effect.id) });
+                    } else {
                       updateConfig({ decorations: [...currentDecs, effect.id] });
                     }
                   }
@@ -37,50 +40,6 @@ export function EffectsTab() {
                     : "border-white/5 hover:border-white/20"
                 }`}
                 data-testid={`button-frame-${effect.id}`}
-              >
-                <img
-                  src={effect.img}
-                  alt={effect.name}
-                  className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-end p-2">
-                  <span className="text-[10px] font-bold text-white uppercase tracking-wider">{effect.name}</span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Avatar Decorations</Label>
-        <div className="grid grid-cols-3 gap-3">
-          {[
-            { id: "avatar_decor", name: "Pixel Aura", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
-            { id: "none_avatar", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
-          ].map((effect) => {
-            const isActive = effect.id === "none_avatar"
-              ? !config.decorations?.includes("avatar_decor")
-              : config.decorations?.includes(effect.id);
-            return (
-              <button
-                key={effect.id}
-                onClick={() => {
-                  const currentDecs = config.decorations || [];
-                  if (effect.id === "none_avatar") {
-                    updateConfig({ decorations: currentDecs.filter((d: string) => d !== "avatar_decor") });
-                  } else {
-                    if (!currentDecs.includes(effect.id)) {
-                      updateConfig({ decorations: [...currentDecs, effect.id] });
-                    }
-                  }
-                }}
-                className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all group ${
-                  isActive
-                    ? "border-purple-500 scale-95"
-                    : "border-white/5 hover:border-white/20"
-                }`}
-                data-testid={`button-avatar-${effect.id}`}
               >
                 <img
                   src={effect.img}

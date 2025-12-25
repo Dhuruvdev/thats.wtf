@@ -376,30 +376,23 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
             <div className="relative mb-8 group">
               {/* Avatar Decoration Asset */}
               {user.decorations?.includes("avatar_decor") && (
-                <>
-                  <div 
-                    className="absolute -inset-4 pointer-events-none z-10 animate-in fade-in zoom-in duration-1000"
-                    style={{
-                      border: "8px solid #FFE600",
-                      borderRadius: "50%",
-                      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 5% 5%, 5% 95%, 95% 95%, 95% 5%, 5% 5%)",
-                      imageRendering: "pixelated",
-                      filter: "drop-shadow(0 0 12px rgba(255, 230, 0, 0.6))",
-                      boxSizing: "border-box"
-                    }}
-                  />
-                  {/* Secondary blocky layer */}
-                  <div 
-                    className="absolute -inset-2 pointer-events-none z-10 opacity-50"
-                    style={{
-                      border: "4px solid #FFE600",
-                      borderRadius: "50%",
-                      clipPath: "polygon(0% 20%, 20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%)",
-                      imageRendering: "pixelated",
-                      boxSizing: "border-box"
-                    }}
-                  />
-                </>
+                <div className="absolute -inset-6 pointer-events-none z-20">
+                  {/* Main Animated Glow Ring */}
+                  <div className="absolute inset-0 rounded-full border-[6px] border-[#FFE600] opacity-90 shadow-[0_0_20px_#FFE600,inset_0_0_15px_#FFE600] animate-pulse" />
+                  
+                  {/* Rotating Tech Accents */}
+                  <div className="absolute inset-[-4px] rounded-full border-t-[3px] border-r-[3px] border-[#FFE600] animate-[spin_3s_linear_infinite]" />
+                  <div className="absolute inset-[-8px] rounded-full border-b-[3px] border-l-[3px] border-[#FFE600]/40 animate-[spin_5s_linear_infinite_reverse]" />
+                  
+                  {/* High-Fidelity Corner Accent */}
+                  <div className="absolute top-1 right-1 w-5 h-5 bg-[#FFE600] rounded-tr-lg rounded-bl-lg shadow-[0_0_10px_rgba(255,230,0,0.8)] flex items-center justify-center">
+                    <div className="w-2 h-2 bg-black rounded-sm animate-ping" />
+                  </div>
+                  
+                  {/* Floating Pixel Particles */}
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
+                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
+                </div>
               )}
               <div className="absolute inset-0 bg-[var(--accent-color)] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
               <div className="relative w-28 h-28 rounded-full overflow-hidden border-3 border-[var(--accent-color)]/50 hover:border-[var(--accent-color)] transition-all duration-300 shadow-2xl">

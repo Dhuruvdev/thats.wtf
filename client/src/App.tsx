@@ -53,6 +53,7 @@ function Router() {
     <Switch>
       <Route path="/login" component={Auth} />
       <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/profile/:username" component={Profile} />
       <Route path="/u/:username" component={Profile} />
       <Route path="/user" component={ProfilePage} />
       <Route path="/">

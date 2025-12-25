@@ -1,12 +1,127 @@
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useProfile } from "@/context/ProfileContext";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { Upload, Trash2, Music } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function DesignTab() {
-  const { config, updateGeometry } = useProfile();
+  const { config, updateGeometry, updateConfig } = useProfile();
+  const { toast } = useToast();
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: "avatarUrl" | "backgroundUrl" | "audioUrl") => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!res.ok) throw new Error("Upload failed");
+      
+      const data = await res.json();
+      updateConfig({ [field]: data.url });
+      
+      // Also save to database if authenticated
+      await apiRequest("PATCH", "/api/user", { [field]: data.url });
+      
+      toast({ title: "Success", description: "File uploaded and saved!" });
+    } catch (error) {
+      toast({ title: "Error", description: "Upload failed", variant: "destructive" });
+    }
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="space-y-4">
+        <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Visual Identity</Label>
+        
+        <div className="grid gap-6">
+          <div className="flex items-center gap-6 p-4 bg-white/5 border border-white/5 rounded-2xl group hover:border-white/10 transition-all">
+            <div className="relative group/avatar">
+              <div className="w-20 h-20 rounded-2xl bg-white/5 flex items-center justify-center border-2 border-dashed border-white/10 overflow-hidden">
+                {config.avatarUrl ? (
+                  <img src={config.avatarUrl} className="w-full h-full object-cover" />
+                ) : (
+                  <Upload className="w-6 h-6 text-white/20" />
+                )}
+              </div>
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={(e) => handleFileUpload(e, "avatarUrl")}
+                accept="image/*"
+              />
+            </div>
+            <div className="flex-1 space-y-1">
+              <h4 className="text-sm font-bold">Profile Picture</h4>
+              <p className="text-xs text-white/40">JPG, PNG or GIF. Max 5MB.</p>
+            </div>
+          </div>
+
+          <div className="p-4 bg-white/5 border border-white/5 rounded-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-bold">Background Media</h4>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-wider" onClick={() => updateConfig({ backgroundUrl: "" })}>
+                  <Trash2 className="w-3 h-3 mr-2" />
+                  Clear
+                </Button>
+              </div>
+            </div>
+            <div className="relative h-32 rounded-xl bg-white/5 border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-2 overflow-hidden">
+              {config.backgroundUrl ? (
+                <>
+                  <img src={config.backgroundUrl} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                  <div className="relative z-10 text-[10px] font-bold text-white uppercase bg-black/50 px-3 py-1 rounded-full">Background Set</div>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-6 h-6 text-white/20" />
+                  <span className="text-[10px] font-bold text-white/20 uppercase">Drop image or video</span>
+                </>
+              )}
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={(e) => handleFileUpload(e, "backgroundUrl")}
+                accept="image/*,video/*"
+              />
+            </div>
+          </div>
+
+          <div className="p-4 bg-white/5 border border-white/5 rounded-2xl space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-bold">Ambient Audio</h4>
+              <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-wider" onClick={() => updateConfig({ audioUrl: "" })}>
+                <Trash2 className="w-3 h-3 mr-2" />
+                Clear
+              </Button>
+            </div>
+            <div className="relative p-4 rounded-xl bg-white/5 border-white/10 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                <Music className="w-5 h-5 text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <span className="text-[10px] font-bold text-white/60 uppercase">{config.audioUrl ? "Audio track loaded" : "No track selected"}</span>
+              </div>
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={(e) => handleFileUpload(e, "audioUrl")}
+                accept="audio/*"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-6 p-6 bg-white/5 border border-white/5 rounded-2xl">
         <div className="space-y-4">
           <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Card Geometry</Label>
