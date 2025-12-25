@@ -1,0 +1,64 @@
+You are an expert Front-End UI Developer, Motion Graphics Designer, and Asset Pipeline Engineer working on a product called Profile Lab — a customizable profile page editor inspired by Discord profile effects.
+Goal: Create three high-quality animated profile entrance effects (like Discord Profile Effects) using a modern React + Framer Motion + Lottie setup.
+Effects must be optimized, lightweight, and exported as reusable assets.
+Effects Requirements:
+1️⃣ Neon Aura Glow
+animated glow ring around profile avatar
+colors: purple + pink neon stack
+subtle pulsing loop
+export as Lottie JSON + preview MP4/PNG sequence
+2️⃣ Sparkle Particles
+floating sparkle particles, random opacity
+follows parallax motion
+WebGL or Lottie format
+60fps smooth
+3️⃣ Burst Entrance Pop
+quick glow burst behind profile card
+scale animation synced with card entrance
+shockwave ring asset (SVG + Lottie format)
+Output Files:
+/assets/effects/aura-glow.json (Lottie)
+/assets/effects/sparkles.json
+/assets/effects/burst.json
+Export preview transparent PNG spritesheets
+Documentation for integration
+Code Implementation:
+Create a folder: /src/components/effects/
+Create React wrapper components:
+AuraGlowEffect.jsx
+SparkleEffect.jsx
+BurstEntranceEffect.jsx
+These components must include:
+✔ Framer Motion entrance animations for Profile Card
+✔ Toggle props (enabled, intensity, speed)
+✔ Positioned absolutely inside card preview container
+Install dependencies:
+Copy code
+Bash
+npm install framer-motion lottie-react
+Integration Task:
+Add a new tab "Entrance Effects" into the Customization Center:
+displays thumbnails for each effect
+click to apply effect in real-time
+live preview in Profile Preview panel
+autosave selection to local storage JSON config
+Provide:
+✔ React UI code for the tab interface
+✔ Props system for modifying effects
+✔ Example state management (Context or Zustand)
+Final Deliverables for This Task:
+Animated assets
+React effect components
+Integration into LAB UI
+Demo preview inside Replit
+Small README showing how to add more effects later
+Style + Quality Specs:
+Dark UI with Neon Purple/Pink highlight theme
+Same aesthetic language as Discord effects
+No heavy video formats — prioritize vector and Lottie
+Maintain >90fps GPU performance
+When you finish:
+✔ Show effects in a live preview webpage
+✔ Provide download buttons for the asset files
+✔ Display thumbnails + preview toggle
+Begin by generating the assets first, then build the UI around them.
