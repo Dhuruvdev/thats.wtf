@@ -23,6 +23,7 @@ import Privacy from "@/pages/Privacy";
 import Loading from "@/pages/Loading";
 import ProfileCardDemo from "@/pages/ProfileCardDemo";
 import LabRedesign from "@/pages/LabRedesign";
+import ProfilePage from "@/pages/ProfilePage";
 
 import LoadingPage from "@/components/LoadingPage";
 
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/login" component={Auth} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/u/:username" component={Profile} />
+      <Route path="/user" component={ProfilePage} />
       <Route path="/">
         <LabRedesign />
       </Route>
