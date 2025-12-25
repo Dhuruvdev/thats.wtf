@@ -31,6 +31,12 @@ export default function LabRedesign() {
     backgroundUrl: "",
     audioUrl: "",
     avatarUrl: "",
+    geometry: {
+      radius: 40,
+      blur: 20,
+      opacity: 3,
+    },
+    entranceAnimation: "none" as "none" | "glitch" | "fade" | "zoom" | "slide",
   });
 
   // Sync with initial query data
@@ -44,6 +50,12 @@ export default function LabRedesign() {
         backgroundUrl: profileDataFromQuery.backgroundUrl || "",
         audioUrl: profileDataFromQuery.audioUrl || "",
         avatarUrl: profileDataFromQuery.avatarUrl || "",
+        geometry: (profileDataFromQuery as any).geometry || {
+          radius: 40,
+          blur: 20,
+          opacity: 3,
+        },
+        entranceAnimation: (profileDataFromQuery as any).entranceAnimation || "none",
       });
     }
   }, [profileDataFromQuery]);
@@ -70,6 +82,8 @@ export default function LabRedesign() {
       backgroundUrl: profileData.backgroundUrl,
       audioUrl: profileData.audioUrl,
       avatarUrl: profileData.avatarUrl,
+      geometry: profileData.geometry,
+      entranceAnimation: profileData.entranceAnimation,
     });
   };
 
@@ -153,6 +167,8 @@ export default function LabRedesign() {
                 avatarUrl={profileData.avatarUrl || undefined}
                 backgroundUrl={profileData.backgroundUrl}
                 audioUrl={profileData.audioUrl}
+                geometry={profileData.geometry}
+                entranceAnimation={profileData.entranceAnimation}
               />
             </div>
           </div>

@@ -14,7 +14,8 @@ import {
   Monitor,
   Music,
   FileVideo,
-  Image as ImageIcon
+  Image as ImageIcon,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,12 @@ interface LabCustomizationPanelProps {
     backgroundUrl?: string;
     audioUrl?: string;
     avatarUrl?: string;
+    geometry?: {
+      radius: number;
+      blur: number;
+      opacity: number;
+    };
+    entranceAnimation?: string;
   };
   onProfileChange?: (data: any) => void;
   onColorChange?: (type: string, value: string) => void;
@@ -66,6 +73,15 @@ export function LabCustomizationPanel({
 
   const updateField = (field: string, value: any) => {
     onProfileChange?.({ [field]: value });
+  };
+
+  const updateGeometry = (key: string, value: number[]) => {
+    onProfileChange?.({
+      geometry: {
+        ...profileData?.geometry,
+        [key]: value[0]
+      }
+    });
   };
 
   const handleFileUpload = useCallback(async (file: File, type: 'background' | 'audio' | 'avatar') => {
@@ -113,6 +129,14 @@ export function LabCustomizationPanel({
     }
   }, [handleFileUpload]);
 
+  const ANIMATIONS = [
+    { id: "none", name: "None", icon: <X className="w-4 h-4" /> },
+    { id: "fade", name: "Soft Fade", icon: <Sparkles className="w-4 h-4 text-purple-400" /> },
+    { id: "zoom", name: "Elastic Zoom", icon: <Sparkles className="w-4 h-4 text-blue-400" /> },
+    { id: "slide", name: "Upward Flow", icon: <Sparkles className="w-4 h-4 text-pink-400" /> },
+    { id: "glitch", name: "Discord Pulse", icon: <Sparkles className="w-4 h-4 text-indigo-400" /> },
+  ];
+
   return (
     <div className="h-full flex flex-col">
       <div className="p-6 pb-2">
@@ -129,11 +153,15 @@ export function LabCustomizationPanel({
             </TabsTrigger>
             <TabsTrigger value="design" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
               <Palette className="w-4 h-4" />
-              <span className="hidden sm:inline">Design</span>
+              <span className="hidden sm:inline">Geometry</span>
             </TabsTrigger>
             <TabsTrigger value="theme" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
               <Layers className="w-4 h-4" />
               <span className="hidden sm:inline">Assets</span>
+            </TabsTrigger>
+            <TabsTrigger value="effects" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Entrance</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -159,16 +187,6 @@ export function LabCustomizationPanel({
                     <h4 className="text-sm font-semibold text-white">Profile Image</h4>
                     <p className="text-xs text-white/40">Drag or click to upload</p>
                   </div>
-                  {profileData?.avatarUrl && (
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-white/20 hover:text-red-400"
-                      onClick={(e) => { e.stopPropagation(); updateField('avatarUrl', null); }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  )}
                 </div>
               </div>
 
@@ -178,7 +196,6 @@ export function LabCustomizationPanel({
                   value={profileData?.displayName} 
                   onChange={(e) => updateField('displayName', e.target.value)}
                   className="h-12 bg-white/5 border-white/5 focus:border-purple-500/50 rounded-xl px-4 text-white"
-                  placeholder="e.g. NeonExplorer"
                 />
               </div>
 
@@ -188,22 +205,57 @@ export function LabCustomizationPanel({
                   value={profileData?.bio} 
                   onChange={(e) => updateField('bio', e.target.value)}
                   className="h-12 bg-white/5 border-white/5 focus:border-purple-500/50 rounded-xl px-4 text-white"
-                  placeholder="Briefly describe yourself..."
                 />
               </div>
+            </div>
+          </TabsContent>
 
+          <TabsContent value="design" className="space-y-8 mt-0">
+            <div className="space-y-6">
               <div className="space-y-4">
-                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Social Presence</Label>
-                <div className="space-y-2">
-                  {socialLinks.map((link) => (
-                    <div key={link.id} className="flex items-center gap-3 p-3 bg-white/5 border border-white/5 rounded-xl group hover:border-white/10 transition-all">
-                      <GripVertical className="w-4 h-4 text-white/20" />
-                      <div className={`w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center ${link.color}`}>
-                        {link.icon}
-                      </div>
-                      <span className="flex-1 text-sm font-medium text-white/70">{link.platform}</span>
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Card Geometry</Label>
+                <div className="space-y-8 p-6 bg-white/5 border border-white/5 rounded-2xl">
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-white/70">Corner Radius</span>
+                      <span className="text-sm font-bold text-purple-400">{profileData?.geometry?.radius}px</span>
                     </div>
-                  ))}
+                    <Slider 
+                      value={[profileData?.geometry?.radius || 40]} 
+                      onValueChange={(v) => updateGeometry('radius', v)}
+                      max={100} 
+                      step={1} 
+                      className="[&_[role=slider]]:bg-purple-500" 
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-white/70">Glass Blur</span>
+                      <span className="text-sm font-bold text-purple-400">{profileData?.geometry?.blur}px</span>
+                    </div>
+                    <Slider 
+                      value={[profileData?.geometry?.blur || 20]} 
+                      onValueChange={(v) => updateGeometry('blur', v)}
+                      max={50} 
+                      step={1} 
+                      className="[&_[role=slider]]:bg-purple-500" 
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium text-white/70">Glass Opacity</span>
+                      <span className="text-sm font-bold text-purple-400">{profileData?.geometry?.opacity}%</span>
+                    </div>
+                    <Slider 
+                      value={[profileData?.geometry?.opacity || 3]} 
+                      onValueChange={(v) => updateGeometry('opacity', v)}
+                      max={20} 
+                      step={1} 
+                      className="[&_[role=slider]]:bg-purple-500" 
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -238,8 +290,8 @@ export function LabCustomizationPanel({
                           <ImageIcon className="w-6 h-6 text-white/40" />
                         </div>
                         <div className="text-center">
-                          <h4 className="text-sm font-semibold text-white">Drag Background Here</h4>
-                          <p className="text-xs text-white/40">MP4, GIF, PNG, JPG supported</p>
+                          <h4 className="text-sm font-semibold text-white">Drag Background</h4>
+                          <p className="text-xs text-white/40">MP4, GIF, PNG, JPG</p>
                         </div>
                       </>
                     )}
@@ -274,8 +326,8 @@ export function LabCustomizationPanel({
                           <Music className="w-6 h-6 text-white/40" />
                         </div>
                         <div className="text-center">
-                          <h4 className="text-sm font-semibold text-white">Drag Audio Here</h4>
-                          <p className="text-xs text-white/40">MP3, WAV supported</p>
+                          <h4 className="text-sm font-semibold text-white">Drag Audio</h4>
+                          <p className="text-xs text-white/40">MP3, WAV</p>
                         </div>
                       </>
                     )}
@@ -285,11 +337,24 @@ export function LabCustomizationPanel({
             </div>
           </TabsContent>
 
-          <TabsContent value="design" className="space-y-8 mt-0">
-             <div className="p-8 bg-white/5 border border-white/5 rounded-2xl text-center space-y-4">
-                <Palette className="w-12 h-12 text-purple-400 mx-auto opacity-50" />
-                <h4 className="text-sm font-bold text-white">Advanced Geometry</h4>
-                <p className="text-xs text-white/40">Fine-tune card corner radius and glass effects coming soon.</p>
+          <TabsContent value="effects" className="space-y-6 mt-0">
+             <div className="space-y-4">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Entrance Sequence</Label>
+                <div className="grid grid-cols-1 gap-3">
+                  {ANIMATIONS.map((anim) => (
+                    <Button
+                      key={anim.id}
+                      variant="outline"
+                      onClick={() => updateField('entranceAnimation', anim.id)}
+                      className={`h-16 justify-start px-6 rounded-2xl gap-4 transition-all ${profileData?.entranceAnimation === anim.id ? "bg-purple-500/10 border-purple-500/50 text-white" : "bg-white/5 border-white/5 text-white/40"}`}
+                    >
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${profileData?.entranceAnimation === anim.id ? "bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "bg-white/5"}`}>
+                        {anim.icon}
+                      </div>
+                      <span className="text-sm font-bold uppercase tracking-widest">{anim.name}</span>
+                    </Button>
+                  ))}
+                </div>
              </div>
           </TabsContent>
         </div>

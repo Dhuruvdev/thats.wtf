@@ -26,6 +26,8 @@ export default function ProfilePage() {
           avatarUrl={profile?.avatarUrl || undefined}
           backgroundUrl={profile?.backgroundUrl || undefined}
           audioUrl={profile?.audioUrl || undefined}
+          geometry={(profile as any)?.geometry}
+          entranceAnimation={(profile as any)?.entranceAnimation}
           isMobilePreview={false}
         />
       </div>

@@ -96,6 +96,14 @@ export const users = pgTable("users", {
     }
   }).notNull(),
 
+  geometry: jsonb("geometry").$type<{
+    radius: number;
+    blur: number;
+    opacity: number;
+  }>().default({ radius: 40, blur: 20, opacity: 3 }),
+
+  entranceAnimation: text("entrance_animation").default("none"),
+
   logicRules: jsonb("logic_rules").$type<Array<{
     trigger: "mobile" | "night" | "idle" | "scroll" | "returning";
     action: "switch_theme" | "skip_intro" | "scale_motion" | "ambient_move";

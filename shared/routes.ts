@@ -74,6 +74,8 @@ export const api = {
         backgroundUrl: z.string().optional(),
         audioUrl: z.string().optional(),
         cursorUrl: z.string().optional(),
+        geometry: z.any().optional(),
+        entranceAnimation: z.string().optional(),
       }),
       responses: {
         200: z.custom<typeof users.$inferSelect>(),
