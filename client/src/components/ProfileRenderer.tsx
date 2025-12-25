@@ -384,7 +384,8 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
                       borderRadius: "50%",
                       clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 5% 5%, 5% 95%, 95% 95%, 95% 5%, 5% 5%)",
                       imageRendering: "pixelated",
-                      filter: "drop-shadow(0 0 12px rgba(255, 230, 0, 0.6))"
+                      filter: "drop-shadow(0 0 12px rgba(255, 230, 0, 0.6))",
+                      boxSizing: "border-box"
                     }}
                   />
                   {/* Secondary blocky layer */}
@@ -394,7 +395,8 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
                       border: "4px solid #FFE600",
                       borderRadius: "50%",
                       clipPath: "polygon(0% 20%, 20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%)",
-                      imageRendering: "pixelated"
+                      imageRendering: "pixelated",
+                      boxSizing: "border-box"
                     }}
                   />
                 </>
