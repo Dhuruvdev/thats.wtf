@@ -60,27 +60,19 @@ export default function Profile() {
     <div className="fixed inset-0 bg-black relative overflow-hidden">
       <BackgroundMediaManager media={media} setMedia={setMedia} playAudio={true} />
       
-      {/* Accent gradient glow effect */}
-      <div className="fixed inset-0 pointer-events-none -z-10">
-        <div 
-          className="absolute top-[-30%] left-[-20%] w-[70%] h-[70%] rounded-full blur-[150px] opacity-30" 
-          style={{ background: profile.accentColor || "#7c3aed" }}
-        />
-        <div 
-          className="absolute bottom-[-30%] right-[-20%] w-[60%] h-[60%] rounded-full blur-[150px] opacity-20" 
-          style={{ background: profile.accentColor || "#7c3aed" }}
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <LabProfilePreview
+          username={profile.displayName || profile.username}
+          tagline={profile.bio || ""}
+          views={profile.views}
+          avatarUrl={profile.avatarUrl || ""}
+          backgroundUrl={profile.backgroundUrl || ""}
+          audioUrl={profile.audioUrl || ""}
+          geometry={profile.geometry || { radius: 40, blur: 20, opacity: 3 }}
+          entranceAnimation={profile.entranceAnimation || "none"}
+          decorations={(profile as any).decorations || []}
         />
       </div>
-
-      <main className="absolute inset-0 flex flex-col items-center justify-center relative z-10 overflow-auto">
-        <div className="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <ProfileRenderer user={profile} blocks={profile.blocks || []} />
-        </div>
-        
-        <div className="mt-12 text-center text-xs text-white/30 font-display tracking-widest uppercase pb-4">
-          Powered by Lab.dev
-        </div>
-      </main>
     </div>
   );
 }

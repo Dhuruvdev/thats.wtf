@@ -124,10 +124,11 @@ export function LabProfilePreview({
         <div 
           className="absolute inset-0 pointer-events-none z-[100]"
           style={{
-            border: "32px solid transparent",
             borderImageSource: "url('/assets/borders/pixel_border.svg')",
             borderImageSlice: "40",
             borderImageRepeat: "stretch",
+            borderStyle: "solid",
+            borderWidth: "32px",
             margin: "-16px",
             imageRendering: "pixelated",
             filter: "drop-shadow(0 0 20px rgba(255, 230, 0, 0.5))"
@@ -247,11 +248,15 @@ export function LabProfilePreview({
                   <div className="absolute -inset-6 pointer-events-none z-20">
                     <div className="absolute inset-0 rounded-full border-[6px] border-[#FFE600] opacity-90 shadow-[0_0_20px_#FFE600,inset_0_0_15px_#FFE600] animate-pulse" />
                     <div className="absolute inset-[-4px] rounded-full border-t-4 border-r-4 border-[#FFE600] animate-[spin_3s_linear_infinite]" />
-                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#FFE600] rounded-bl-xl shadow-lg flex items-center justify-center">
-                      <div className="w-3 h-3 bg-black rounded-full animate-ping" />
-                    </div>
+                  <div className="absolute top-1 right-1 w-5 h-5 bg-[#FFE600] rounded-tr-lg rounded-bl-lg shadow-[0_0_10px_rgba(255,230,0,0.8)] flex items-center justify-center">
+                    <div className="w-2 h-2 bg-black rounded-sm animate-ping" />
                   </div>
-                )}
+                  
+                  {/* Floating Pixel Particles */}
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
+                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
+                </div>
+              )}
                 <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
                   <AvatarImage src={displayAvatar} alt={username} className="object-cover" />
                   <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">{username ? username.charAt(0) : 'A'}</AvatarFallback>

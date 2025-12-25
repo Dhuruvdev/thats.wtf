@@ -9,11 +9,11 @@ export function EffectsTab() {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Frame Decorations</Label>
+        <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Profile Decorations</Label>
         <div className="grid grid-cols-3 gap-3">
           {[
             { id: "pixel_border", name: "Pixel Frame", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
-            { id: "avatar_decor", name: "Avatar Deco", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
+            { id: "avatar_decor", name: "Cyber Aura", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
             { id: "none", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
           ].map((effect) => {
             const isActive = effect.id === "none" 
@@ -39,7 +39,7 @@ export function EffectsTab() {
                     ? "border-purple-500 scale-95"
                     : "border-white/5 hover:border-white/20"
                 }`}
-                data-testid={`button-frame-${effect.id}`}
+                data-testid={`button-deco-${effect.id}`}
               >
                 <img
                   src={effect.img}
