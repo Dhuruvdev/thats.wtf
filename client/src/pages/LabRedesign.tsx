@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Download, RotateCcw, Save, Beaker, Copy, Check } from "lucide-react";
+import { Download, RotateCcw, Save, Beaker, Copy, Check, Monitor, Layers2, Settings, Plus, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LabProfilePreview } from "@/components/LabProfilePreview";
@@ -8,13 +8,13 @@ import { DesignTab } from "@/components/DesignTab";
 import { ThemeTab } from "@/components/ThemeTab";
 import { EffectsTab } from "@/components/EffectsTab";
 import { LayoutTab } from "@/components/LayoutTab";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProfile } from "@/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
-import { User, Palette, Layers, Sparkles, Layout as LayoutIcon } from "lucide-react";
+import { User, Sparkles } from "lucide-react";
 
 export default function LabRedesign() {
   const { config, resetConfig, exportConfig, importConfig } = useProfile();
+  const [activeTab, setActiveTab] = useState("profile");
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showImport, setShowImport] = useState(false);
@@ -51,25 +51,61 @@ export default function LabRedesign() {
     toast({ title: "Published!", description: "Profile config saved to browser" });
   };
 
+  const tabs = [
+    { id: "profile", icon: User, label: "Profile" },
+    { id: "design", icon: Monitor, label: "Design" },
+    { id: "explore", icon: Layers2, label: "Explore" },
+    { id: "effects", icon: Sparkles, label: "Effects" },
+    { id: "add", icon: Plus, label: "Add" },
+    { id: "layout", icon: LayoutGrid, label: "Layout" },
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "profile":
+        return <ProfileTabFull />;
+      case "design":
+        return <DesignTab />;
+      case "explore":
+        return <ThemeTab />;
+      case "effects":
+        return <EffectsTab />;
+      case "add":
+        return <div className="text-white/40 text-center py-12">Coming soon...</div>;
+      case "layout":
+        return <LayoutTab />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-[#0a0a0c] text-white overflow-hidden flex flex-col relative">
+      {/* Background Gradients */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
       </div>
 
-      <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-50">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.2)]">
-              <Beaker className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Lab</span>
+      {/* Header */}
+      <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-50">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+            <Beaker className="w-5 h-5 text-white" />
           </div>
+          <span className="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Lab</span>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handlePublish}
+            className="ml-auto md:ml-0 text-white/40 hover:text-white"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
@@ -77,7 +113,7 @@ export default function LabRedesign() {
             className="text-white/40 hover:text-white"
             title="Export config"
           >
-            {copied ? <Check className="w-5 h-5 text-green-400" /> : <Download className="w-5 h-5" />}
+            {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
           </Button>
           <Button
             variant="ghost"
@@ -86,7 +122,7 @@ export default function LabRedesign() {
             className="text-white/40 hover:text-white"
             title="Import config"
           >
-            <Copy className="w-5 h-5" />
+            <Download className="w-4 h-4" />
           </Button>
           <Button
             variant="ghost"
@@ -95,28 +131,30 @@ export default function LabRedesign() {
             className="text-white/40 hover:text-white"
             title="Reset to defaults"
           >
-            <RotateCcw className="w-5 h-5" />
+            <RotateCcw className="w-4 h-4" />
           </Button>
           <Button
             onClick={handlePublish}
-            className="bg-white text-black hover:bg-white/90 font-bold px-6 rounded-xl transition-all active:scale-95"
+            className="bg-white text-black hover:bg-white/90 font-bold px-4 rounded-lg transition-all active:scale-95 text-sm"
           >
-            <Save className="w-4 h-4 mr-2" />
+            <Save className="w-3 h-3 mr-2" />
             Publish
           </Button>
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden">
-        <section className="flex-1 flex flex-col p-8 overflow-y-auto">
-          <div className="flex items-center justify-between mb-8">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {/* Preview Section */}
+        <section className="flex-1 flex flex-col p-4 md:p-8 overflow-y-auto bg-gradient-to-b from-transparent via-purple-600/5 to-transparent">
+          <div className="flex items-center justify-between mb-4 md:mb-8">
             <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">Live Preview</h2>
-            <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
+            <div className="flex bg-white/5 p-1 rounded-lg border border-white/5">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMobilePreview(false)}
-                className={`h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${!isMobilePreview ? "bg-white/10 text-white" : "text-white/30"}`}
+                className={`h-7 px-3 rounded text-[9px] font-bold uppercase tracking-wider transition-all ${!isMobilePreview ? "bg-white/10 text-white" : "text-white/30"}`}
               >
                 Desktop
               </Button>
@@ -124,7 +162,7 @@ export default function LabRedesign() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMobilePreview(true)}
-                className={`h-8 px-4 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${isMobilePreview ? "bg-white/10 text-white" : "text-white/30"}`}
+                className={`h-7 px-3 rounded text-[9px] font-bold uppercase tracking-wider transition-all ${isMobilePreview ? "bg-white/10 text-white" : "text-white/30"}`}
               >
                 Mobile
               </Button>
@@ -132,7 +170,7 @@ export default function LabRedesign() {
           </div>
 
           <div className="flex-1 flex items-center justify-center">
-            <div className={`transition-all duration-700 ease-in-out flex items-center justify-center ${isMobilePreview ? "w-[360px] h-[640px]" : "w-full max-w-4xl h-full"}`}>
+            <div className={`transition-all duration-700 ease-in-out flex items-center justify-center ${isMobilePreview ? "w-[320px] h-[580px] md:w-[360px] md:h-[640px]" : "w-full max-w-2xl h-auto"}`}>
               <LabProfilePreview
                 isMobilePreview={isMobilePreview}
                 username={config.displayName}
@@ -150,59 +188,46 @@ export default function LabRedesign() {
           </div>
         </section>
 
-        <section className="w-full lg:w-[500px] border-l border-white/5 bg-[#0f0f12]/80 backdrop-blur-3xl flex flex-col">
-          <div className="p-6 pb-2">
-            <h2 className="text-xl font-bold text-white tracking-tight">Lab Editor</h2>
-            <p className="text-sm text-white/40 mt-1">Customize your profile in real-time</p>
+        {/* Tab Content Section */}
+        <section className="max-h-[45vh] md:max-h-[50vh] overflow-y-auto border-t border-white/5 bg-[#0f0f12]/80 backdrop-blur-3xl">
+          <div className="p-4 md:p-6">
+            <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">Lab Editor</h2>
+            <p className="text-xs md:text-sm text-white/40 mt-1">Customize your profile in real-time</p>
           </div>
 
-          <Tabs defaultValue="profile" className="flex-1 flex flex-col">
-            <div className="px-6 py-4">
-              <TabsList className="w-full bg-white/5 p-1 border border-white/5 rounded-xl h-12">
-                <TabsTrigger value="profile" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
-                  <User className="w-4 h-4" />
-                  <span className="hidden sm:inline text-xs">Profile</span>
-                </TabsTrigger>
-                <TabsTrigger value="design" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
-                  <Palette className="w-4 h-4" />
-                  <span className="hidden sm:inline text-xs">Design</span>
-                </TabsTrigger>
-                <TabsTrigger value="theme" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
-                  <Layers className="w-4 h-4" />
-                  <span className="hidden sm:inline text-xs">Theme</span>
-                </TabsTrigger>
-                <TabsTrigger value="effects" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
-                  <Sparkles className="w-4 h-4" />
-                  <span className="hidden sm:inline text-xs">Effects</span>
-                </TabsTrigger>
-                <TabsTrigger value="layout" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
-                  <LayoutIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline text-xs">Layout</span>
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <div className="flex-1 overflow-y-auto px-6 pb-24">
-              <TabsContent value="profile" className="space-y-6 mt-0">
-                <ProfileTabFull />
-              </TabsContent>
-              <TabsContent value="design" className="space-y-6 mt-0">
-                <DesignTab />
-              </TabsContent>
-              <TabsContent value="theme" className="space-y-6 mt-0">
-                <ThemeTab />
-              </TabsContent>
-              <TabsContent value="effects" className="space-y-6 mt-0">
-                <EffectsTab />
-              </TabsContent>
-              <TabsContent value="layout" className="space-y-6 mt-0">
-                <LayoutTab />
-              </TabsContent>
-            </div>
-          </Tabs>
+          <div className="px-4 md:px-6 pb-24">
+            {renderTabContent()}
+          </div>
         </section>
       </main>
 
+      {/* Bottom Tab Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 h-16 border-t border-white/5 bg-[#0a0a0c]/95 backdrop-blur-xl flex items-center justify-around z-40">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex flex-col items-center justify-center w-12 h-12 md:w-16 md:h-16 transition-all rounded-lg ${
+                isActive
+                  ? "text-white bg-white/10 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                  : "text-white/40 hover:text-white/60"
+              }`}
+              title={tab.label}
+              data-testid={`button-tab-${tab.id}`}
+            >
+              <Icon className="w-5 h-5 md:w-6 md:h-6" />
+              <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-wider mt-0.5 hidden md:block">
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Import Dialog */}
       <Dialog open={showImport} onOpenChange={setShowImport}>
         <DialogContent className="bg-[#0f0f12] border-white/5">
           <DialogHeader>
