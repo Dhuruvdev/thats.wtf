@@ -53,7 +53,7 @@ function Router() {
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/u/:username" component={Profile} />
       <Route path="/">
-        {!isLoading && !user ? <Home /> : <AccountOverview />}
+        <LabRedesign />
       </Route>
       <Route path="/~" component={AccountOverview} />
       <Route path="/lab" component={LabRedesign} />
