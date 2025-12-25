@@ -161,7 +161,7 @@ export function LabCustomizationPanel({
             </TabsTrigger>
             <TabsTrigger value="effects" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
               <Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline">Entrance</span>
+              <span className="hidden sm:inline">Profile Effect</span>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -339,20 +339,31 @@ export function LabCustomizationPanel({
 
           <TabsContent value="effects" className="space-y-6 mt-0">
              <div className="space-y-4">
-                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Entrance Sequence</Label>
-                <div className="grid grid-cols-1 gap-3">
-                  {ANIMATIONS.map((anim) => (
-                    <Button
-                      key={anim.id}
-                      variant="outline"
-                      onClick={() => updateField('entranceAnimation', anim.id)}
-                      className={`h-16 justify-start px-6 rounded-2xl gap-4 transition-all ${profileData?.entranceAnimation === anim.id ? "bg-purple-500/10 border-purple-500/50 text-white" : "bg-white/5 border-white/5 text-white/40"}`}
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Effect Category</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { id: "aura", name: "Aura", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
+                    { id: "cosmic", name: "Cosmic", img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=200" },
+                    { id: "cyber", name: "Cyber", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
+                    { id: "snowfall", name: "Snow", img: "https://images.unsplash.com/photo-1491002052546-bf38f186af56?auto=format&fit=crop&q=80&w=200" },
+                    { id: "rain", name: "Rain", img: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&q=80&w=200" },
+                    { id: "none", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
+                  ].map((effect) => (
+                    <button
+                      key={effect.id}
+                      onClick={() => updateField('entranceAnimation', effect.id)}
+                      className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all group ${profileData?.entranceAnimation === effect.id ? "border-purple-500 scale-95" : "border-white/5 hover:border-white/20"}`}
                     >
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${profileData?.entranceAnimation === anim.id ? "bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "bg-white/5"}`}>
-                        {anim.icon}
+                      <img src={effect.img} alt={effect.name} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute inset-0 bg-black/40 flex items-end p-2">
+                        <span className="text-[10px] font-bold text-white uppercase tracking-wider">{effect.name}</span>
                       </div>
-                      <span className="text-sm font-bold uppercase tracking-widest">{anim.name}</span>
-                    </Button>
+                      {profileData?.entranceAnimation !== effect.id && (
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center backdrop-blur-md">
+                          <Plus className="w-3 h-3 text-white/40" />
+                        </div>
+                      )}
+                    </button>
                   ))}
                 </div>
              </div>

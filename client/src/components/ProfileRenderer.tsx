@@ -47,6 +47,8 @@ function getFrameStyles(activeTheme: any): string {
   return css;
 }
 
+import { ProfileOverlays } from "@/components/ProfileOverlays";
+
 export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -240,6 +242,8 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         ...getScreenEffectStyles()
       }}
     >
+      <ProfileOverlays activeOverlay={user.entranceAnimation as any} showSelector={false} />
+
       {/* Background Image/GIF */}
       {backgroundUrl && (
         <div className="absolute inset-0 -z-20 bg-video-container" style={{ contain: 'strict', willChange: 'transform' }}>

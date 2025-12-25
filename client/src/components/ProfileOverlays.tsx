@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 
-type OverlayType = "none" | "snowfall" | "particles" | "sparkles" | "aurora" | "rain" | "floating-orbs" | "light-streaks";
+type OverlayType = "none" | "snowfall" | "particles" | "sparkles" | "aurora" | "rain" | "floating-orbs" | "light-streaks" | "aura" | "cosmic" | "cyber";
 
 interface ProfileOverlaysProps {
   activeOverlay?: OverlayType;
@@ -9,8 +9,11 @@ interface ProfileOverlaysProps {
   showSelector?: boolean;
 }
 
-const OVERLAY_OPTIONS: { id: OverlayType; name: string; description: string }[] = [
+const OVERLAY_OPTIONS: { id: OverlayType; name: string; description: string; thumbnail?: string }[] = [
   { id: "none", name: "None", description: "No overlay" },
+  { id: "aura", name: "Aura", description: "Mystical energy aura", thumbnail: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
+  { id: "cosmic", name: "Cosmic", description: "Deep space nebula", thumbnail: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=200" },
+  { id: "cyber", name: "Cyber", description: "Digital grid matrix", thumbnail: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
   { id: "snowfall", name: "Snowfall", description: "Gentle snow effect" },
   { id: "particles", name: "Particle Burst", description: "Dynamic particles" },
   { id: "sparkles", name: "Sparkles", description: "Twinkling sparkles" },
@@ -19,6 +22,46 @@ const OVERLAY_OPTIONS: { id: OverlayType; name: string; description: string }[] 
   { id: "floating-orbs", name: "Floating Orbs", description: "Glowing orbs" },
   { id: "light-streaks", name: "Light Streaks", description: "Light beam effect" },
 ];
+
+function AuraEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 animate-pulse blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle,rgba(139,92,246,0.15)_0%,transparent_70%)] animate-pulse" />
+    </div>
+  );
+}
+
+function CosmicEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(30,58,138,0.2)_0%,transparent_80%)]" />
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full bg-white blur-[1px] animate-pulse"
+          style={{
+            width: Math.random() * 3 + 1 + "px",
+            height: Math.random() * 3 + 1 + "px",
+            left: Math.random() * 100 + "%",
+            top: Math.random() * 100 + "%",
+            animationDelay: Math.random() * 5 + "s",
+            opacity: Math.random() * 0.5 + 0.2,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function CyberEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_14px]" />
+    </div>
+  );
+}
 
 function Snowfall() {
   const snowflakes = Array.from({ length: 50 }, (_, i) => i);
@@ -254,6 +297,12 @@ export function ProfileOverlays({ activeOverlay = "none", onOverlayChange, showS
 
   const renderOverlay = () => {
     switch (selectedOverlay) {
+      case "aura":
+        return <AuraEffect />;
+      case "cosmic":
+        return <CosmicEffect />;
+      case "cyber":
+        return <CyberEffect />;
       case "snowfall":
         return <Snowfall />;
       case "particles":
