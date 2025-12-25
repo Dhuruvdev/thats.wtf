@@ -16,8 +16,15 @@ interface SocialLink {
 }
 
 interface LabCustomizationPanelProps {
+  profileData?: {
+    displayName?: string;
+    bio?: string;
+    views?: number;
+    accentColor?: string;
+  };
   onProfileChange?: (data: any) => void;
   onColorChange?: (type: string, value: string) => void;
+  isUpdating?: boolean;
 }
 
 const COLOR_PRESETS = [
@@ -34,10 +41,15 @@ const BACKGROUND_PRESETS = [
   { name: "Carbon Black", value: "from-black via-slate-900 to-black" },
 ];
 
-export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCustomizationPanelProps) {
-  const [username, setUsername] = useState("kinjal.fr");
-  const [tagline, setTagline] = useState("just exploring the world");
-  const [views, setViews] = useState("45");
+export function LabCustomizationPanel({ 
+  profileData, 
+  onProfileChange, 
+  onColorChange,
+  isUpdating 
+}: LabCustomizationPanelProps) {
+  const [displayName, setDisplayName] = useState(profileData?.displayName || "");
+  const [bio, setBio] = useState(profileData?.bio || "");
+  const [views, setViews] = useState(profileData?.views?.toString() || "0");
   const [showViews, setShowViews] = useState(true);
   const [showFollowButton, setShowFollowButton] = useState(true);
   const [primaryColor, setPrimaryColor] = useState("from-purple-500 to-pink-500");
@@ -57,7 +69,13 @@ export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCus
   };
 
   const handleProfileUpdate = () => {
-    const data = { username, tagline, views: parseInt(views), showViews, showFollowButton };
+    const data = { 
+      displayName, 
+      bio, 
+      views: parseInt(views) || 0,
+      showViews, 
+      showFollowButton 
+    };
     onProfileChange?.(data);
   };
 
@@ -68,86 +86,78 @@ export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCus
   };
 
   return (
-    <div className="h-full flex flex-col p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold text-white mb-6">Customization Center</h2>
+    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Customization Center</h2>
 
       <Tabs defaultValue="profile" className="w-full flex-1 flex flex-col">
-        <TabsList className="bg-white/5 border border-white/10 rounded-lg p-1 mb-6 overflow-x-auto">
-          <TabsTrigger value="profile" className="text-white whitespace-nowrap" data-testid="tab-profile">Profile</TabsTrigger>
-          <TabsTrigger value="design" className="text-white whitespace-nowrap" data-testid="tab-design">Design</TabsTrigger>
-          <TabsTrigger value="theme" className="text-white whitespace-nowrap" data-testid="tab-theme">Theme</TabsTrigger>
-          <TabsTrigger value="effects" className="text-white whitespace-nowrap" data-testid="tab-effects">Effects</TabsTrigger>
-          <TabsTrigger value="layout" className="text-white whitespace-nowrap" data-testid="tab-layout">Layout</TabsTrigger>
-        </TabsList>
+        {/* Tabs - Responsive */}
+        <div className="overflow-x-auto mb-4 sm:mb-6 -mx-4 sm:mx-0 px-4 sm:px-0">
+          <TabsList className="bg-white/5 border border-white/10 rounded-lg p-1 inline-flex min-w-full sm:w-auto">
+            <TabsTrigger value="profile" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-profile">Profile</TabsTrigger>
+            <TabsTrigger value="design" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-design">Design</TabsTrigger>
+            <TabsTrigger value="theme" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-theme">Theme</TabsTrigger>
+            <TabsTrigger value="effects" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-effects">Effects</TabsTrigger>
+            <TabsTrigger value="layout" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-layout">Layout</TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Profile Tab */}
-        <TabsContent value="profile" className="space-y-6 mt-0 flex-1">
-          {/* Profile Picture */}
-          <div className="space-y-3">
-            <label className="text-white font-semibold text-sm">Profile Picture</label>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-600 to-slate-900 flex items-center justify-center text-white font-bold">
-                K
-              </div>
-              <Button variant="outline" className="bg-white/5 border-white/20 text-white hover:bg-white/10" data-testid="button-upload">
-                Upload
-              </Button>
-            </div>
-          </div>
-
-          {/* Username */}
-          <div className="space-y-2">
-            <Label htmlFor="username" className="text-white text-sm font-semibold">Username</Label>
+        <TabsContent value="profile" className="space-y-4 sm:space-y-6 mt-0 flex-1">
+          {/* Display Name */}
+          <div className="space-y-1 sm:space-y-2">
+            <Label htmlFor="displayName" className="text-white text-xs sm:text-sm font-semibold">Display Name</Label>
             <Input
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg"
-              data-testid="input-username"
+              id="displayName"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg text-sm h-10 sm:h-auto"
+              data-testid="input-displayname"
+              placeholder="Your Name"
             />
           </div>
 
-          {/* Tagline */}
-          <div className="space-y-2">
-            <Label htmlFor="tagline" className="text-white text-sm font-semibold">Tagline</Label>
+          {/* Bio */}
+          <div className="space-y-1 sm:space-y-2">
+            <Label htmlFor="bio" className="text-white text-xs sm:text-sm font-semibold">Bio / Tagline</Label>
             <Input
-              id="tagline"
-              value={tagline}
-              onChange={(e) => setTagline(e.target.value)}
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg"
-              data-testid="input-tagline"
+              id="bio"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg text-sm h-10 sm:h-auto"
+              data-testid="input-bio"
+              placeholder="Your bio"
             />
           </div>
 
           {/* View Count */}
-          <div className="space-y-2">
-            <Label htmlFor="views" className="text-white text-sm font-semibold">View Count</Label>
+          <div className="space-y-1 sm:space-y-2">
+            <Label htmlFor="views" className="text-white text-xs sm:text-sm font-semibold">View Count</Label>
             <Input
               id="views"
               type="number"
               value={views}
               onChange={(e) => setViews(e.target.value)}
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg"
+              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg text-sm h-10 sm:h-auto"
               data-testid="input-views"
             />
           </div>
 
           {/* Social Links */}
-          <div className="space-y-3">
-            <label className="text-white font-semibold text-sm">Social Links</label>
+          <div className="space-y-2 sm:space-y-3">
+            <label className="text-white font-semibold text-xs sm:text-sm">Social Links</label>
             <div className="space-y-2">
               {socialLinks.map((link) => (
                 <div
                   key={link.id}
-                  className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg p-3"
+                  className="flex items-center gap-2 sm:gap-3 bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3"
                   data-testid={`social-link-${link.platform.toLowerCase()}`}
                 >
-                  <GripVertical className="w-4 h-4 text-white/40" />
-                  <div className={`w-5 h-5 ${link.color}`}>{link.icon}</div>
-                  <span className="text-white text-sm flex-1">{link.platform}</span>
+                  <GripVertical className="w-4 h-4 text-white/40 flex-shrink-0" />
+                  <div className={`w-5 h-5 ${link.color} flex-shrink-0`}>{link.icon}</div>
+                  <span className="text-white text-xs sm:text-sm flex-1 truncate">{link.platform}</span>
                   <button
                     onClick={() => handleRemoveSocialLink(link.id)}
-                    className="text-white/40 hover:text-red-400 transition-colors"
+                    className="text-white/40 hover:text-red-400 transition-colors flex-shrink-0"
                     data-testid={`button-remove-${link.platform.toLowerCase()}`}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -157,7 +167,7 @@ export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCus
             </div>
             <Button
               variant="outline"
-              className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 gap-2"
+              className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 gap-2 text-sm h-10"
               data-testid="button-add-link"
             >
               <Plus className="w-4 h-4" />
@@ -166,9 +176,9 @@ export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCus
           </div>
 
           {/* Toggles */}
-          <div className="space-y-3 pt-2 border-t border-white/10">
+          <div className="space-y-2 sm:space-y-3 pt-2 sm:pt-3 border-t border-white/10">
             <div className="flex items-center justify-between">
-              <span className="text-white text-sm">Show: Views counter</span>
+              <span className="text-white text-xs sm:text-sm">Show: Views counter</span>
               <Switch
                 checked={showViews}
                 onCheckedChange={setShowViews}
@@ -176,7 +186,7 @@ export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCus
               />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-white text-sm">Follow button</span>
+              <span className="text-white text-xs sm:text-sm">Follow button</span>
               <Switch
                 checked={showFollowButton}
                 onCheckedChange={setShowFollowButton}
@@ -187,133 +197,131 @@ export function LabCustomizationPanel({ onProfileChange, onColorChange }: LabCus
         </TabsContent>
 
         {/* Design Tab */}
-        <TabsContent value="design" className="space-y-6 mt-0 flex-1">
-          <div className="space-y-4">
-            <label className="text-white font-semibold text-sm block">Primary Color</label>
+        <TabsContent value="design" className="space-y-4 sm:space-y-6 mt-0 flex-1">
+          <div className="space-y-3 sm:space-y-4">
+            <label className="text-white font-semibold text-xs sm:text-sm block">Primary Color</label>
             <div className="grid grid-cols-2 gap-2">
               {COLOR_PRESETS.map((preset) => (
                 <button
                   key={preset.name}
-                  onClick={() => setPrimaryColor(preset.primary)}
-                  className={`p-3 rounded-lg border-2 transition-all ${
+                  onClick={() => {
+                    setPrimaryColor(preset.primary);
+                    handleColorUpdate();
+                  }}
+                  className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${
                     primaryColor === preset.primary ? "border-white" : "border-white/20"
                   }`}
                   data-testid={`color-preset-${preset.name.toLowerCase()}`}
                 >
-                  <div className={`h-8 rounded bg-gradient-to-r ${preset.primary}`} />
-                  <p className="text-white text-xs mt-2 text-center">{preset.name}</p>
+                  <div className={`h-6 sm:h-8 rounded bg-gradient-to-r ${preset.primary}`} />
+                  <p className="text-white text-xs mt-1 sm:mt-2 text-center">{preset.name}</p>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-4">
-            <label className="text-white font-semibold text-sm block">Background</label>
+          <div className="space-y-3 sm:space-y-4">
+            <label className="text-white font-semibold text-xs sm:text-sm block">Background</label>
             <div className="grid grid-cols-2 gap-2">
               {BACKGROUND_PRESETS.map((preset) => (
                 <button
                   key={preset.name}
-                  onClick={() => setBackgroundColor(preset.value)}
-                  className={`p-3 rounded-lg border-2 transition-all ${
+                  onClick={() => {
+                    setBackgroundColor(preset.value);
+                    handleColorUpdate();
+                  }}
+                  className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${
                     backgroundColor === preset.value ? "border-white" : "border-white/20"
                   }`}
                   data-testid={`bg-preset-${preset.name.toLowerCase()}`}
                 >
-                  <div className={`h-8 rounded bg-gradient-to-r ${preset.value}`} />
-                  <p className="text-white text-xs mt-2 text-center">{preset.name}</p>
+                  <div className={`h-6 sm:h-8 rounded bg-gradient-to-r ${preset.value}`} />
+                  <p className="text-white text-xs mt-1 sm:mt-2 text-center">{preset.name}</p>
                 </button>
               ))}
             </div>
           </div>
-
-          <Button onClick={handleColorUpdate} className="w-full bg-purple-600 hover:bg-purple-700 text-white" data-testid="button-apply-colors">
-            Apply Design
-          </Button>
         </TabsContent>
 
         {/* Theme Tab */}
-        <TabsContent value="theme" className="space-y-4 mt-0 flex-1">
-          <div className="space-y-3">
-            <label className="text-white font-semibold text-sm">Theme Options</label>
-            <div className="space-y-2">
-              <button className="w-full p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-light">
-                <div className="text-white font-medium">Light Mode</div>
-                <div className="text-white/40 text-sm">Bright, clean aesthetic</div>
-              </button>
-              <button className="w-full p-3 bg-white/5 border border-white/20 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-dark">
-                <div className="text-white font-medium">Dark Mode</div>
-                <div className="text-white/40 text-sm">Current theme (Recommended)</div>
-              </button>
-              <button className="w-full p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-neon">
-                <div className="text-white font-medium">Neon Mode</div>
-                <div className="text-white/40 text-sm">Bright neon colors</div>
-              </button>
-            </div>
+        <TabsContent value="theme" className="space-y-3 sm:space-y-4 mt-0 flex-1">
+          <label className="text-white font-semibold text-xs sm:text-sm block">Theme Options</label>
+          <div className="space-y-2">
+            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-light">
+              <div className="text-white font-medium text-sm">Light Mode</div>
+              <div className="text-white/40 text-xs">Bright, clean aesthetic</div>
+            </button>
+            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/20 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-dark">
+              <div className="text-white font-medium text-sm">Dark Mode</div>
+              <div className="text-white/40 text-xs">Current theme (Recommended)</div>
+            </button>
+            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-neon">
+              <div className="text-white font-medium text-sm">Neon Mode</div>
+              <div className="text-white/40 text-xs">Bright neon colors</div>
+            </button>
           </div>
         </TabsContent>
 
         {/* Effects Tab */}
-        <TabsContent value="effects" className="space-y-4 mt-0 flex-1">
-          <div className="space-y-3">
-            <label className="text-white font-semibold text-sm">Visual Effects</label>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
-                <span className="text-white text-sm">Glow Effect</span>
-                <Switch defaultChecked data-testid="toggle-glow" />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
-                <span className="text-white text-sm">Animation</span>
-                <Switch defaultChecked data-testid="toggle-animation" />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
-                <span className="text-white text-sm">Blur Background</span>
-                <Switch defaultChecked data-testid="toggle-blur" />
-              </div>
-              <div className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg">
-                <span className="text-white text-sm">Particles</span>
-                <Switch defaultChecked data-testid="toggle-particles" />
-              </div>
+        <TabsContent value="effects" className="space-y-3 sm:space-y-4 mt-0 flex-1">
+          <label className="text-white font-semibold text-xs sm:text-sm block">Visual Effects</label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
+              <span className="text-white text-xs sm:text-sm">Glow Effect</span>
+              <Switch defaultChecked data-testid="toggle-glow" />
+            </div>
+            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
+              <span className="text-white text-xs sm:text-sm">Animation</span>
+              <Switch defaultChecked data-testid="toggle-animation" />
+            </div>
+            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
+              <span className="text-white text-xs sm:text-sm">Blur Background</span>
+              <Switch defaultChecked data-testid="toggle-blur" />
+            </div>
+            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
+              <span className="text-white text-xs sm:text-sm">Particles</span>
+              <Switch defaultChecked data-testid="toggle-particles" />
             </div>
           </div>
         </TabsContent>
 
         {/* Layout Tab */}
-        <TabsContent value="layout" className="space-y-4 mt-0 flex-1">
-          <div className="space-y-3">
-            <label className="text-white font-semibold text-sm">Layout Options</label>
-            <div className="space-y-2">
-              <button className="w-full p-3 bg-white/5 border border-white/20 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-center">
-                <div className="text-white font-medium">Centered</div>
-                <div className="text-white/40 text-sm">Current layout (Recommended)</div>
-              </button>
-              <button className="w-full p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-left">
-                <div className="text-white font-medium">Left Aligned</div>
-                <div className="text-white/40 text-sm">Content on left side</div>
-              </button>
-              <button className="w-full p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-card">
-                <div className="text-white font-medium">Card Grid</div>
-                <div className="text-white/40 text-sm">Multiple cards layout</div>
-              </button>
-            </div>
+        <TabsContent value="layout" className="space-y-3 sm:space-y-4 mt-0 flex-1">
+          <label className="text-white font-semibold text-xs sm:text-sm block">Layout Options</label>
+          <div className="space-y-2">
+            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/20 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-center">
+              <div className="text-white font-medium text-sm">Centered</div>
+              <div className="text-white/40 text-xs">Current layout (Recommended)</div>
+            </button>
+            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-left">
+              <div className="text-white font-medium text-sm">Left Aligned</div>
+              <div className="text-white/40 text-xs">Content on left side</div>
+            </button>
+            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-card">
+              <div className="text-white font-medium text-sm">Card Grid</div>
+              <div className="text-white/40 text-xs">Multiple cards layout</div>
+            </button>
           </div>
         </TabsContent>
       </Tabs>
 
       {/* Bottom Actions */}
-      <div className="flex gap-3 pt-6 border-t border-white/10 mt-6">
+      <div className="flex gap-2 sm:gap-3 pt-4 sm:pt-6 border-t border-white/10 mt-4 sm:mt-6">
         <Button
           variant="outline"
-          className="flex-1 bg-white/5 border-white/20 text-white hover:bg-white/10 rounded-lg"
+          className="flex-1 bg-white/5 border-white/20 text-white hover:bg-white/10 rounded-lg text-sm h-10 sm:h-auto"
           data-testid="button-reset"
+          disabled={isUpdating}
         >
           Reset
         </Button>
         <Button
           onClick={handleProfileUpdate}
-          className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg"
+          className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg text-sm h-10 sm:h-auto"
           data-testid="button-publish"
+          disabled={isUpdating}
         >
-          Publish
+          {isUpdating ? "Saving..." : "Publish"}
         </Button>
       </div>
     </div>
