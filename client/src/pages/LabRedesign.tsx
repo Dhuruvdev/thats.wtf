@@ -14,35 +14,29 @@ export default function LabRedesign() {
 
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [activePanel, setActivePanel] = useState<"preview" | "customize">("customize");
+  
+  // These states can be used for more advanced theme controls later
   const [primaryColor, setPrimaryColor] = useState("from-purple-500 to-pink-500");
   const [accentColor, setAccentColor] = useState("from-cyan-400 to-blue-500");
   const [backgroundColor, setBackgroundColor] = useState("from-slate-950 via-slate-900 to-slate-950");
 
+  const { data: profileDataFromQuery, isLoading: isProfileLoading } = useProfile(user?.username || "demo");
+  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
+
   const [profileData, setProfileData] = useState({
-    displayName: "kinjal.fr",
-    bio: "just exploring the world",
-    views: 45,
+    displayName: "Alex Rivera",
+    bio: "creative director & product designer",
+    views: 1240,
     accentColor: "#7c3aed",
   });
 
-  const { data: profileDataFromQuery } = useProfile(user?.username || "demo");
-
-  const themeConfig = profileDataFromQuery?.themeConfig || {
-    background: { type: "static", value: "from-slate-950 via-slate-900 to-slate-950", overlayOpacity: 0.5, blur: 0 },
-    typography: { 
-      accentColor: "#7c3aed",
-      displayNameGlowColor: "#7c3aed"
-    }
-  };
-
-  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
-
+  // Sync with initial query data
   useEffect(() => {
     if (profileDataFromQuery) {
       setProfileData({
-        displayName: profileDataFromQuery.displayName || "kinjal.fr",
-        bio: profileDataFromQuery.bio || "just exploring the world",
-        views: profileDataFromQuery.views || 45,
+        displayName: profileDataFromQuery.displayName || "Alex Rivera",
+        bio: profileDataFromQuery.bio || "creative director & product designer",
+        views: profileDataFromQuery.views || 1240,
         accentColor: profileDataFromQuery.accentColor || "#7c3aed",
       });
     }
@@ -70,7 +64,7 @@ export default function LabRedesign() {
     });
   };
 
-  if (isUserLoading) {
+  if (isUserLoading || isProfileLoading) {
     return <LoadingPage />;
   }
 
@@ -111,7 +105,7 @@ export default function LabRedesign() {
             disabled={isUpdating}
             className="bg-white text-black hover:bg-white/90 font-bold px-6 rounded-xl transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
           >
-            {isUserLoading ? "..." : !user ? "Login to Save" : isUpdating ? "Saving..." : "Save Changes"}
+            {isUpdating ? "Saving..." : !user ? "Login to Save" : "Save Changes"}
           </Button>
         </div>
       </header>
@@ -144,10 +138,10 @@ export default function LabRedesign() {
             <div className={`transition-all duration-700 ease-in-out flex items-center justify-center ${isMobilePreview ? "w-[360px] h-[640px]" : "w-full max-w-4xl h-full"}`}>
               <LabProfilePreview 
                 isMobilePreview={isMobilePreview}
-                username={profileData.displayName || user?.username || "Alex Rivera"}
-                tagline={profileData.bio || "creative director & product designer"}
+                username={profileData.displayName}
+                tagline={profileData.bio}
                 views={profileData.views}
-                avatarUrl={undefined}
+                avatarUrl={profileDataFromQuery?.avatarUrl || undefined}
               />
             </div>
           </div>

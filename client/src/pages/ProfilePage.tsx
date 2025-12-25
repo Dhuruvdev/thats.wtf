@@ -11,13 +11,18 @@ export default function ProfilePage() {
     return <LoadingPage />;
   }
 
+  // Use profile data from query, with hardcoded fallbacks if no data exists
+  const displayName = profile?.displayName || user?.username || "Alex Rivera";
+  const bio = profile?.bio || "creative director & product designer";
+  const views = profile?.views || 1240;
+
   return (
     <div className="min-h-screen w-full bg-[#0a0a0c] flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-4xl">
         <LabProfilePreview 
-          username={profile?.displayName || user?.username || "Alex Rivera"}
-          tagline={profile?.bio || "creative director & product designer"}
-          views={profile?.views || 1240}
+          username={displayName}
+          tagline={bio}
+          views={views}
           avatarUrl={profile?.avatarUrl || undefined}
           isMobilePreview={false}
         />

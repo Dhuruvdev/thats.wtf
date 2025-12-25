@@ -36,7 +36,7 @@ export function LabProfilePreview({
           <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-white/10 to-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
             <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
               <AvatarImage src={displayAvatar} alt={username} className="object-cover" />
-              <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">{username.charAt(0)}</AvatarFallback>
+              <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">{username ? username.charAt(0) : 'A'}</AvatarFallback>
             </Avatar>
           </div>
         </div>
