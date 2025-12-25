@@ -20,7 +20,7 @@ interface LabProfilePreviewProps {
     blur: number;
     opacity: number;
   };
-  entranceAnimation?: "none" | "glitch" | "fade" | "zoom" | "slide" | "aura" | "sparkles" | "burst" | "cosmic" | "cyber" | "snowfall" | "rain";
+  entranceAnimation?: string;
   effectIntensity?: number;
   effectSpeed?: number;
   onFullScreen?: () => void;
