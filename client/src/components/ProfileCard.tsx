@@ -83,6 +83,19 @@ export function ProfileCard({ user, links, isPreview = false }: ProfileCardProps
         background: frameStyle === "glass" ? undefined : `linear-gradient(180deg, rgba(17,24,39,0.8) 0%, rgba(11,14,20,0.95) 100%)`
       }}
     >
+      {/* Pixel Border Overlay */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-50"
+        style={{
+          borderImageSource: "url('/assets/borders/pixel_border.svg')",
+          borderImageSlice: "40",
+          borderImageWidth: "32px",
+          borderImageRepeat: "stretch",
+          margin: "-16px",
+          imageRendering: "pixelated",
+          filter: "drop-shadow(0 0 10px rgba(255, 230, 0, 0.3))"
+        }}
+      />
       {/* Background Video/Image */}
       {user.backgroundUrl && (
         <div className="absolute inset-0 -z-20">

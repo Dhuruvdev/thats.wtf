@@ -147,25 +147,29 @@ export default function LabRedesign() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* View Mode Switcher */}
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 flex bg-black/80 backdrop-blur-xl p-1 rounded-2xl border border-white/10 shadow-2xl">
-          <Button
-            variant="ghost"
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 flex bg-black/80 backdrop-blur-xl p-1.5 rounded-2xl border border-white/10 shadow-2xl">
+          <button
             onClick={() => setViewMode("preview")}
-            className={`h-10 px-8 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
-              viewMode === "preview" ? "bg-cyan-400 text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]" : "text-white/40 hover:text-white"
+            className={`h-11 px-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
+              viewMode === "preview" 
+                ? "bg-cyan-400 text-black shadow-[0_0_30px_rgba(34,211,238,0.5)] scale-105" 
+                : "text-white/40 hover:text-white hover:bg-white/5"
             }`}
           >
+            <div className={`w-1.5 h-1.5 rounded-full ${viewMode === "preview" ? "bg-black animate-pulse" : "bg-white/20"}`} />
             Preview
-          </Button>
-          <Button
-            variant="ghost"
+          </button>
+          <button
             onClick={() => setViewMode("editor")}
-            className={`h-10 px-8 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
-              viewMode === "editor" ? "bg-white/10 text-white" : "text-white/40 hover:text-white"
+            className={`h-11 px-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
+              viewMode === "editor" 
+                ? "bg-white/10 text-white border border-white/10 scale-105" 
+                : "text-white/40 hover:text-white hover:bg-white/5"
             }`}
           >
+            <div className={`w-1.5 h-1.5 rounded-full ${viewMode === "editor" ? "bg-white animate-pulse" : "bg-white/20"}`} />
             Editor
-          </Button>
+          </button>
         </div>
 
         {/* Preview Section */}

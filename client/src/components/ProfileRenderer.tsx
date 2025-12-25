@@ -357,16 +357,37 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
       <div className="relative z-10 max-w-md w-full space-y-8 px-4">
         {/* Profile Header */}
         <div className="flex flex-col items-center pt-12 profile-header">
-          <div className="relative mb-8 group">
-            <div className="absolute inset-0 bg-[var(--accent-color)] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
-            <div className="relative w-28 h-28 rounded-full overflow-hidden border-3 border-[var(--accent-color)]/50 hover:border-[var(--accent-color)] transition-all duration-300 shadow-2xl">
-              <img 
-                src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
-                alt={user.username}
-                className="w-full h-full object-cover"
+            <div className="relative mb-8 group">
+              {/* Avatar Decoration Asset */}
+              <div 
+                className="absolute -inset-4 pointer-events-none z-10 animate-in fade-in zoom-in duration-1000"
+                style={{
+                  border: "8px solid #FFE600",
+                  borderRadius: "50%",
+                  clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 5% 5%, 5% 95%, 95% 95%, 95% 5%, 5% 5%)",
+                  imageRendering: "pixelated",
+                  filter: "drop-shadow(0 0 12px rgba(255, 230, 0, 0.6))"
+                }}
               />
+              {/* Secondary blocky layer */}
+              <div 
+                className="absolute -inset-2 pointer-events-none z-10 opacity-50"
+                style={{
+                  border: "4px solid #FFE600",
+                  borderRadius: "50%",
+                  clipPath: "polygon(0% 20%, 20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%)",
+                  imageRendering: "pixelated"
+                }}
+              />
+              <div className="absolute inset-0 bg-[var(--accent-color)] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+              <div className="relative w-28 h-28 rounded-full overflow-hidden border-3 border-[var(--accent-color)]/50 hover:border-[var(--accent-color)] transition-all duration-300 shadow-2xl">
+                <img 
+                  src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
+                  alt={user.username}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
-          </div>
           
           <h1 
             className="text-5xl font-black mb-4 text-white text-center tracking-tight displayname-text"

@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const DECORATIONS = [
-  { id: "pixel_border", name: "Pixel Border", description: "Sharp yellow pixelated card border", category: "decorations" },
+  { id: "pixel_border", name: "Pixel Frame", description: "Sharp yellow pixelated card border", category: "decorations" },
+  { id: "avatar_decor", name: "Pixel Aura", description: "Pixelated aura around avatar", category: "decorations" },
   { id: "glow", name: "Glow Effect", description: "Ambient glow around profile", category: "decorations" },
   { id: "particles", name: "Floating Particles", description: "Animated particles", category: "decorations" },
   { id: "gradient", name: "Gradient Overlay", description: "Smooth gradient background", category: "decorations" },
