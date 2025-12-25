@@ -21,6 +21,7 @@ import About from "@/pages/About";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Loading from "@/pages/Loading";
+import ProfileCardDemo from "@/pages/ProfileCardDemo";
 
 import LoadingPage from "@/components/LoadingPage";
 
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/loading" component={Loading} />
+      <Route path="/profile-card" component={ProfileCardDemo} />
       <Route component={NotFound} />
     </Switch>
   );
