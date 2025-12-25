@@ -18,7 +18,7 @@ export default function ProfilePage() {
           username={profile?.displayName || user?.username || "Alex Rivera"}
           tagline={profile?.bio || "creative director & product designer"}
           views={profile?.views || 1240}
-          avatarUrl={profile?.avatarUrl}
+          avatarUrl={profile?.avatarUrl || undefined}
           isMobilePreview={false}
         />
       </div>

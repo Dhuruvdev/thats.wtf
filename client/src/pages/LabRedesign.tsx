@@ -144,9 +144,10 @@ export default function LabRedesign() {
             <div className={`transition-all duration-700 ease-in-out flex items-center justify-center ${isMobilePreview ? "w-[360px] h-[640px]" : "w-full max-w-4xl h-full"}`}>
               <LabProfilePreview 
                 isMobilePreview={isMobilePreview}
-                username={profileData.displayName || user?.username || "kinjal.fr"}
-                tagline={profileData.bio || "just exploring the world"}
+                username={profileData.displayName || user?.username || "Alex Rivera"}
+                tagline={profileData.bio || "creative director & product designer"}
                 views={profileData.views}
+                avatarUrl={undefined}
               />
             </div>
           </div>
