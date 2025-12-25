@@ -68,7 +68,7 @@ export function LabCustomizationPanel({
     onProfileChange?.({ [field]: value });
   };
 
-  const handleFileUpload = useCallback(async (file: File, type: 'background' | 'audio') => {
+  const handleFileUpload = useCallback(async (file: File, type: 'background' | 'audio' | 'avatar') => {
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -84,8 +84,10 @@ export function LabCustomizationPanel({
       const data = await res.json();
       if (type === 'background') {
         updateField('backgroundUrl', data.url);
-      } else {
+      } else if (type === 'audio') {
         updateField('audioUrl', data.url);
+      } else if (type === 'avatar') {
+        updateField('avatarUrl', data.url);
       }
 
       toast({
@@ -103,7 +105,7 @@ export function LabCustomizationPanel({
     }
   }, [onProfileChange, toast]);
 
-  const onDrop = useCallback((e: React.DragEvent, type: 'background' | 'audio') => {
+  const onDrop = useCallback((e: React.DragEvent, type: 'background' | 'audio' | 'avatar') => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
@@ -140,14 +142,37 @@ export function LabCustomizationPanel({
           <TabsContent value="profile" className="space-y-6 mt-0">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Username</Label>
-                <Input 
-                  value={profileData?.displayName} 
-                  onChange={(e) => updateField('displayName', e.target.value)}
-                  className="h-12 bg-white/5 border-white/5 focus:border-purple-500/50 rounded-xl px-4 text-white"
-                  placeholder="e.g. NeonExplorer"
-                />
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Profile Identity</Label>
+                <div 
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => onDrop(e, 'avatar')}
+                  className="flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] transition-colors cursor-pointer group"
+                >
+                  <div className="w-16 h-16 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:border-purple-500/50 transition-colors overflow-hidden">
+                    {profileData?.avatarUrl ? (
+                      <img src={profileData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <Upload className="w-6 h-6 text-white/40 group-hover:text-purple-400" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold text-white">Profile Image</h4>
+                    <p className="text-xs text-white/40">Drag or click to upload</p>
+                  </div>
+                  {profileData?.avatarUrl && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-white/20 hover:text-red-400"
+                      onClick={(e) => { e.stopPropagation(); updateField('avatarUrl', null); }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
+
+              <div className="space-y-2">
 
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Tagline</Label>

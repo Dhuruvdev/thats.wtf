@@ -30,6 +30,7 @@ export default function LabRedesign() {
     accentColor: "#7c3aed",
     backgroundUrl: "",
     audioUrl: "",
+    avatarUrl: "",
   });
 
   // Sync with initial query data
@@ -42,6 +43,7 @@ export default function LabRedesign() {
         accentColor: profileDataFromQuery.accentColor || "#7c3aed",
         backgroundUrl: profileDataFromQuery.backgroundUrl || "",
         audioUrl: profileDataFromQuery.audioUrl || "",
+        avatarUrl: profileDataFromQuery.avatarUrl || "",
       });
     }
   }, [profileDataFromQuery]);
@@ -67,6 +69,7 @@ export default function LabRedesign() {
       accentColor: profileData.accentColor,
       backgroundUrl: profileData.backgroundUrl,
       audioUrl: profileData.audioUrl,
+      avatarUrl: profileData.avatarUrl,
     });
   };
 
@@ -147,7 +150,7 @@ export default function LabRedesign() {
                 username={profileData.displayName}
                 tagline={profileData.bio}
                 views={profileData.views}
-                avatarUrl={profileDataFromQuery?.avatarUrl || undefined}
+                avatarUrl={profileData.avatarUrl || undefined}
                 backgroundUrl={profileData.backgroundUrl}
                 audioUrl={profileData.audioUrl}
               />
