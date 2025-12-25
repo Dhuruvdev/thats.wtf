@@ -1,6 +1,7 @@
 import { Eye } from "lucide-react";
 import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat } from "react-icons/si";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import stockAvatar from '@assets/stock_images/professional_portrai_594a4b95.jpg';
 
 interface LabProfilePreviewProps {
   username?: string;
@@ -11,12 +12,14 @@ interface LabProfilePreviewProps {
 }
 
 export function LabProfilePreview({
-  username = "kinjal.fr",
-  tagline = "just exploring the world",
-  views = 45,
+  username = "Alex Rivera",
+  tagline = "creative director & product designer",
+  views = 1240,
   avatarUrl,
   isMobilePreview = false,
 }: LabProfilePreviewProps) {
+  const displayAvatar = avatarUrl || stockAvatar;
+
   return (
     <div className={`relative transition-all duration-700 flex items-center justify-center min-h-[500px] w-full ${isMobilePreview ? "scale-95" : ""}`}>
       {/* Background with Dark Bokeh Gradient */}
@@ -32,8 +35,8 @@ export function LabProfilePreview({
           <div className="absolute inset-[-4px] rounded-full bg-gradient-to-tr from-purple-500/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-white/10 to-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
             <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
-              <AvatarImage src={avatarUrl} alt={username} className="object-cover" />
-              <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">K</AvatarFallback>
+              <AvatarImage src={displayAvatar} alt={username} className="object-cover" />
+              <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">{username.charAt(0)}</AvatarFallback>
             </Avatar>
           </div>
         </div>
