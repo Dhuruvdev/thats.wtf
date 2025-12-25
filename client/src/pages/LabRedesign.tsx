@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, RotateCcw, RotateCw, Download, X } from "lucide-react";
+import { Menu, RotateCcw, RotateCw, Save, X, Beaker, Undo2, Redo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LabProfilePreview } from "@/components/LabProfilePreview";
 import { LabCustomizationPanel } from "@/components/LabCustomizationPanel";
@@ -12,7 +12,6 @@ export default function LabRedesign() {
   const { data: user, isLoading: isUserLoading } = useUser();
   const [, setLocation] = useLocation();
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!isUserLoading && !user) {
       setLocation("/login");
@@ -28,9 +27,8 @@ export default function LabRedesign() {
 
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activePanel, setActivePanel] = useState<"preview" | "customize">("preview");
+  const [activePanel, setActivePanel] = useState<"preview" | "customize">("customize");
   
-  // Theme config from database
   const themeConfig = profile?.themeConfig || {
     background: { type: "static", value: "from-slate-950 via-slate-900 to-slate-950", overlayOpacity: 0.5, blur: 0 },
     typography: { 
@@ -39,11 +37,7 @@ export default function LabRedesign() {
     }
   };
 
-  const [primaryColor, setPrimaryColor] = useState(
-    themeConfig.typography?.accentColor === "#7c3aed" 
-      ? "from-purple-500 to-pink-500"
-      : `from-${themeConfig.typography?.accentColor}`
-  );
+  const [primaryColor, setPrimaryColor] = useState("from-purple-500 to-pink-500");
   const [accentColor, setAccentColor] = useState("from-cyan-400 to-blue-500");
   const [backgroundColor, setBackgroundColor] = useState("from-slate-950 via-slate-900 to-slate-950");
   
@@ -54,7 +48,6 @@ export default function LabRedesign() {
     accentColor: profile?.accentColor || "#7c3aed",
   });
 
-  // Sync profile data when it loads
   useEffect(() => {
     if (profile) {
       setProfileData({
@@ -64,54 +57,23 @@ export default function LabRedesign() {
         accentColor: profile.accentColor || "#7c3aed",
       });
     }
-  }, [profile?.displayName, profile?.bio, profile?.views, profile?.accentColor]);
+  }, [profile]);
 
   const handleProfileChange = (data: any) => {
-    setProfileData(data);
-    // Update profile in database
-    updateProfile({
-      displayName: data.displayName || profileData.displayName,
-      bio: data.bio || profileData.bio,
-    });
+    setProfileData(prev => ({ ...prev, ...data }));
   };
 
   const handleColorChange = (type: string, value: string) => {
-    if (type === "primary") {
-      setPrimaryColor(value);
-      // Update accent color in database
-      updateProfile({
-        accentColor: value,
-      });
-    }
+    if (type === "primary") setPrimaryColor(value);
     if (type === "accent") setAccentColor(value);
     if (type === "background") setBackgroundColor(value);
   };
 
-  const handleUndo = () => {
-    console.log("Undo");
-  };
-
-  const handleRedo = () => {
-    console.log("Redo");
-  };
-
   const handleSaveChanges = () => {
-    console.log("Saving changes:", { profileData, primaryColor, accentColor, backgroundColor });
     updateProfile({
       displayName: profileData.displayName,
       bio: profileData.bio,
-    });
-  };
-
-  const handleReset = () => {
-    setPrimaryColor("from-purple-500 to-pink-500");
-    setAccentColor("from-cyan-400 to-blue-500");
-    setBackgroundColor("from-slate-950 via-slate-900 to-slate-950");
-    setProfileData({
-      displayName: profile?.displayName || "",
-      bio: profile?.bio || "",
-      views: profile?.views || 0,
-      accentColor: "#7c3aed",
+      accentColor: profileData.accentColor,
     });
   };
 
@@ -120,226 +82,117 @@ export default function LabRedesign() {
   }
 
   return (
-    <div className={`min-h-screen w-full bg-gradient-to-br ${backgroundColor} overflow-hidden flex flex-col`}>
-      {/* Glow particles background */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-gradient-to-br ${primaryColor} rounded-full mix-blend-multiply filter blur-[160px] opacity-20 animate-pulse`} />
-        <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-gradient-to-bl ${accentColor} rounded-full mix-blend-multiply filter blur-[160px] opacity-15 animate-pulse`} />
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+    <div className="min-h-screen w-full bg-[#0a0a0c] text-white overflow-hidden flex flex-col relative">
+      {/* Neon Background Effects */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pink-600/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
       </div>
 
-      {/* Top Navigation - Responsive */}
-      <header className="border-b border-white/10 bg-white/5 backdrop-blur-md sticky top-0 z-40">
-        <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          {/* Left: Logo */}
-          <div className="flex items-center gap-2 sm:gap-3" data-testid="logo-lab">
-            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${primaryColor} flex items-center justify-center text-white font-bold text-sm`}>
-              ⚗️
+      {/* Top Navigation */}
+      <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-50">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setLocation("/")}>
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)] group-hover:scale-105 transition-transform">
+              <Beaker className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-lg sm:text-xl font-bold text-white">Lab</h1>
+            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Lab</span>
           </div>
-
-          {/* Middle: Menu - Hide on mobile */}
-          <button className="hidden sm:flex text-white/60 hover:text-white transition-colors" data-testid="button-menu">
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
-
-          {/* Right: Actions - Responsive */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex text-white/60 hover:text-white h-10 w-10"
-              data-testid="button-undo"
-              onClick={handleUndo}
-              disabled={isUpdating}
-            >
-              <RotateCcw className="w-5 h-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex text-white/60 hover:text-white h-10 w-10"
-              data-testid="button-redo"
-              onClick={handleRedo}
-              disabled={isUpdating}
-            >
-              <RotateCw className="w-5 h-5" />
-            </Button>
-            <Button
-              className={`bg-gradient-to-r ${primaryColor} hover:opacity-90 text-white font-semibold px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all text-sm sm:text-base h-10 sm:h-auto`}
-              data-testid="button-save-changes"
-              onClick={handleSaveChanges}
-              disabled={isUpdating}
-            >
-              <span className="hidden sm:inline">{isUpdating ? "Saving..." : "Save Changes"}</span>
-              <span className="sm:hidden">{isUpdating ? "..." : "Save"}</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="sm:hidden text-white/60 hover:text-white h-10 w-10"
-              data-testid="button-mobile-menu"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
-          </div>
+          <div className="h-6 w-px bg-white/10 mx-2" />
+          <Button variant="ghost" size="icon" className="text-white/40 hover:text-white transition-colors">
+            <Menu className="w-5 h-5" />
+          </Button>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden border-t border-white/10 bg-white/5 px-4 py-3 space-y-2">
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-white/60 hover:text-white gap-2"
-              data-testid="mobile-menu-undo"
-              onClick={() => {
-                handleUndo();
-                setMobileMenuOpen(false);
-              }}
-              disabled={isUpdating}
-            >
-              <RotateCcw className="w-4 h-4" />
-              Undo
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/5">
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-white/40 hover:text-white">
+              <Undo2 className="w-4 h-4" />
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-white/60 hover:text-white gap-2"
-              data-testid="mobile-menu-redo"
-              onClick={() => {
-                handleRedo();
-                setMobileMenuOpen(false);
-              }}
-              disabled={isUpdating}
-            >
-              <RotateCw className="w-4 h-4" />
-              Redo
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-white/40 hover:text-white">
+              <Redo2 className="w-4 h-4" />
             </Button>
           </div>
-        )}
+          <Button 
+            onClick={handleSaveChanges}
+            disabled={isUpdating}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 rounded-xl shadow-[0_0_20px_rgba(168,85,247,0.3)] border-t border-white/20 transition-all active:scale-95"
+          >
+            {isUpdating ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
       </header>
 
-      {/* Main Content - Stack vertically on mobile */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Left Panel: Profile Preview */}
-        <div className={`w-full lg:flex-1 lg:border-r border-white/10 bg-white/[0.02] overflow-y-auto ${activePanel === "customize" ? "hidden lg:block" : ""}`}>
-          <div className="p-4 sm:p-6 lg:p-8 min-h-full flex flex-col justify-center">
-            <h3 className="text-white/60 text-xs sm:text-sm font-semibold px-2 sm:px-4 py-2 mb-4">Profile Preview</h3>
-            <LabProfilePreview 
-              isMobilePreview={isMobilePreview}
-              username={profileData.displayName || user?.username || "Profile"}
-              tagline={profileData.bio || "just exploring the world"}
-              views={profileData.views}
-              primaryColor={primaryColor}
-              accentColor={accentColor}
-              backgroundColor={backgroundColor}
-            />
+      {/* Main Layout */}
+      <main className="flex-1 flex overflow-hidden">
+        {/* Left: Profile Preview */}
+        <section className={`flex-1 flex flex-col p-8 overflow-y-auto bg-gradient-to-b from-white/[0.02] to-transparent ${activePanel === "customize" ? "hidden lg:flex" : "flex"}`}>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-white/40">Profile Preview</h2>
+            <div className="flex bg-white/5 p-1 rounded-lg border border-white/5">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setIsMobilePreview(false)}
+                className={`h-8 px-3 rounded-md text-xs transition-all ${!isMobilePreview ? "bg-white/10 text-white shadow-sm" : "text-white/40"}`}
+              >
+                Desktop
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setIsMobilePreview(true)}
+                className={`h-8 px-3 rounded-md text-xs transition-all ${isMobilePreview ? "bg-white/10 text-white shadow-sm" : "text-white/40"}`}
+              >
+                Mobile
+              </Button>
+            </div>
           </div>
-        </div>
+          
+          <div className="flex-1 flex items-center justify-center">
+            <div className={`transition-all duration-500 ease-out ${isMobilePreview ? "w-[320px] aspect-[9/19]" : "w-full max-w-2xl aspect-video"}`}>
+              <LabProfilePreview 
+                isMobilePreview={isMobilePreview}
+                username={profileData.displayName || user?.username || "User"}
+                tagline={profileData.bio || "Just exploring the Lab"}
+                views={profileData.views}
+                primaryColor={primaryColor}
+                accentColor={accentColor}
+                backgroundColor={backgroundColor}
+              />
+            </div>
+          </div>
+        </section>
 
-        {/* Right Panel: Customization */}
-        <div className={`w-full lg:flex-1 overflow-y-auto ${activePanel === "preview" ? "hidden lg:block" : ""}`}>
+        {/* Right: Customization Panel */}
+        <section className={`w-full lg:w-[480px] border-l border-white/5 bg-[#0f0f12]/80 backdrop-blur-2xl flex flex-col ${activePanel === "preview" ? "hidden lg:flex" : "flex"}`}>
           <LabCustomizationPanel 
             profileData={profileData}
             onProfileChange={handleProfileChange}
             onColorChange={handleColorChange}
             isUpdating={isUpdating}
           />
-        </div>
-      </div>
+        </section>
+      </main>
 
-      {/* Mobile Panel Toggle */}
-      <div className="lg:hidden border-t border-white/10 bg-white/5 backdrop-blur-md p-4 flex gap-2">
+      {/* Mobile Toggle */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex bg-black/60 backdrop-blur-xl p-1.5 rounded-2xl border border-white/10 shadow-2xl z-50">
         <Button
+          variant="ghost"
           onClick={() => setActivePanel("preview")}
-          className={`flex-1 py-2 h-11 font-medium rounded-lg transition-all ${
-            activePanel === "preview"
-              ? `bg-gradient-to-r ${primaryColor} text-white`
-              : "bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10"
-          }`}
-          data-testid="button-toggle-preview"
+          className={`h-11 px-6 rounded-xl transition-all ${activePanel === "preview" ? "bg-white/10 text-white" : "text-white/40"}`}
         >
           Preview
         </Button>
         <Button
+          variant="ghost"
           onClick={() => setActivePanel("customize")}
-          className={`flex-1 py-2 h-11 font-medium rounded-lg transition-all ${
-            activePanel === "customize"
-              ? `bg-gradient-to-r ${primaryColor} text-white`
-              : "bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10"
-          }`}
-          data-testid="button-toggle-customize"
+          className={`h-11 px-6 rounded-xl transition-all ${activePanel === "customize" ? "bg-white/10 text-white" : "text-white/40"}`}
         >
-          Customize
+          Custom
         </Button>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-white/5 backdrop-blur-md">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Button
-              variant="outline"
-              className="flex-1 sm:flex-none bg-white/5 border-white/20 text-white/60 hover:text-white hover:bg-white/10 gap-1 sm:gap-2 px-3 sm:px-4 py-2 h-10 text-sm"
-              data-testid="button-reset-footer"
-              onClick={handleReset}
-              disabled={isUpdating}
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span className="hidden sm:inline">Reset</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 sm:flex-none bg-white/5 border-white/20 text-white/60 hover:text-white hover:bg-white/10 gap-1 sm:gap-2 px-3 sm:px-4 py-2 h-10 text-sm"
-              data-testid="button-export"
-            >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Export</span>
-            </Button>
-          </div>
-
-          {/* Preview Toggle */}
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
-            <button
-              onClick={() => setIsMobilePreview(false)}
-              className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all h-10 ${
-                !isMobilePreview
-                  ? "bg-white/10 text-white border border-white/20"
-                  : "text-white/40 hover:text-white/60"
-              }`}
-              data-testid="button-desktop-view"
-            >
-              💻
-            </button>
-            <button
-              onClick={() => setIsMobilePreview(true)}
-              className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all h-10 ${
-                isMobilePreview
-                  ? "bg-white/10 text-white border border-white/20"
-                  : "text-white/40 hover:text-white/60"
-              }`}
-              data-testid="button-mobile-view"
-            >
-              📱
-            </button>
-            <div className="w-px h-6 bg-white/10 hidden sm:block" />
-            <div className="text-white/40 text-xs sm:text-sm">Preview</div>
-          </div>
-        </div>
-      </footer>
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-      `}</style>
     </div>
   );
 }

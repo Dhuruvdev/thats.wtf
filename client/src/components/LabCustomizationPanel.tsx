@@ -4,7 +4,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, GripVertical, Trash2 } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { 
+  User, 
+  Palette, 
+  Layout as LayoutIcon, 
+  Sparkles, 
+  Layers, 
+  Upload, 
+  Plus, 
+  Trash2, 
+  GripVertical,
+  Type,
+  Maximize,
+  Smartphone,
+  Monitor
+} from "lucide-react";
 import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat } from "react-icons/si";
 
 interface SocialLink {
@@ -28,17 +43,10 @@ interface LabCustomizationPanelProps {
 }
 
 const COLOR_PRESETS = [
-  { name: "Purple-Pink", primary: "from-purple-500 to-pink-500", accent: "from-cyan-400 to-blue-500" },
-  { name: "Orange-Red", primary: "from-orange-500 to-red-500", accent: "from-yellow-300 to-orange-400" },
-  { name: "Blue-Cyan", primary: "from-blue-600 to-cyan-500", accent: "from-green-400 to-emerald-500" },
-  { name: "Pink-Purple", primary: "from-pink-600 to-purple-600", accent: "from-pink-400 to-purple-400" },
-];
-
-const BACKGROUND_PRESETS = [
-  { name: "Dark Slate", value: "from-slate-950 via-slate-900 to-slate-950" },
-  { name: "Dark Navy", value: "from-slate-950 via-blue-950 to-slate-950" },
-  { name: "Deep Purple", value: "from-slate-950 via-purple-950 to-slate-950" },
-  { name: "Carbon Black", value: "from-black via-slate-900 to-black" },
+  { name: "Cyberpunk", primary: "from-purple-600 to-pink-500", accent: "from-cyan-400 to-blue-500" },
+  { name: "Inferno", primary: "from-orange-500 to-red-600", accent: "from-yellow-400 to-orange-500" },
+  { name: "Oceanic", primary: "from-blue-600 to-cyan-400", accent: "from-emerald-400 to-teal-500" },
+  { name: "Matrix", primary: "from-green-600 to-emerald-500", accent: "from-lime-400 to-green-500" },
 ];
 
 export function LabCustomizationPanel({ 
@@ -47,283 +55,231 @@ export function LabCustomizationPanel({
   onColorChange,
   isUpdating 
 }: LabCustomizationPanelProps) {
-  const [displayName, setDisplayName] = useState(profileData?.displayName || "");
-  const [bio, setBio] = useState(profileData?.bio || "");
-  const [views, setViews] = useState(profileData?.views?.toString() || "0");
-  const [showViews, setShowViews] = useState(true);
-  const [showFollowButton, setShowFollowButton] = useState(true);
-  const [primaryColor, setPrimaryColor] = useState("from-purple-500 to-pink-500");
-  const [backgroundColor, setBackgroundColor] = useState("from-slate-950 via-slate-900 to-slate-950");
-  const [accentColor, setAccentColor] = useState("from-cyan-400 to-blue-500");
-
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([
-    { id: "1", platform: "Spotify", icon: <SiSpotify />, color: "text-green-400", url: "https://spotify.com" },
-    { id: "2", platform: "Instagram", icon: <SiInstagram />, color: "text-pink-400", url: "https://instagram.com" },
-    { id: "3", platform: "Snapchat", icon: <SiSnapchat />, color: "text-yellow-300", url: "https://snapchat.com" },
-    { id: "4", platform: "Threads", icon: <SiThreads />, color: "text-white", url: "https://threads.net" },
-    { id: "5", platform: "Roblox", icon: <SiRoblox />, color: "text-red-400", url: "https://roblox.com" },
+    { id: "1", platform: "Spotify", icon: <SiSpotify />, color: "text-[#1DB954]", url: "" },
+    { id: "2", platform: "Instagram", icon: <SiInstagram />, color: "text-[#E4405F]", url: "" },
+    { id: "3", platform: "Snapchat", icon: <SiSnapchat />, color: "text-[#FFFC00]", url: "" },
+    { id: "4", platform: "Threads", icon: <SiThreads />, color: "text-white", url: "" },
+    { id: "5", platform: "Roblox", icon: <SiRoblox />, color: "text-[#FF0000]", url: "" },
   ]);
 
-  const handleRemoveSocialLink = (id: string) => {
-    setSocialLinks(socialLinks.filter(link => link.id !== id));
-  };
-
-  const handleProfileUpdate = () => {
-    const data = { 
-      displayName, 
-      bio, 
-      views: parseInt(views) || 0,
-      showViews, 
-      showFollowButton 
-    };
-    onProfileChange?.(data);
-  };
-
-  const handleColorUpdate = () => {
-    onColorChange?.("primary", primaryColor);
-    onColorChange?.("accent", accentColor);
-    onColorChange?.("background", backgroundColor);
+  const updateField = (field: string, value: any) => {
+    onProfileChange?.({ [field]: value });
   };
 
   return (
-    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 overflow-y-auto">
-      <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Customization Center</h2>
+    <div className="h-full flex flex-col">
+      <div className="p-6 pb-2">
+        <h2 className="text-xl font-bold text-white tracking-tight">Customization Center</h2>
+        <p className="text-sm text-white/40 mt-1">Personalize your high-fidelity identity</p>
+      </div>
 
-      <Tabs defaultValue="profile" className="w-full flex-1 flex flex-col">
-        {/* Tabs - Responsive */}
-        <div className="overflow-x-auto mb-4 sm:mb-6 -mx-4 sm:mx-0 px-4 sm:px-0">
-          <TabsList className="bg-white/5 border border-white/10 rounded-lg p-1 inline-flex min-w-full sm:w-auto">
-            <TabsTrigger value="profile" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-profile">Profile</TabsTrigger>
-            <TabsTrigger value="design" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-design">Design</TabsTrigger>
-            <TabsTrigger value="theme" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-theme">Theme</TabsTrigger>
-            <TabsTrigger value="effects" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-effects">Effects</TabsTrigger>
-            <TabsTrigger value="layout" className="text-xs sm:text-sm text-white whitespace-nowrap px-2 sm:px-3 py-2" data-testid="tab-layout">Layout</TabsTrigger>
+      <Tabs defaultValue="profile" className="flex-1 flex flex-col">
+        <div className="px-6 py-4">
+          <TabsList className="w-full bg-white/5 p-1 border border-white/5 rounded-xl h-12">
+            <TabsTrigger value="profile" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </TabsTrigger>
+            <TabsTrigger value="design" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
+              <Palette className="w-4 h-4" />
+              <span className="hidden sm:inline">Design</span>
+            </TabsTrigger>
+            <TabsTrigger value="theme" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
+              <Layers className="w-4 h-4" />
+              <span className="hidden sm:inline">Theme</span>
+            </TabsTrigger>
+            <TabsTrigger value="effects" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Effects</span>
+            </TabsTrigger>
+            <TabsTrigger value="layout" className="flex-1 gap-2 data-[state=active]:bg-white/10 rounded-lg">
+              <LayoutIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">Layout</span>
+            </TabsTrigger>
           </TabsList>
         </div>
 
-        {/* Profile Tab */}
-        <TabsContent value="profile" className="space-y-4 sm:space-y-6 mt-0 flex-1">
-          {/* Display Name */}
-          <div className="space-y-1 sm:space-y-2">
-            <Label htmlFor="displayName" className="text-white text-xs sm:text-sm font-semibold">Display Name</Label>
-            <Input
-              id="displayName"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg text-sm h-10 sm:h-auto"
-              data-testid="input-displayname"
-              placeholder="Your Name"
-            />
-          </div>
-
-          {/* Bio */}
-          <div className="space-y-1 sm:space-y-2">
-            <Label htmlFor="bio" className="text-white text-xs sm:text-sm font-semibold">Bio / Tagline</Label>
-            <Input
-              id="bio"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg text-sm h-10 sm:h-auto"
-              data-testid="input-bio"
-              placeholder="Your bio"
-            />
-          </div>
-
-          {/* View Count */}
-          <div className="space-y-1 sm:space-y-2">
-            <Label htmlFor="views" className="text-white text-xs sm:text-sm font-semibold">View Count</Label>
-            <Input
-              id="views"
-              type="number"
-              value={views}
-              onChange={(e) => setViews(e.target.value)}
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40 rounded-lg text-sm h-10 sm:h-auto"
-              data-testid="input-views"
-            />
-          </div>
-
-          {/* Social Links */}
-          <div className="space-y-2 sm:space-y-3">
-            <label className="text-white font-semibold text-xs sm:text-sm">Social Links</label>
-            <div className="space-y-2">
-              {socialLinks.map((link) => (
-                <div
-                  key={link.id}
-                  className="flex items-center gap-2 sm:gap-3 bg-white/5 border border-white/10 rounded-lg p-2 sm:p-3"
-                  data-testid={`social-link-${link.platform.toLowerCase()}`}
-                >
-                  <GripVertical className="w-4 h-4 text-white/40 flex-shrink-0" />
-                  <div className={`w-5 h-5 ${link.color} flex-shrink-0`}>{link.icon}</div>
-                  <span className="text-white text-xs sm:text-sm flex-1 truncate">{link.platform}</span>
-                  <button
-                    onClick={() => handleRemoveSocialLink(link.id)}
-                    className="text-white/40 hover:text-red-400 transition-colors flex-shrink-0"
-                    data-testid={`button-remove-${link.platform.toLowerCase()}`}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+        <div className="flex-1 overflow-y-auto px-6 pb-24">
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-6 mt-0">
+            <div className="space-y-4">
+              <div className="group relative">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest mb-2 block">Identity</Label>
+                <div className="flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/[0.08] transition-colors cursor-pointer group">
+                  <div className="w-16 h-16 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:border-purple-500/50 transition-colors">
+                    <Upload className="w-6 h-6 text-white/40 group-hover:text-purple-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-white">Change Avatar</h4>
+                    <p className="text-xs text-white/40">JPG, PNG or GIF. Max 5MB.</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <Button
-              variant="outline"
-              className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 gap-2 text-sm h-10"
-              data-testid="button-add-link"
-            >
-              <Plus className="w-4 h-4" />
-              Add Link
-            </Button>
-          </div>
+              </div>
 
-          {/* Toggles */}
-          <div className="space-y-2 sm:space-y-3 pt-2 sm:pt-3 border-t border-white/10">
-            <div className="flex items-center justify-between">
-              <span className="text-white text-xs sm:text-sm">Show: Views counter</span>
-              <Switch
-                checked={showViews}
-                onCheckedChange={setShowViews}
-                data-testid="toggle-views"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-white text-xs sm:text-sm">Follow button</span>
-              <Switch
-                checked={showFollowButton}
-                onCheckedChange={setShowFollowButton}
-                data-testid="toggle-follow"
-              />
-            </div>
-          </div>
-        </TabsContent>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Username</Label>
+                <Input 
+                  value={profileData?.displayName} 
+                  onChange={(e) => updateField('displayName', e.target.value)}
+                  className="h-12 bg-white/5 border-white/5 focus:border-purple-500/50 rounded-xl px-4"
+                  placeholder="e.g. NeonExplorer"
+                />
+              </div>
 
-        {/* Design Tab */}
-        <TabsContent value="design" className="space-y-4 sm:space-y-6 mt-0 flex-1">
-          <div className="space-y-3 sm:space-y-4">
-            <label className="text-white font-semibold text-xs sm:text-sm block">Primary Color</label>
-            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Tagline</Label>
+                <Input 
+                  value={profileData?.bio} 
+                  onChange={(e) => updateField('bio', e.target.value)}
+                  className="h-12 bg-white/5 border-white/5 focus:border-purple-500/50 rounded-xl px-4"
+                  placeholder="Briefly describe yourself..."
+                />
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Social Presence</Label>
+                  <Button variant="ghost" size="sm" className="h-8 text-purple-400 hover:text-purple-300">
+                    <Plus className="w-4 h-4 mr-1" /> Add New
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {socialLinks.map((link) => (
+                    <div key={link.id} className="flex items-center gap-3 p-3 bg-white/5 border border-white/5 rounded-xl group hover:border-white/10 transition-all">
+                      <GripVertical className="w-4 h-4 text-white/20 cursor-grab" />
+                      <div className={`w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center ${link.color}`}>
+                        {link.icon}
+                      </div>
+                      <span className="flex-1 text-sm font-medium">{link.platform}</span>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-white/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-4 bg-purple-500/5 border border-purple-500/10 rounded-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-medium text-white">Live View Counter</Label>
+                    <p className="text-xs text-white/40">Show total profile visits</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-medium text-white">Follow Connection</Label>
+                    <p className="text-xs text-white/40">Allow users to follow you</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Design Tab */}
+          <TabsContent value="design" className="space-y-8 mt-0">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Card Geometry</Label>
+                <div className="space-y-6 px-2">
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-xs text-white/60">Corner Radius</span>
+                      <span className="text-xs text-purple-400 font-mono">24px</span>
+                    </div>
+                    <Slider defaultValue={[24]} max={48} step={1} className="[&_[role=slider]]:bg-purple-500" />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-xs text-white/60">Transparency</span>
+                      <span className="text-xs text-purple-400 font-mono">15%</span>
+                    </div>
+                    <Slider defaultValue={[15]} max={100} step={1} className="[&_[role=slider]]:bg-purple-500" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Typography System</Label>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button variant="outline" className="h-12 bg-white/5 border-white/5 justify-start px-4 rounded-xl gap-2">
+                    <Type className="w-4 h-4 text-purple-400" />
+                    <span className="text-xs">Inter</span>
+                  </Button>
+                  <Button variant="outline" className="h-12 bg-white/5 border-white/5 justify-start px-4 rounded-xl gap-2">
+                    <Type className="w-4 h-4 text-pink-400" />
+                    <span className="text-xs">Space G.</span>
+                  </Button>
+                </div>
+                <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
+                  <Button variant="ghost" className="flex-1 h-9 rounded-lg text-xs font-bold">B</Button>
+                  <Button variant="ghost" className="flex-1 h-9 rounded-lg text-xs italic">I</Button>
+                  <Button variant="ghost" className="flex-1 h-9 rounded-lg text-xs underline">U</Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Theme Tab */}
+          <TabsContent value="theme" className="space-y-8 mt-0">
+            <div className="grid grid-cols-2 gap-4">
               {COLOR_PRESETS.map((preset) => (
                 <button
                   key={preset.name}
-                  onClick={() => {
-                    setPrimaryColor(preset.primary);
-                    handleColorUpdate();
-                  }}
-                  className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${
-                    primaryColor === preset.primary ? "border-white" : "border-white/20"
-                  }`}
-                  data-testid={`color-preset-${preset.name.toLowerCase()}`}
+                  onClick={() => onColorChange?.("primary", preset.primary)}
+                  className="group relative h-24 rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 transition-all"
                 >
-                  <div className={`h-6 sm:h-8 rounded bg-gradient-to-r ${preset.primary}`} />
-                  <p className="text-white text-xs mt-1 sm:mt-2 text-center">{preset.name}</p>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${preset.primary} opacity-40 group-hover:opacity-60 transition-opacity`} />
+                  <div className="absolute inset-x-0 bottom-0 p-3 bg-black/40 backdrop-blur-md">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-white">{preset.name}</p>
+                  </div>
                 </button>
               ))}
             </div>
-          </div>
 
-          <div className="space-y-3 sm:space-y-4">
-            <label className="text-white font-semibold text-xs sm:text-sm block">Background</label>
-            <div className="grid grid-cols-2 gap-2">
-              {BACKGROUND_PRESETS.map((preset) => (
-                <button
-                  key={preset.name}
-                  onClick={() => {
-                    setBackgroundColor(preset.value);
-                    handleColorUpdate();
-                  }}
-                  className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${
-                    backgroundColor === preset.value ? "border-white" : "border-white/20"
-                  }`}
-                  data-testid={`bg-preset-${preset.name.toLowerCase()}`}
-                >
-                  <div className={`h-6 sm:h-8 rounded bg-gradient-to-r ${preset.value}`} />
-                  <p className="text-white text-xs mt-1 sm:mt-2 text-center">{preset.name}</p>
-                </button>
-              ))}
+            <div className="space-y-4">
+              <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Background Engine</Label>
+              <div className="p-4 bg-white/5 border border-white/5 rounded-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Dynamic Particles</span>
+                  <Switch defaultChecked />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-xs text-white/60">Density</span>
+                    <span className="text-xs text-purple-400 font-mono">Low</span>
+                  </div>
+                  <Slider defaultValue={[20]} max={100} step={1} className="[&_[role=slider]]:bg-purple-500" />
+                </div>
+              </div>
             </div>
-          </div>
-        </TabsContent>
+          </TabsContent>
 
-        {/* Theme Tab */}
-        <TabsContent value="theme" className="space-y-3 sm:space-y-4 mt-0 flex-1">
-          <label className="text-white font-semibold text-xs sm:text-sm block">Theme Options</label>
-          <div className="space-y-2">
-            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-light">
-              <div className="text-white font-medium text-sm">Light Mode</div>
-              <div className="text-white/40 text-xs">Bright, clean aesthetic</div>
-            </button>
-            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/20 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-dark">
-              <div className="text-white font-medium text-sm">Dark Mode</div>
-              <div className="text-white/40 text-xs">Current theme (Recommended)</div>
-            </button>
-            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="theme-option-neon">
-              <div className="text-white font-medium text-sm">Neon Mode</div>
-              <div className="text-white/40 text-xs">Bright neon colors</div>
-            </button>
-          </div>
-        </TabsContent>
+          <TabsContent value="effects" className="space-y-6 mt-0">
+             <div className="p-6 bg-purple-500/5 border border-purple-500/10 rounded-2xl text-center space-y-4">
+                <Sparkles className="w-12 h-12 text-purple-400 mx-auto opacity-50" />
+                <h4 className="text-sm font-bold">Neon Motion Engine</h4>
+                <p className="text-xs text-white/40">Select specialized entrance animations and hover states.</p>
+             </div>
+          </TabsContent>
 
-        {/* Effects Tab */}
-        <TabsContent value="effects" className="space-y-3 sm:space-y-4 mt-0 flex-1">
-          <label className="text-white font-semibold text-xs sm:text-sm block">Visual Effects</label>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
-              <span className="text-white text-xs sm:text-sm">Glow Effect</span>
-              <Switch defaultChecked data-testid="toggle-glow" />
-            </div>
-            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
-              <span className="text-white text-xs sm:text-sm">Animation</span>
-              <Switch defaultChecked data-testid="toggle-animation" />
-            </div>
-            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
-              <span className="text-white text-xs sm:text-sm">Blur Background</span>
-              <Switch defaultChecked data-testid="toggle-blur" />
-            </div>
-            <div className="flex items-center justify-between p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg">
-              <span className="text-white text-xs sm:text-sm">Particles</span>
-              <Switch defaultChecked data-testid="toggle-particles" />
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Layout Tab */}
-        <TabsContent value="layout" className="space-y-3 sm:space-y-4 mt-0 flex-1">
-          <label className="text-white font-semibold text-xs sm:text-sm block">Layout Options</label>
-          <div className="space-y-2">
-            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/20 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-center">
-              <div className="text-white font-medium text-sm">Centered</div>
-              <div className="text-white/40 text-xs">Current layout (Recommended)</div>
-            </button>
-            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-left">
-              <div className="text-white font-medium text-sm">Left Aligned</div>
-              <div className="text-white/40 text-xs">Content on left side</div>
-            </button>
-            <button className="w-full p-2 sm:p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all text-left" data-testid="layout-option-card">
-              <div className="text-white font-medium text-sm">Card Grid</div>
-              <div className="text-white/40 text-xs">Multiple cards layout</div>
-            </button>
-          </div>
-        </TabsContent>
+          <TabsContent value="layout" className="space-y-6 mt-0">
+             <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="h-24 bg-white/5 border-purple-500/50 flex-col gap-2 rounded-2xl">
+                   <Monitor className="w-6 h-6 text-purple-400" />
+                   <span className="text-xs font-bold uppercase">Grid View</span>
+                </Button>
+                <Button variant="outline" className="h-24 bg-white/5 border-white/5 flex-col gap-2 rounded-2xl">
+                   <Smartphone className="w-6 h-6 text-white/40" />
+                   <span className="text-xs font-bold uppercase">Flow List</span>
+                </Button>
+             </div>
+          </TabsContent>
+        </div>
       </Tabs>
-
-      {/* Bottom Actions */}
-      <div className="flex gap-2 sm:gap-3 pt-4 sm:pt-6 border-t border-white/10 mt-4 sm:mt-6">
-        <Button
-          variant="outline"
-          className="flex-1 bg-white/5 border-white/20 text-white hover:bg-white/10 rounded-lg text-sm h-10 sm:h-auto"
-          data-testid="button-reset"
-          disabled={isUpdating}
-        >
-          Reset
-        </Button>
-        <Button
-          onClick={handleProfileUpdate}
-          className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-lg text-sm h-10 sm:h-auto"
-          data-testid="button-publish"
-          disabled={isUpdating}
-        >
-          {isUpdating ? "Saving..." : "Publish"}
-        </Button>
-      </div>
     </div>
   );
 }

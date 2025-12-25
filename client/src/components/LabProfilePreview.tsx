@@ -14,100 +14,91 @@ interface LabProfilePreviewProps {
 }
 
 export function LabProfilePreview({
-  username = "kinjal.fr",
-  tagline = "just exploring the world",
-  views = 45,
-  avatarInitial = "K",
+  username = "NeonExplorer",
+  tagline = "Lost in the neon code of the future",
+  views = 1240,
+  avatarInitial = "N",
   isMobilePreview = false,
-  primaryColor = "from-purple-500 to-pink-500",
+  primaryColor = "from-purple-600 to-pink-500",
   accentColor = "from-cyan-400 to-blue-500",
   backgroundColor = "from-slate-950 via-slate-900 to-slate-950",
 }: LabProfilePreviewProps) {
   return (
-    <div className="w-full max-w-md mx-auto">
-      {/* Glow background */}
-      <div className={`absolute -inset-4 bg-gradient-to-r ${primaryColor} rounded-3xl blur-2xl opacity-30`} />
-      
-      {/* Card */}
-      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
-        {/* Avatar Container */}
-        <div className="flex justify-center mb-6 sm:mb-8">
-          <div className="relative w-24 sm:w-32 h-24 sm:h-32">
-            {/* Neon glow rings */}
-            <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${primaryColor} opacity-60 blur-lg`} />
-            <div className={`absolute inset-1 rounded-full bg-gradient-to-r ${primaryColor} opacity-40 blur-md`} />
+    <div className={`relative transition-all duration-700 ${isMobilePreview ? "w-full h-full rounded-[40px]" : "w-full max-w-lg mx-auto"}`}>
+      {/* Dynamic Glow Orbs */}
+      <div className={`absolute -top-20 -left-20 w-64 h-64 bg-gradient-to-r ${primaryColor} rounded-full blur-[100px] opacity-20 animate-pulse`} />
+      <div className={`absolute -bottom-20 -right-20 w-64 h-64 bg-gradient-to-r ${accentColor} rounded-full blur-[100px] opacity-10 animate-pulse`} style={{ animationDelay: '1s' }} />
 
-            {/* Avatar */}
-            <div className={`absolute inset-0 rounded-full bg-gradient-to-br from-slate-600 to-slate-900 flex items-center justify-center border-2 border-white/30 text-white font-bold text-3xl sm:text-5xl`}>
-              {avatarInitial}
+      {/* Main Glass Card */}
+      <div className={`relative h-full bg-white/[0.03] backdrop-blur-3xl border border-white/10 ${isMobilePreview ? "rounded-[32px]" : "rounded-[40px] shadow-[0_32px_128px_-12px_rgba(0,0,0,0.8)]"} p-8 overflow-hidden group`}>
+        {/* Animated Border Glow */}
+        <div className={`absolute inset-0 bg-gradient-to-r ${primaryColor} opacity-[0.05] group-hover:opacity-[0.1] transition-opacity`} />
+        
+        {/* Profile Content */}
+        <div className="relative z-10 flex flex-col items-center">
+          {/* Avatar with Glow Ring */}
+          <div className="relative mb-10 group/avatar">
+            <div className={`absolute -inset-4 bg-gradient-to-tr ${primaryColor} rounded-full blur-2xl opacity-40 group-hover/avatar:opacity-60 transition-opacity animate-pulse`} />
+            <div className={`absolute -inset-1 bg-gradient-to-tr ${primaryColor} rounded-full p-[2px]`}>
+              <div className="absolute inset-0 bg-black rounded-full" />
             </div>
+            <div className="relative w-32 h-32 rounded-full bg-gradient-to-b from-white/10 to-transparent flex items-center justify-center border border-white/20 shadow-2xl overflow-hidden">
+               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+               <span className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">{avatarInitial}</span>
+            </div>
+          </div>
+
+          {/* Identity Info */}
+          <div className="text-center space-y-3 mb-12">
+            <h2 className="text-4xl font-black tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              {username}
+            </h2>
+            <div className="h-1 w-12 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+            <p className="text-white/60 font-medium max-w-[280px] leading-relaxed italic">
+              "{tagline}"
+            </p>
+          </div>
+
+          {/* Social Array */}
+          <div className="grid grid-cols-5 gap-4 mb-12 w-full max-w-[320px]">
+            {[
+              { id: 'spot', icon: SiSpotify, color: 'text-[#1DB954]', glow: 'bg-[#1DB954]/20' },
+              { id: 'insta', icon: SiInstagram, color: 'text-[#E4405F]', glow: 'bg-[#E4405F]/20' },
+              { id: 'snap', icon: SiSnapchat, color: 'text-[#FFFC00]', glow: 'bg-[#FFFC00]/20' },
+              { id: 'threads', icon: SiThreads, color: 'text-white', glow: 'bg-white/20' },
+              { id: 'roblox', icon: SiRoblox, color: 'text-[#FF0000]', glow: 'bg-[#FF0000]/20' },
+            ].map((social) => (
+              <div key={social.id} className="relative group/icon cursor-pointer">
+                <div className={`absolute inset-0 ${social.glow} rounded-2xl blur-xl opacity-0 group-hover/icon:opacity-100 transition-all duration-300 scale-50 group-hover/icon:scale-110`} />
+                <div className="relative h-12 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-md flex items-center justify-center group-hover/icon:bg-white/10 group-hover/icon:-translate-y-1 transition-all duration-300">
+                  <social.icon className={`w-5 h-5 ${social.color} drop-shadow-[0_0_8px_currentColor]`} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Performance Section */}
+          <div className="w-full space-y-8">
+            <div className="flex items-center justify-center gap-4 text-white/40">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/5" />
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/5">
+                <Eye className="w-4 h-4" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">{views.toLocaleString()} Views</span>
+              </div>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/5" />
+            </div>
+
+            <Button className={`w-full h-14 bg-gradient-to-r ${primaryColor} hover:opacity-90 text-white font-bold text-sm uppercase tracking-[0.2em] rounded-2xl shadow-[0_10px_40px_-10px_rgba(168,85,247,0.4)] border-t border-white/20 group-hover:scale-[1.02] transition-all`}>
+              View Profile →
+            </Button>
           </div>
         </div>
 
-        {/* Username */}
-        <div className="text-center mb-1 sm:mb-2">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight break-words">{username}</h2>
+        {/* Decorative elements */}
+        <div className="absolute top-4 right-6 text-[8px] font-mono text-white/20 uppercase tracking-widest">Lab-Ref-2025</div>
+        <div className="absolute bottom-4 left-6 flex gap-1">
+           {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-white/20" />)}
         </div>
-
-        {/* Tagline */}
-        <div className="text-center mb-6 sm:mb-8">
-          <p className="text-gray-400 text-xs sm:text-sm font-medium line-clamp-2">{tagline}</p>
-        </div>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6 sm:mb-8" />
-
-        {/* Social Icons */}
-        <div className="flex justify-center items-center gap-3 sm:gap-4 mb-6 sm:mb-8 flex-wrap">
-          <a href="#" className="group relative" data-testid="link-spotify">
-            <div className="absolute -inset-2 bg-green-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SiSpotify className="w-5 sm:w-6 h-5 sm:h-6 text-green-400 relative z-10 group-hover:scale-110 transition-transform" />
-          </a>
-
-          <a href="#" className="group relative" data-testid="link-instagram">
-            <div className="absolute -inset-2 bg-pink-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SiInstagram className="w-5 sm:w-6 h-5 sm:h-6 text-pink-400 relative z-10 group-hover:scale-110 transition-transform" />
-          </a>
-
-          <a href="#" className="group relative" data-testid="link-snapchat">
-            <div className="absolute -inset-2 bg-yellow-300/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SiSnapchat className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-300 relative z-10 group-hover:scale-110 transition-transform" />
-          </a>
-
-          <a href="#" className="group relative" data-testid="link-threads">
-            <div className="absolute -inset-2 bg-white/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SiThreads className="w-5 sm:w-6 h-5 sm:h-6 text-white relative z-10 group-hover:scale-110 transition-transform" />
-          </a>
-
-          <a href="#" className="group relative" data-testid="link-roblox">
-            <div className="absolute -inset-2 bg-red-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-            <SiRoblox className="w-5 sm:w-6 h-5 sm:h-6 text-red-400 relative z-10 group-hover:scale-110 transition-transform" />
-          </a>
-        </div>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4 sm:mb-6" />
-
-        {/* Views Counter */}
-        <div className="flex justify-center items-center gap-2 mb-6 sm:mb-8">
-          <Eye className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" data-testid="icon-eye" />
-          <span className="text-gray-400 text-xs sm:text-sm font-medium" data-testid="text-views">{views} views</span>
-        </div>
-
-        {/* View Profile Button */}
-        <Button 
-          className={`w-full bg-gradient-to-r ${primaryColor} hover:opacity-90 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all text-sm sm:text-base h-10 sm:h-auto`}
-          data-testid="button-view-profile"
-        >
-          View Profile →
-        </Button>
-      </div>
-
-      {/* Mobile Toggle */}
-      <div className="mt-4 sm:mt-6 flex justify-center">
-        <button className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-white/20 text-white/60 text-xs sm:text-sm hover:border-white/40 hover:text-white/80 transition-all" data-testid="button-mobile-toggle">
-          {isMobilePreview ? "📱 Mobile" : "💻 Desktop"}
-        </button>
       </div>
     </div>
   );
