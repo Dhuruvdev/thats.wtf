@@ -30,6 +30,10 @@ export default function LabRedesign() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleFullScreen = () => {
+    window.open(`/profile/${config.displayName}`, "_blank");
+  };
+
   const handleImport = () => {
     if (!importInputRef.current?.value) return;
     try {
@@ -211,6 +215,7 @@ export default function LabRedesign() {
                 effectIntensity={config.effectIntensity}
                 effectSpeed={config.effectSpeed}
                 decorations={config.decorations}
+                onFullScreen={handleFullScreen}
               />
             </div>
           </div>
