@@ -210,6 +210,7 @@ export default function LabRedesign() {
                 entranceAnimation={config.entranceAnimation}
                 effectIntensity={config.effectIntensity}
                 effectSpeed={config.effectSpeed}
+                decorations={config.decorations}
               />
             </div>
           </div>

@@ -23,6 +23,7 @@ interface LabProfilePreviewProps {
   entranceAnimation?: string;
   effectIntensity?: number;
   effectSpeed?: number;
+  decorations?: string[];
   onFullScreen?: () => void;
 }
 
@@ -38,6 +39,7 @@ export function LabProfilePreview({
   entranceAnimation = "none",
   effectIntensity = 1,
   effectSpeed = 1,
+  decorations = [],
   onFullScreen,
 }: LabProfilePreviewProps) {
   const displayAvatar = avatarUrl || stockAvatar;
@@ -117,6 +119,21 @@ export function LabProfilePreview({
 
   return (
     <div className={`relative transition-all duration-700 flex items-center justify-center min-h-[500px] w-full overflow-hidden rounded-[40px] ${isMobilePreview ? "scale-95" : ""}`}>
+      {/* Pixel Border Overlay */}
+      {decorations.includes("pixel_border") && (
+        <div 
+          className="absolute inset-0 pointer-events-none z-50"
+          style={{
+            borderImageSource: "url('/assets/borders/pixel_border.svg')",
+            borderImageSlice: "40",
+            borderImageWidth: "32px",
+            borderImageRepeat: "stretch",
+            margin: "-16px",
+            imageRendering: "pixelated",
+            filter: "drop-shadow(0 0 10px rgba(255, 230, 0, 0.3))"
+          }}
+        />
+      )}
       {/* Background Layer */}
       <div className="absolute inset-0 z-0">
         {backgroundUrl ? (
@@ -225,6 +242,32 @@ export function LabProfilePreview({
               
               <div className="absolute inset-[-4px] rounded-full bg-gradient-to-tr from-purple-500/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-white/10 to-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+                {/* Avatar Decoration Asset */}
+                {decorations.includes("avatar_decor") && (
+                  <>
+                    <div 
+                      className="absolute -inset-4 pointer-events-none z-10 animate-in fade-in zoom-in duration-1000"
+                      style={{
+                        border: "8px solid #FFE600",
+                        borderRadius: "50%",
+                        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 5% 5%, 5% 95%, 95% 95%, 95% 5%, 5% 5%)",
+                        imageRendering: "pixelated",
+                        filter: "drop-shadow(0 0 12px rgba(255, 230, 0, 0.6))",
+                        boxSizing: "border-box"
+                      }}
+                    />
+                    <div 
+                      className="absolute -inset-2 pointer-events-none z-10 opacity-50"
+                      style={{
+                        border: "4px solid #FFE600",
+                        borderRadius: "50%",
+                        clipPath: "polygon(0% 20%, 20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%)",
+                        imageRendering: "pixelated",
+                        boxSizing: "border-box"
+                      }}
+                    />
+                  </>
+                )}
                 <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
                   <AvatarImage src={displayAvatar} alt={username} className="object-cover" />
                   <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">{username ? username.charAt(0) : 'A'}</AvatarFallback>
