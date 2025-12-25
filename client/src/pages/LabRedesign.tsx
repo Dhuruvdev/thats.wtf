@@ -12,17 +12,17 @@ export default function LabRedesign() {
   const { data: user, isLoading: isUserLoading } = useUser();
   const [, setLocation] = useLocation();
 
+  /* Removing redirect for "without login" access
   useEffect(() => {
     if (!isUserLoading && !user) {
       setLocation("/login");
     }
   }, [isUserLoading, user, setLocation]);
+  */
   
-  if (!isUserLoading && !user) {
-    return null;
-  }
+  /* Returning the component regardless of user status */
 
-  const { data: profile, isLoading: isProfileLoading } = useProfile(user?.username || "");
+  const { data: profile, isLoading: isProfileLoading } = useProfile(user?.username || "demo");
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
 
   const [isMobilePreview, setIsMobilePreview] = useState(false);
