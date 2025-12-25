@@ -28,6 +28,8 @@ export default function LabRedesign() {
     bio: "creative director & product designer",
     views: 1240,
     accentColor: "#7c3aed",
+    backgroundUrl: "",
+    audioUrl: "",
   });
 
   // Sync with initial query data
@@ -38,6 +40,8 @@ export default function LabRedesign() {
         bio: profileDataFromQuery.bio || "creative director & product designer",
         views: profileDataFromQuery.views || 1240,
         accentColor: profileDataFromQuery.accentColor || "#7c3aed",
+        backgroundUrl: profileDataFromQuery.backgroundUrl || "",
+        audioUrl: profileDataFromQuery.audioUrl || "",
       });
     }
   }, [profileDataFromQuery]);
@@ -61,6 +65,8 @@ export default function LabRedesign() {
       displayName: profileData.displayName,
       bio: profileData.bio,
       accentColor: profileData.accentColor,
+      backgroundUrl: profileData.backgroundUrl,
+      audioUrl: profileData.audioUrl,
     });
   };
 
@@ -142,6 +148,8 @@ export default function LabRedesign() {
                 tagline={profileData.bio}
                 views={profileData.views}
                 avatarUrl={profileDataFromQuery?.avatarUrl || undefined}
+                backgroundUrl={profileData.backgroundUrl}
+                audioUrl={profileData.audioUrl}
               />
             </div>
           </div>

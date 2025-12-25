@@ -24,6 +24,8 @@ export default function ProfilePage() {
           tagline={bio}
           views={views}
           avatarUrl={profile?.avatarUrl || undefined}
+          backgroundUrl={profile?.backgroundUrl || undefined}
+          audioUrl={profile?.audioUrl || undefined}
           isMobilePreview={false}
         />
       </div>

@@ -24,7 +24,7 @@ export const users = pgTable("users", {
   // High-Fidelity Identity Config
   themeConfig: jsonb("theme_config").$type<{
     background: {
-      type: "static" | "animated" | "shader" | "video";
+      type: "static" | "animated" | "shader" | "video" | "image" | "gif";
       value: string;
       overlayOpacity: number;
       blur: number;
@@ -138,6 +138,7 @@ export const media = pgTable("media", {
     width?: number;
     height?: number;
     size?: number;
+    mimeType?: string;
   }>(),
   createdAt: timestamp("created_at").defaultNow(),
 });
