@@ -1,4 +1,4 @@
-import { Eye, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Eye, Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
 import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat } from "react-icons/si";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import stockAvatar from '@assets/stock_images/professional_portrai_594a4b95.jpg';
@@ -20,6 +20,7 @@ interface LabProfilePreviewProps {
     opacity: number;
   };
   entranceAnimation?: "none" | "glitch" | "fade" | "zoom" | "slide";
+  onFullScreen?: () => void;
 }
 
 export function LabProfilePreview({
@@ -32,6 +33,7 @@ export function LabProfilePreview({
   isMobilePreview = false,
   geometry = { radius: 40, blur: 20, opacity: 3 },
   entranceAnimation = "none",
+  onFullScreen,
 }: LabProfilePreviewProps) {
   const displayAvatar = avatarUrl || stockAvatar;
   const [isPlaying, setIsPlaying] = useState(false);
@@ -122,19 +124,33 @@ export function LabProfilePreview({
       </div>
 
       {/* Audio Controls */}
-      {audioUrl && (
-        <div className="absolute top-6 left-6 z-50">
-          <audio ref={audioRef} src={audioUrl} loop />
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={toggleAudio}
+      <div className="absolute top-6 left-6 right-6 z-50 flex justify-between items-center">
+        {audioUrl ? (
+          <div className="flex gap-2">
+            <audio ref={audioRef} src={audioUrl} loop />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleAudio}
+              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all active:scale-90"
+            >
+              {isPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+            </Button>
+          </div>
+        ) : <div />}
+
+        {onFullScreen && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onFullScreen}
             className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all active:scale-90"
+            data-testid="button-fullscreen-preview"
           >
-            {isPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+            <Maximize2 className="w-5 h-5" />
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Main Frosted Glass Card */}
       <AnimatePresence mode="wait">

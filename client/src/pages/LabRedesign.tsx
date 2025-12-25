@@ -169,6 +169,7 @@ export default function LabRedesign() {
                 audioUrl={profileData.audioUrl}
                 geometry={profileData.geometry}
                 entranceAnimation={profileData.entranceAnimation}
+                onFullScreen={() => window.open(`/u/${user?.username}`, '_blank')}
               />
             </div>
           </div>
