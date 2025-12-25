@@ -1,0 +1,18 @@
+{
+  "name": "Sparkle Particles",
+  "description": "Floating sparkle particles with random opacity and parallax motion",
+  "version": "1.0.0",
+  "type": "entrance-effect",
+  "duration": 2500,
+  "colors": ["#FFFFFF", "#E0E0E0"],
+  "properties": {
+    "intensity": { "min": 0.5, "max": 2, "default": 1 },
+    "speed": { "min": 0.5, "max": 2, "default": 1 },
+    "particleCount": { "min": 8, "max": 20, "default": 12 }
+  },
+  "preview": {
+    "width": 200,
+    "height": 200,
+    "backgroundColor": "#000000"
+  }
+}

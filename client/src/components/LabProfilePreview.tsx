@@ -5,6 +5,7 @@ import stockAvatar from '@assets/stock_images/professional_portrai_594a4b95.jpg'
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import { AuraGlowEffect, SparkleEffect, BurstEntranceEffect } from "@/components/effects";
 
 interface LabProfilePreviewProps {
   username?: string;
@@ -19,7 +20,9 @@ interface LabProfilePreviewProps {
     blur: number;
     opacity: number;
   };
-  entranceAnimation?: "none" | "glitch" | "fade" | "zoom" | "slide";
+  entranceAnimation?: "none" | "glitch" | "fade" | "zoom" | "slide" | "aura" | "sparkles" | "burst" | "cosmic" | "cyber" | "snowfall" | "rain";
+  effectIntensity?: number;
+  effectSpeed?: number;
   onFullScreen?: () => void;
 }
 
@@ -33,6 +36,8 @@ export function LabProfilePreview({
   isMobilePreview = false,
   geometry = { radius: 40, blur: 20, opacity: 3 },
   entranceAnimation = "none",
+  effectIntensity = 1,
+  effectSpeed = 1,
   onFullScreen,
 }: LabProfilePreviewProps) {
   const displayAvatar = avatarUrl || stockAvatar;
@@ -85,6 +90,38 @@ export function LabProfilePreview({
         x: [0, -5, 5, -2, 2, 0],
         transition: { duration: 0.5 }
       }
+    },
+    aura: {
+      initial: { opacity: 0, scale: 0.9 },
+      animate: { opacity: 1, scale: 1 }
+    },
+    sparkles: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 }
+    },
+    burst: {
+      initial: { opacity: 0, scale: 0.8 },
+      animate: { opacity: 1, scale: 1 }
+    },
+    cosmic: {
+      initial: { opacity: 0, rotate: -10 },
+      animate: { opacity: 1, rotate: 0 }
+    },
+    cyber: {
+      initial: { opacity: 0, x: -40 },
+      animate: { 
+        opacity: 1, 
+        x: [0, 5, -5, 0],
+        transition: { duration: 0.6 }
+      }
+    },
+    snowfall: {
+      initial: { opacity: 0, y: -30 },
+      animate: { opacity: 1, y: 0 }
+    },
+    rain: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 }
     }
   };
 
@@ -169,8 +206,19 @@ export function LabProfilePreview({
             className="relative z-10 w-full max-w-[340px] border border-white/[0.08] p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col items-center group transition-all duration-500 hover:border-white/[0.12] hover:bg-white/[0.05]"
           >
             
-            {/* Avatar with Neon Glow Ring */}
+            {/* Avatar with Entrance Effects */}
             <div className="relative mb-8">
+              {/* Effect layers */}
+              {["aura", "cosmic"].includes(entranceAnimation) && (
+                <AuraGlowEffect enabled={true} intensity={effectIntensity} speed={effectSpeed} />
+              )}
+              {["sparkles"].includes(entranceAnimation) && (
+                <SparkleEffect enabled={true} intensity={effectIntensity} speed={effectSpeed} />
+              )}
+              {["burst"].includes(entranceAnimation) && (
+                <BurstEntranceEffect enabled={true} intensity={effectIntensity} speed={effectSpeed} />
+              )}
+              
               <div className="absolute inset-[-4px] rounded-full bg-gradient-to-tr from-purple-500/30 to-blue-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-white/10 to-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
                 <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
