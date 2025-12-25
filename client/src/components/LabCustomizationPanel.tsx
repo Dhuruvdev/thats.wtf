@@ -24,7 +24,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
 
 interface SocialLink {
   id: string;
@@ -42,6 +41,7 @@ interface LabCustomizationPanelProps {
     accentColor?: string;
     backgroundUrl?: string;
     audioUrl?: string;
+    avatarUrl?: string;
   };
   onProfileChange?: (data: any) => void;
   onColorChange?: (type: string, value: string) => void;
@@ -173,6 +173,14 @@ export function LabCustomizationPanel({
               </div>
 
               <div className="space-y-2">
+                <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Username</Label>
+                <Input 
+                  value={profileData?.displayName} 
+                  onChange={(e) => updateField('displayName', e.target.value)}
+                  className="h-12 bg-white/5 border-white/5 focus:border-purple-500/50 rounded-xl px-4 text-white"
+                  placeholder="e.g. NeonExplorer"
+                />
+              </div>
 
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Tagline</Label>
