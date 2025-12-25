@@ -1,0 +1,24 @@
+<svg width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pixel Border Logic: 8px thickness, sharp edges -->
+  <defs>
+    <pattern id="pixelGrid" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="none" stroke="#FFE600" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Outer Pixel Border -->
+  <!-- Top -->
+  <rect x="0" y="0" width="400" height="8" fill="#FFE600" />
+  <!-- Bottom -->
+  <rect x="0" y="592" width="400" height="8" fill="#FFE600" />
+  <!-- Left -->
+  <rect x="0" y="0" width="8" height="600" fill="#FFE600" />
+  <!-- Right -->
+  <rect x="392" y="0" width="8" height="600" fill="#FFE600" />
+  
+  <!-- Corner Detail (Pixelated) -->
+  <rect x="0" y="0" width="16" height="16" fill="#FFE600" />
+  <rect x="384" y="0" width="16" height="16" fill="#FFE600" />
+  <rect x="0" y="584" width="16" height="16" fill="#FFE600" />
+  <rect x="384" y="584" width="16" height="16" fill="#FFE600" />
+</svg>

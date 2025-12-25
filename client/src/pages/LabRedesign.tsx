@@ -15,6 +15,7 @@ import { User, Sparkles } from "lucide-react";
 export default function LabRedesign() {
   const { config, resetConfig, exportConfig, importConfig } = useProfile();
   const [activeTab, setActiveTab] = useState("profile");
+  const [viewMode, setViewMode] = useState<"editor" | "preview">("editor");
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showImport, setShowImport] = useState(false);
@@ -144,9 +145,31 @@ export default function LabRedesign() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden relative">
+        {/* View Mode Switcher */}
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 flex bg-black/80 backdrop-blur-xl p-1 rounded-2xl border border-white/10 shadow-2xl">
+          <Button
+            variant="ghost"
+            onClick={() => setViewMode("preview")}
+            className={`h-10 px-8 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+              viewMode === "preview" ? "bg-cyan-400 text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]" : "text-white/40 hover:text-white"
+            }`}
+          >
+            Preview
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => setViewMode("editor")}
+            className={`h-10 px-8 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
+              viewMode === "editor" ? "bg-white/10 text-white" : "text-white/40 hover:text-white"
+            }`}
+          >
+            Editor
+          </Button>
+        </div>
+
         {/* Preview Section */}
-        <section className="flex-1 flex flex-col p-4 md:p-8 overflow-y-auto bg-gradient-to-b from-transparent via-purple-600/5 to-transparent">
+        <section className={`flex-1 flex flex-col p-4 md:p-8 overflow-y-auto bg-gradient-to-b from-transparent via-purple-600/5 to-transparent transition-all duration-500 ${viewMode === "editor" ? "opacity-40 scale-[0.98] blur-sm pointer-events-none" : "opacity-100 scale-100 blur-0"}`}>
           <div className="flex items-center justify-between mb-4 md:mb-8">
             <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">Live Preview</h2>
             <div className="flex bg-white/5 p-1 rounded-lg border border-white/5">
@@ -188,14 +211,14 @@ export default function LabRedesign() {
           </div>
         </section>
 
-        {/* Tab Content Section */}
-        <section className="max-h-[45vh] md:max-h-[50vh] overflow-y-auto border-t border-white/5 bg-[#0f0f12]/80 backdrop-blur-3xl">
-          <div className="p-4 md:p-6">
+        {/* Tab Content Section (Editor) */}
+        <section className={`absolute inset-0 z-10 overflow-y-auto bg-[#0f0f12]/80 backdrop-blur-3xl transition-all duration-500 ${viewMode === "preview" ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"}`}>
+          <div className="p-4 md:p-6 pt-20">
             <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">Lab Editor</h2>
             <p className="text-xs md:text-sm text-white/40 mt-1">Customize your profile in real-time</p>
           </div>
 
-          <div className="px-4 md:px-6 pb-24">
+          <div className="px-4 md:px-6 pb-40">
             {renderTabContent()}
           </div>
         </section>

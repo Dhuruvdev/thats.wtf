@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const DECORATIONS = [
-  { id: "glow", name: "Glow Effect", description: "Ambient glow around profile" },
-  { id: "particles", name: "Floating Particles", description: "Animated particles" },
-  { id: "gradient", name: "Gradient Overlay", description: "Smooth gradient background" },
-  { id: "blur", name: "Blur Effect", description: "Motion blur animation" },
-  { id: "shimmer", name: "Shimmer Effect", description: "Shimmering light effect" },
-  { id: "pulse", name: "Pulse Animation", description: "Pulsing accent color" },
-  { id: "stars", name: "Star Field", description: "Animated star background" },
-  { id: "waves", name: "Wave Animation", description: "Wavy distortion effect" },
+  { id: "pixel_border", name: "Pixel Border", description: "Sharp yellow pixelated card border", category: "decorations" },
+  { id: "glow", name: "Glow Effect", description: "Ambient glow around profile", category: "decorations" },
+  { id: "particles", name: "Floating Particles", description: "Animated particles", category: "decorations" },
+  { id: "gradient", name: "Gradient Overlay", description: "Smooth gradient background", category: "decorations" },
+  { id: "blur", name: "Blur Effect", description: "Motion blur animation", category: "decorations" },
+  { id: "shimmer", name: "Shimmer Effect", description: "Shimmering light effect", category: "decorations" },
+  { id: "pulse", name: "Pulse Animation", description: "Pulsing accent color", category: "decorations" },
+  { id: "stars", name: "Star Field", description: "Animated star background", category: "decorations" },
+  { id: "waves", name: "Wave Animation", description: "Wavy distortion effect", category: "decorations" },
 ];
 
 interface DecorationsPanelProps {
