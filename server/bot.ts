@@ -1,6 +1,7 @@
-import { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes } from "discord.js";
+import { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes, AttachmentBuilder } from "discord.js";
 import { storage } from "./storage";
 import { log } from "./index";
+import canvacord from "canvacord";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
@@ -15,7 +16,7 @@ const commands = [
     .setDescription("Shows your profile stats"),
   new SlashCommandBuilder()
     .setName("profile")
-    .setDescription("Get your profile link"),
+    .setDescription("Get your profile card"),
 ].map(command => command.toJSON());
 
 export async function setupBot() {
@@ -56,13 +57,41 @@ export async function setupBot() {
       }
       await interaction.reply(`📊 **Stats for ${user.username}**\nLevel: ${user.level}\nXP: ${user.xp}\nViews: ${user.views}`);
     } else if (commandName === "profile") {
-      const user = await storage.getUserByDiscordId(interaction.user.id);
-      if (!user) {
-        await interaction.reply("You haven't linked your account yet!");
-        return;
+      try {
+        await interaction.deferReply();
+        
+        const user = await storage.getUserByDiscordId(interaction.user.id);
+        if (!user) {
+          await interaction.editReply("You haven't linked your account yet!");
+          return;
+        }
+
+        const avatar = interaction.user.displayAvatarURL({ extension: "png", size: 256 });
+        const accentColor = user.accentColor || "#7c3aed";
+
+        const card = new canvacord.Rank()
+          .setAvatar(avatar)
+          .setCurrentXP(user.xp)
+          .setRequiredXP(user.level * 1000) // Estimate required XP based on level
+          .setStatus("online")
+          .setProgressBar(accentColor, "COLOR")
+          .setUsername(user.displayName || user.username)
+          .setDiscriminator("0000")
+          .setLevel(user.level)
+          .setRank(1, "RANK", false);
+
+        const image = await card.build();
+        const attachment = new AttachmentBuilder(image, { name: "profile.png" });
+        
+        const domain = process.env.REPLIT_DEV_DOMAIN || "localhost:5000";
+        await interaction.editReply({ 
+          content: `🔗 View full profile: https://${domain}/${user.username}`,
+          files: [attachment] 
+        });
+      } catch (error) {
+        console.error("Error generating profile card:", error);
+        await interaction.editReply("An error occurred while generating your profile card.");
       }
-      const domain = process.env.REPLIT_DEV_DOMAIN || "localhost:5000";
-      await interaction.reply(`🔗 Your profile: https://${domain}/${user.username}`);
     }
   });
 
