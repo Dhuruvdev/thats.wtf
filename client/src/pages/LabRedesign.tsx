@@ -223,7 +223,32 @@ export default function LabRedesign() {
 
         {/* Tab Content Section (Editor) */}
         <section className={`absolute inset-0 z-10 overflow-y-auto bg-[#0f0f12]/80 backdrop-blur-3xl transition-all duration-500 ${viewMode === "preview" ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"}`}>
-          <div className="p-4 md:p-6 pt-20">
+          <div className="p-4 md:p-6 pt-6">
+            <div className="flex items-center justify-center mb-8">
+              <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 backdrop-blur-md">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2 transition-all rounded-lg ${
+                        isActive
+                          ? "text-white bg-white/10 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                          : "text-white/40 hover:text-white/60"
+                      }`}
+                      data-testid={`button-tab-${tab.id}`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">
+                        {tab.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">Lab Editor</h2>
             <p className="text-xs md:text-sm text-white/40 mt-1">Customize your profile in real-time</p>
           </div>
@@ -234,31 +259,7 @@ export default function LabRedesign() {
         </section>
       </main>
 
-      {/* Bottom Tab Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 h-16 border-t border-white/5 bg-[#0a0a0c]/95 backdrop-blur-xl flex items-center justify-around z-40">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center w-12 h-12 md:w-16 md:h-16 transition-all rounded-lg ${
-                isActive
-                  ? "text-white bg-white/10 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
-                  : "text-white/40 hover:text-white/60"
-              }`}
-              title={tab.label}
-              data-testid={`button-tab-${tab.id}`}
-            >
-              <Icon className="w-5 h-5 md:w-6 md:h-6" />
-              <span className="text-[7px] md:text-[8px] font-bold uppercase tracking-wider mt-0.5 hidden md:block">
-                {tab.label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+      {/* Bottom Tab Navigation removed */}
 
       {/* Import Dialog */}
       <Dialog open={showImport} onOpenChange={setShowImport}>

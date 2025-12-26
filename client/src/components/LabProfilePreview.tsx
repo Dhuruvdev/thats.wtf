@@ -131,7 +131,7 @@ export function LabProfilePreview({
             borderWidth: "32px",
             margin: "-16px",
             imageRendering: "pixelated",
-            filter: "drop-shadow(0 0 20px rgba(255, 230, 0, 0.5))"
+            filter: "drop-shadow(8px 8px 0px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 230, 0, 0.3))"
           }}
         />
       )}
@@ -245,18 +245,26 @@ export function LabProfilePreview({
               <div className="relative p-[2px] rounded-full bg-gradient-to-tr from-white/10 to-white/5 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
                 {/* Avatar Decoration Asset */}
                 {decorations.includes("avatar_decor") && (
-                  <div className="absolute -inset-6 pointer-events-none z-20">
-                    <div className="absolute inset-0 rounded-full border-[6px] border-[#FFE600] opacity-90 shadow-[0_0_20px_#FFE600,inset_0_0_15px_#FFE600] animate-pulse" />
-                    <div className="absolute inset-[-4px] rounded-full border-t-4 border-r-4 border-[#FFE600] animate-[spin_3s_linear_infinite]" />
-                  <div className="absolute top-1 right-1 w-5 h-5 bg-[#FFE600] rounded-tr-lg rounded-bl-lg shadow-[0_0_10px_rgba(255,230,0,0.8)] flex items-center justify-center">
-                    <div className="w-2 h-2 bg-black rounded-sm animate-ping" />
+                  <div className="absolute -inset-6 pointer-events-none z-20 scale-110">
+                    {/* High-Fidelity Animated Glow Ring */}
+                    <div className="absolute inset-0 rounded-full border-[8px] border-[#FFE600] opacity-90 shadow-[0_0_30px_#FFE600,inset_0_0_20px_#FFE600] animate-pulse" />
+                    
+                    {/* Rotating Tech Ornaments */}
+                    <div className="absolute inset-[-6px] rounded-full border-t-[4px] border-r-[4px] border-[#FFE600] animate-[spin_4s_linear_infinite]" />
+                    <div className="absolute inset-[-10px] rounded-full border-b-[4px] border-l-[4px] border-[#FFE600]/40 animate-[spin_6s_linear_infinite_reverse]" />
+                    
+                    {/* Floating Tech Corners */}
+                    <div className="absolute top-0 right-0 w-6 h-6 bg-[#FFE600] rounded-tr-xl rounded-bl-xl shadow-[0_0_15px_rgba(255,230,0,1)] flex items-center justify-center">
+                      <div className="w-2.5 h-2.5 bg-black rounded-sm animate-ping" />
+                    </div>
+                    
+                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-[#FFE600] rounded-bl-lg" />
+                    
+                    {/* Moving Pixel Particles */}
+                    <div className="absolute top-1/2 -left-4 w-2 h-2 bg-[#FFE600] shadow-[0_0_12px_#FFE600] animate-bounce" />
+                    <div className="absolute top-1/2 -right-4 w-2 h-2 bg-[#FFE600] shadow-[0_0_12px_#FFE600] animate-bounce" style={{ animationDelay: '1s' }} />
                   </div>
-                  
-                  {/* Floating Pixel Particles */}
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
-                </div>
-              )}
+                )}
                 <Avatar className="w-28 h-28 border-[1.5px] border-white/20">
                   <AvatarImage src={displayAvatar} alt={username} className="object-cover" />
                   <AvatarFallback className="bg-[#16161a] text-white/40 font-bold text-2xl">{username ? username.charAt(0) : 'A'}</AvatarFallback>
