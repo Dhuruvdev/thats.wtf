@@ -79,7 +79,7 @@ export class DatabaseStorage implements IStorage {
       animationConfig: insertBlock.animationConfig,
       order: insertBlock.order,
       visible: insertBlock.visible
-    }).returning();
+    } as any).returning();
     return block;
   }
 

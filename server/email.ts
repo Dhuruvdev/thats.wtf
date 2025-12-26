@@ -18,30 +18,93 @@ export async function sendVerificationEmail(email: string, token: string, userna
     <!DOCTYPE html>
     <html>
     <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-        body { font-family: Arial, sans-serif; background: #000; color: #fff; }
-        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .content { background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 12px; padding: 30px; }
-        .button { background: #7c3aed; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin: 20px 0; }
-        .footer { text-align: center; margin-top: 30px; color: #888; font-size: 12px; }
+        body { 
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+          background-color: #050505; 
+          color: #ffffff; 
+          margin: 0; 
+          padding: 0;
+          -webkit-font-smoothing: antialiased;
+        }
+        .wrapper {
+          width: 100%;
+          table-layout: fixed;
+          background-color: #050505;
+          padding-bottom: 40px;
+        }
+        .container { 
+          max-width: 600px; 
+          margin: 0 auto; 
+          padding: 40px 20px; 
+        }
+        .card { 
+          background: #0f0f0f; 
+          border: 1px solid rgba(255, 255, 255, 0.05); 
+          border-radius: 24px; 
+          padding: 40px;
+          text-align: center;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .logo {
+          width: 64px;
+          height: 64px;
+          margin-bottom: 24px;
+        }
+        h1 { 
+          font-size: 28px; 
+          font-weight: 800; 
+          margin: 0 0 16px; 
+          letter-spacing: -0.02em;
+        }
+        p { 
+          font-size: 16px; 
+          line-height: 1.6; 
+          color: #a1a1aa; 
+          margin: 0 0 32px;
+        }
+        .button { 
+          background: #7c3aed; 
+          color: #ffffff !important; 
+          padding: 16px 32px; 
+          border-radius: 12px; 
+          text-decoration: none; 
+          display: inline-block; 
+          font-weight: 700;
+          font-size: 16px;
+          transition: transform 0.2s ease;
+        }
+        .footer { 
+          margin-top: 32px; 
+          color: #52525b; 
+          font-size: 14px; 
+          font-weight: 500;
+        }
+        .link-alt {
+          margin-top: 24px;
+          font-size: 12px;
+          color: #3f3f46;
+          word-break: break-all;
+        }
       </style>
     </head>
     <body>
-      <div class="container">
-        <div class="header">
-          <h1>Welcome to guns.lol!</h1>
-        </div>
-        <div class="content">
-          <p>Hi <strong>${username}</strong>,</p>
-          <p>Thanks for signing up! Please verify your email address to get started.</p>
-          <a href="${verificationUrl}" class="button">Verify Email</a>
-          <p style="color: #aaa; font-size: 14px;">Or copy this link:</p>
-          <p style="word-break: break-all; color: #888; font-size: 12px;">${verificationUrl}</p>
-          <p style="margin-top: 20px; color: #aaa;">This link expires in 24 hours.</p>
-        </div>
-        <div class="footer">
-          <p>guns.lol - Your profile, your way</p>
+      <div class="wrapper">
+        <div class="container">
+          <div class="card">
+            <img src="${process.env.APP_URL || "https://lab.dev"}/icon.png" alt="Lab.dev" class="logo">
+            <h1>Verify your identity</h1>
+            <p>Welcome to <strong>lab.dev</strong>, ${username}.<br>Confirm your email to unlock your high-fidelity profile.</p>
+            <a href="${verificationUrl}" class="button">Verify Email Address</a>
+            <div class="footer">
+              lab.dev &copy; 2025
+            </div>
+            <div class="link-alt">
+              ${verificationUrl}
+            </div>
+          </div>
         </div>
       </div>
     </body>
@@ -50,9 +113,9 @@ export async function sendVerificationEmail(email: string, token: string, userna
 
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "noreply@guns.lol",
+      from: process.env.SMTP_FROM || '"Lab.dev" <noreply@lab.dev>',
       to: email,
-      subject: "Verify your guns.lol account",
+      subject: "Verify your lab.dev account",
       html: htmlContent,
     });
     return true;
