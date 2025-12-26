@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useProfile } from "@/context/ProfileContext";
+import { apiRequest } from "@/lib/queryClient";
 import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat } from "react-icons/si";
 
 const SOCIAL_PLATFORMS = [
@@ -19,59 +20,6 @@ export function ProfileTabFull() {
   const { toast } = useToast();
   const { config, updateConfig, addSocialLink, removeSocialLink, updateSocialLink } = useProfile();
   const [isUploading, setIsUploading] = useState(false);
-
-  const handleFileUpload = useCallback(
-    async (file: File, type: "avatar" | "background" | "audio") => {
-      setIsUploading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!res.ok) throw new Error("Upload failed");
-
-        const data = await res.json();
-        const fieldMap = {
-          avatar: "avatarUrl",
-          background: "backgroundUrl",
-          audio: "audioUrl",
-        };
-
-        updateConfig({
-          [fieldMap[type]]: data.url,
-        });
-
-        toast({
-          title: "Success",
-          description: `${type.charAt(0).toUpperCase() + type.slice(1)} uploaded successfully`,
-        });
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to upload file",
-          variant: "destructive",
-        });
-      } finally {
-        setIsUploading(false);
-      }
-    },
-    [updateConfig, toast]
-  );
-
-  const onDrop = useCallback(
-    (e: React.DragEvent, type: "avatar" | "background" | "audio") => {
-      e.preventDefault();
-      const file = e.dataTransfer.files[0];
-      if (file) {
-        handleFileUpload(file, type);
-      }
-    },
-    [handleFileUpload]
-  );
 
   const handleUpdate = async (field: string, value: any) => {
     updateConfig({ [field]: value });
@@ -102,7 +50,7 @@ export function ProfileTabFull() {
           background: "backgroundUrl",
           audio: "audioUrl",
         };
-        
+
         const field = fieldMap[type];
         updateConfig({ [field]: data.url });
         await apiRequest("PATCH", "/api/user", { [field]: data.url });
@@ -202,7 +150,7 @@ export function ProfileTabFull() {
                 value={link.url}
                 onChange={async (e) => {
                   updateSocialLink(link.id, e.target.value);
-                  const updatedLinks = config.socialLinks.map(l => 
+                  const updatedLinks = config.socialLinks.map(l =>
                     l.id === link.id ? { ...l, url: e.target.value } : l
                   );
                   try {
@@ -244,9 +192,7 @@ export function ProfileTabFull() {
               size="sm"
               onClick={async () => {
                 addSocialLink(platform.name);
-                // The context handles ID generation, we'd need to sync after state updates
-                // For simplicity, we assume the next render will have the new link
-                // Ideally addSocialLink would return the new state or we'd use a useEffect
+                // Note: Full backend sync for new links would ideally happen after state confirms
               }}
               className="border-white/10 text-white/70 hover:text-white hover:border-white/20"
               data-testid={`button-add-social-${platform.name}`}
