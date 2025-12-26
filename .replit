@@ -47,3 +47,4 @@ integrations = ["javascript_object_storage:2.0.0"]
 [userenv.shared]
 DISCORD_CLIENT_ID = "1395808941107056832"
 DISCORD_CLIENT_SECRET = "nJZnilMaDhYuJxPTzkjCpk8gg09Yk6md"
+DATABASE_URL = "psql 'postgresql://neondb_owner:npg_Ta9lr4znXsPf@ep-snowy-waterfall-a4rsx4w3-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
