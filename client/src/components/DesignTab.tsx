@@ -3,7 +3,7 @@ import { Slider } from "@/components/ui/slider";
 import { useProfile } from "@/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Upload, Trash2, Music } from "lucide-react";
+import { Upload, Trash2, Music, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function DesignTab() {
@@ -34,6 +34,15 @@ export function DesignTab() {
       toast({ title: "Success", description: "File uploaded and saved!" });
     } catch (error) {
       toast({ title: "Error", description: "Upload failed", variant: "destructive" });
+    }
+  };
+
+  const handleUpdateConfig = async (update: Partial<typeof config>) => {
+    updateConfig(update);
+    try {
+      await apiRequest("PATCH", "/api/user", update);
+    } catch (error) {
+      console.error("Failed to sync config:", error);
     }
   };
 
@@ -69,7 +78,7 @@ export function DesignTab() {
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold">Background Media</h4>
               <div className="flex gap-2">
-                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-wider" onClick={() => updateConfig({ backgroundUrl: "" })}>
+                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-wider" onClick={() => handleUpdateConfig({ backgroundUrl: "" })}>
                   <Trash2 className="w-3 h-3 mr-2" />
                   Clear
                 </Button>
@@ -99,7 +108,7 @@ export function DesignTab() {
           <div className="p-4 bg-white/5 border border-white/5 rounded-2xl space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold">Ambient Audio</h4>
-              <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-wider" onClick={() => updateConfig({ audioUrl: "" })}>
+              <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold tracking-wider" onClick={() => handleUpdateConfig({ audioUrl: "" })}>
                 <Trash2 className="w-3 h-3 mr-2" />
                 Clear
               </Button>
@@ -122,6 +131,52 @@ export function DesignTab() {
         </div>
       </div>
 
+      {/* Profile Decorations (Merged from Effects Tab) */}
+      <div className="space-y-4">
+        <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Profile Decorations</Label>
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { id: "pixel_border", name: "Pixel Frame", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=200" },
+            { id: "avatar_decor", name: "Cyber Aura", img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" },
+            { id: "none", name: "None", img: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=200" }
+          ].map((effect) => {
+            const isActive = effect.id === "none" 
+              ? (!config.decorations || config.decorations.length === 0)
+              : config.decorations?.includes(effect.id);
+            return (
+              <button
+                key={effect.id}
+                onClick={() => {
+                  if (effect.id === "none") {
+                    handleUpdateConfig({ decorations: [] });
+                  } else {
+                    const currentDecs = config.decorations || [];
+                    const newDecs = currentDecs.includes(effect.id)
+                      ? currentDecs.filter(d => d !== effect.id)
+                      : [...currentDecs, effect.id];
+                    handleUpdateConfig({ decorations: newDecs });
+                  }
+                }}
+                className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all group ${
+                  isActive
+                    ? "border-purple-500 scale-95"
+                    : "border-white/5 hover:border-white/20"
+                }`}
+              >
+                <img
+                  src={effect.img}
+                  alt={effect.name}
+                  className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity"
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-end p-2">
+                  <span className="text-[10px] font-bold text-white uppercase tracking-wider">{effect.name}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="space-y-6 p-6 bg-white/5 border border-white/5 rounded-2xl">
         <div className="space-y-4">
           <Label className="text-xs font-bold text-white/40 uppercase tracking-widest">Card Geometry</Label>
@@ -134,7 +189,10 @@ export function DesignTab() {
           </div>
           <Slider
             value={[config.geometry.radius]}
-            onValueChange={(v) => updateGeometry("radius", v[0])}
+            onValueChange={(v) => {
+              updateGeometry("radius", v[0]);
+              handleUpdateConfig({ geometry: { ...config.geometry, radius: v[0] } });
+            }}
             max={100}
             step={1}
             className="[&_[role=slider]]:bg-purple-500"
@@ -148,7 +206,10 @@ export function DesignTab() {
           </div>
           <Slider
             value={[config.geometry.blur]}
-            onValueChange={(v) => updateGeometry("blur", v[0])}
+            onValueChange={(v) => {
+              updateGeometry("blur", v[0]);
+              handleUpdateConfig({ geometry: { ...config.geometry, blur: v[0] } });
+            }}
             max={50}
             step={1}
             className="[&_[role=slider]]:bg-purple-500"
@@ -162,7 +223,10 @@ export function DesignTab() {
           </div>
           <Slider
             value={[config.geometry.opacity]}
-            onValueChange={(v) => updateGeometry("opacity", v[0])}
+            onValueChange={(v) => {
+              updateGeometry("opacity", v[0]);
+              handleUpdateConfig({ geometry: { ...config.geometry, opacity: v[0] } });
+            }}
             max={20}
             step={1}
             className="[&_[role=slider]]:bg-purple-500"

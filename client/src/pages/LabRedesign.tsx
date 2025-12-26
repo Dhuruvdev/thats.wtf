@@ -60,7 +60,6 @@ export default function LabRedesign() {
     { id: "profile", icon: User, label: "Profile" },
     { id: "design", icon: Monitor, label: "Design" },
     { id: "explore", icon: Layers2, label: "Explore" },
-    { id: "effects", icon: Sparkles, label: "Effects" },
     { id: "add", icon: Plus, label: "Add" },
     { id: "layout", icon: LayoutGrid, label: "Layout" },
   ];
@@ -73,8 +72,6 @@ export default function LabRedesign() {
         return <DesignTab />;
       case "explore":
         return <ThemeTab />;
-      case "effects":
-        return <EffectsTab />;
       case "add":
         return <div className="text-white/40 text-center py-12">Coming soon...</div>;
       case "layout":
