@@ -106,6 +106,10 @@ export async function setupAuth(app: Express) {
         async (_accessToken, _refreshToken, profile, done) => {
           try {
             let user = await storage.getUserByDiscordId(profile.id);
+            const profileAny = profile as any;
+            const discordAvatar = profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : 
+                                  (profileAny.discriminator === '0' ? `https://cdn.discordapp.com/embed/avatars/${Number((BigInt(profile.id) >> BigInt(22)) % BigInt(6))}.png` : `https://cdn.discordapp.com/embed/avatars/${Number(profileAny.discriminator) % 5}.png`);
+            
             if (!user) {
               // Try by email if discord didn't give id match
               const discordEmail = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
@@ -117,9 +121,9 @@ export async function setupAuth(app: Express) {
                 // Link account
                 user = await storage.updateUser(user.id, { 
                   discordId: profile.id,
-                  avatarUrl: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
-                  displayName: profile.global_name || profile.username,
-                  bio: (profile as any).bio || ""
+                  avatarUrl: discordAvatar,
+                  displayName: profileAny.global_name || profile.username,
+                  bio: profileAny.bio || ""
                 });
               } else {
                 // Create new user
@@ -128,9 +132,9 @@ export async function setupAuth(app: Express) {
                   email: discordEmail || `${profile.id}@discord.com`,
                   password: randomBytes(16).toString("hex"), // Random password for OAuth users
                   discordId: profile.id,
-                  avatarUrl: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
-                  displayName: profile.global_name || profile.username,
-                  bio: (profile as any).bio || "",
+                  avatarUrl: discordAvatar,
+                  displayName: profileAny.global_name || profile.username,
+                  bio: profileAny.bio || "",
                   themeConfig: {
                     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
                     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -177,9 +181,9 @@ export async function setupAuth(app: Express) {
             } else {
               // Update profile data on every login
               user = await storage.updateUser(user.id, {
-                avatarUrl: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
-                displayName: profile.global_name || profile.username,
-                bio: (profile as any).bio || user.bio // Keep existing bio if Discord has none
+                avatarUrl: discordAvatar,
+                displayName: profileAny.global_name || profile.username,
+                bio: profileAny.bio || user.bio // Keep existing bio if Discord has none
               });
             }
             return done(null, user);
