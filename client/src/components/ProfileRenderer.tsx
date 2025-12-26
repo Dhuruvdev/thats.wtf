@@ -31,9 +31,9 @@ function getFrameStyles(activeTheme: any): string {
   let css = `.profile-header { backdrop-filter: blur(${blur}px); `;
   
   if (style === 'glass') {
-    css += `background: rgba(${colorRgb}, ${opacity * 0.1}); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 40px; padding: 40px 30px; }`;
+    css += `background: rgba(${colorRgb}, ${opacity * 0.1}); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 40px; padding: 40px 30px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }`;
   } else if (style === 'neon') {
-    css += `background: rgba(${colorRgb}, ${opacity * 0.15}); border: 2px solid rgba(${colorRgb}, 0.6); border-radius: 40px; padding: 40px 30px; box-shadow: 0 0 40px rgba(${colorRgb}, 0.3); }`;
+    css += `background: rgba(${colorRgb}, ${opacity * 0.15}); border: 2px solid rgba(${colorRgb}, 0.8); border-radius: 40px; padding: 40px 30px; box-shadow: 0 0 40px rgba(${colorRgb}, 0.5), inset 0 0 20px rgba(${colorRgb}, 0.3); }`;
   } else if (style === 'minimal') {
     css += `border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 40px; padding: 40px 30px; }`;
   } else if (style === 'transparent') {
