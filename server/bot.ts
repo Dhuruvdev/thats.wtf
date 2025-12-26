@@ -37,7 +37,7 @@ export async function setupBot() {
     console.error(error);
   }
 
-  client.once("ready", () => {
+  client.once("clientReady", () => {
     log(`Logged in as ${client.user?.tag}!`, "bot");
   });
 

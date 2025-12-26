@@ -73,8 +73,8 @@ export class DatabaseStorage implements IStorage {
 
   async createBlock(insertBlock: InsertBlock): Promise<Block> {
     const [block] = await db.insert(blocks).values({
-      type: insertBlock.type,
       userId: insertBlock.userId,
+      type: insertBlock.type,
       content: insertBlock.content as any,
       animationConfig: insertBlock.animationConfig,
       order: insertBlock.order,
