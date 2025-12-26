@@ -12,6 +12,7 @@ export const users = pgTable("users", {
   displayName: text("display_name"),
   bio: text("bio"),
   avatarUrl: text("avatar_url"),
+  discordId: text("discord_id").unique(),
   
   // Backwards compatibility fields for old UI components
   accentColor: text("accent_color").default("#7c3aed"),
