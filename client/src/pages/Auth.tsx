@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Auth() {
+  const { data: user } = useUser();
   const [isLogin, setIsLogin] = useState(true);
   const [, setLocation] = useLocation();
   const { mutateAsync: login, isPending: isLoginPending } = useLogin();
