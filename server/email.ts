@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendVerificationEmail(email: string, token: string, username: string) {
-  const verificationUrl = `${process.env.APP_URL || "http://localhost:5000"}/verify-email?token=${token}`;
+  const verificationUrl = `https://${process.env.REPLIT_DEV_DOMAIN || "thats.wtf"}/verify-email?token=${token}`;
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -94,7 +94,7 @@ export async function sendVerificationEmail(email: string, token: string, userna
       <div class="wrapper">
         <div class="container">
           <div class="card">
-            <img src="${process.env.APP_URL || "https://thats.wtf"}/icon.png" alt="thats.wtf" class="logo">
+            <img src="https://${process.env.REPLIT_DEV_DOMAIN || "thats.wtf"}/icon.png" alt="thats.wtf" class="logo">
             <h1>Verify your identity</h1>
             <p>Welcome to <strong>thats.wtf</strong>, ${username}.<br>Confirm your email to unlock your high-fidelity profile.</p>
             <a href="${verificationUrl}" class="button">Verify Email Address</a>
