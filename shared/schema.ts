@@ -158,6 +158,10 @@ export const insertUserSchema = createInsertSchema(users).omit({
   xp: true, 
   views: true, 
   isEmailVerified: true 
+}).extend({
+  themeConfig: z.any().optional(),
+  geometry: z.any().optional(),
+  logicRules: z.any().optional(),
 });
 export const insertBlockSchema = createInsertSchema(blocks).omit({ id: true });
 export const insertMediaSchema = createInsertSchema(media).omit({ id: true, createdAt: true });

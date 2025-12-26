@@ -103,10 +103,29 @@ export async function setupAuth(app: Express) {
         username,
         email,
         password: hashedPassword,
-        theme: 'default',
-        accentColor: '#7c3aed',
-        frame: 'none',
-        glowEnabled: true,
+        themeConfig: {
+          background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
+          cursor: { type: "default", color: "#ffffff", size: 24 },
+          typography: { headingFont: "Space Grotesk", bodyFont: "Inter", displayNameFont: "Space Grotesk", bioFont: "Inter", accentColor: "#7c3aed", displayNameGlowColor: "#7c3aed" },
+          motion: { intensity: 1, reduced: false },
+          frameOverlay: { style: "glass", opacity: 0.5, blur: 10, color: "#7c3aed" },
+          animations: {
+            displayName: { enabled: true, type: "fade", duration: 0.6 },
+            bio: { enabled: true, type: "fade", duration: 0.8 }
+          },
+          entranceMode: {
+            enabled: true,
+            type: "particles",
+            text: "reveal"
+          },
+          screenEffects: {
+            enabled: false,
+            type: "none",
+            intensity: 1
+          }
+        },
+        geometry: { radius: 40, blur: 20, opacity: 3 },
+        entranceAnimation: "none",
         isPro: false,
         isEmailVerified: true
       });

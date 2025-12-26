@@ -36,7 +36,7 @@ function ProtectedRoute({ component: Component }: any) {
   }
 
   if (!user) {
-    return <VerifyEmail />;
+    return <Auth />;
   }
 
   return <Component />;
@@ -52,26 +52,29 @@ function Router() {
   return (
     <Switch>
       <Route path="/login" component={Auth} />
+      <Route path="/register" component={Auth} />
       <Route path="/verify-email" component={VerifyEmail} />
       <Route path="/profile/:username" component={Profile} />
       <Route path="/u/:username" component={Profile} />
       <Route path="/user" component={ProfilePage} />
       <Route path="/">
-        <LabRedesign />
+        {user ? <LabRedesign /> : <Home />}
       </Route>
-      <Route path="/~" component={AccountOverview} />
-      <Route path="/lab" component={LabRedesign} />
-      <Route path="/lab-old" component={Lab} />
+      <Route path="/~">
+        <ProtectedRoute component={AccountOverview} />
+      </Route>
+      <Route path="/lab">
+        <ProtectedRoute component={LabRedesign} />
+      </Route>
       <Route path="/templates" component={Templates} />
-      <Route path="/analytics" component={Analytics} />
-      <Route path="/cardnav-demo" component={CardNavDemo} />
+      <Route path="/analytics">
+        <ProtectedRoute component={Analytics} />
+      </Route>
       <Route path="/pricing" component={Pricing} />
       <Route path="/blog" component={Blog} />
       <Route path="/about" component={About} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
-      <Route path="/loading" component={Loading} />
-      <Route path="/profile-card" component={ProfileCardDemo} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,19 +1,21 @@
 import { useState, useRef } from "react";
-import { Download, RotateCcw, Save, Beaker, Copy, Check, Monitor, Layers2, Settings, Plus, LayoutGrid } from "lucide-react";
+import { Download, RotateCcw, Save, Beaker, Copy, Check, Monitor, Layers2, Plus, LayoutGrid, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LabProfilePreview } from "@/components/LabProfilePreview";
 import { ProfileTabFull } from "@/components/ProfileTabFull";
 import { DesignTab } from "@/components/DesignTab";
 import { ThemeTab } from "@/components/ThemeTab";
-import { EffectsTab } from "@/components/EffectsTab";
 import { LayoutTab } from "@/components/LayoutTab";
 import { useProfile } from "@/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
 import { User, Sparkles } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
+import { useUser } from "@/hooks/use-auth";
 
 export default function LabRedesign() {
   const { config, resetConfig, exportConfig, importConfig } = useProfile();
+  const { logoutMutation } = useUser();
   const [activeTab, setActiveTab] = useState("profile");
   const [viewMode, setViewMode] = useState<"editor" | "preview">("editor");
   const [isMobilePreview, setIsMobilePreview] = useState(false);
@@ -52,8 +54,22 @@ export default function LabRedesign() {
     }
   };
 
-  const handlePublish = () => {
-    toast({ title: "Published!", description: "Profile config saved to browser" });
+  const handlePublish = async () => {
+    try {
+      await apiRequest("PATCH", "/api/user", config);
+      toast({ title: "Saved!", description: "Profile configuration updated successfully." });
+    } catch (err) {
+      toast({ title: "Error", description: "Failed to save changes", variant: "destructive" });
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   const tabs = [
@@ -140,7 +156,16 @@ export default function LabRedesign() {
             className="bg-white text-black hover:bg-white/90 font-bold px-4 rounded-lg transition-all active:scale-95 text-sm"
           >
             <Save className="w-3 h-3 mr-2" />
-            Publish
+            Save Changes
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleLogout}
+            className="text-white/40 hover:text-white"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
           </Button>
         </div>
       </header>
@@ -282,3 +307,4 @@ export default function LabRedesign() {
     </div>
   );
 }
+

@@ -73,14 +73,19 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("profile-lab-config", JSON.stringify(config));
   }, [config]);
 
-  const updateConfig = (partial: Partial<ProfileConfig>) =>
-    setConfig((prev) => ({ ...prev, ...partial }));
+  const updateConfig = (partial: Partial<ProfileConfig>) => {
+    setConfig((prev) => {
+      const newConfig = { ...prev, ...partial };
+      return newConfig;
+    });
+  };
 
-  const updateGeometry = (key: string, value: number) =>
+  const updateGeometry = (key: string, value: number) => {
     setConfig((prev) => ({
       ...prev,
       geometry: { ...prev.geometry, [key]: value },
     }));
+  };
 
   const updateTheme = (key: string, value: any) =>
     setConfig((prev) => ({

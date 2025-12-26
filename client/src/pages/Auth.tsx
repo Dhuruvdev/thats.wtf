@@ -17,7 +17,7 @@ export default function Auth() {
       if (isLogin) {
         // The field is labeled "Email" but the backend accepts both
         await login({ username: data.username, password: data.password });
-        setLocation("/lab");
+        window.location.href = "/lab";
       } else {
         await register({ username: data.username, email: data.email, password: data.password });
         toast({
