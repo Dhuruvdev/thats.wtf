@@ -41,3 +41,9 @@ waitForPort = 5000
 [agent]
 expertMode = true
 integrations = ["javascript_object_storage:2.0.0"]
+
+[userenv]
+
+[userenv.shared]
+DISCORD_CLIENT_ID = "1395808941107056832"
+DISCORD_CLIENT_SECRET = "nJZnilMaDhYuJxPTzkjCpk8gg09Yk6md"
