@@ -79,13 +79,14 @@ export async function setupAuth(app: Express) {
           callbackURL: `https://${process.env.REPLIT_DEV_DOMAIN || "thats.wtf"}/api/auth/discord/callback`,
           scope: ["identify", "email"],
         },
-        async (accessToken, refreshToken, profile, done) => {
+        async (_accessToken, _refreshToken, profile, done) => {
           try {
             let user = await storage.getUserByDiscordId(profile.id);
             if (!user) {
               // Try by email if discord didn't give id match
-              if (profile.email) {
-                user = await storage.getUserByEmail(profile.email);
+              const discordEmail = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
+              if (discordEmail) {
+                user = await storage.getUserByEmail(discordEmail);
               }
               
               if (user) {
@@ -95,10 +96,9 @@ export async function setupAuth(app: Express) {
                 // Create new user
                 user = await storage.createUser({
                   username: profile.username,
-                  email: profile.email || `${profile.id}@discord.com`,
+                  email: discordEmail || `${profile.id}@discord.com`,
                   password: randomBytes(16).toString("hex"), // Random password for OAuth users
                   discordId: profile.id,
-                  isEmailVerified: true,
                   themeConfig: {
                     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
                     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -202,7 +202,6 @@ export async function setupAuth(app: Express) {
         geometry: { radius: 40, blur: 20, opacity: 3 },
         entranceAnimation: "none",
         isPro: false,
-        isEmailVerified: true
       });
 
       req.login(user, (err) => {
