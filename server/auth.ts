@@ -30,6 +30,7 @@ export async function setupAuth(app: Express) {
   const store = new (pgSession(session))({
     pool,
     createTableIfMissing: true,
+    tableName: "session",
   });
 
   const sessionSettings: session.SessionOptions = {
