@@ -94,12 +94,12 @@ export async function sendVerificationEmail(email: string, token: string, userna
       <div class="wrapper">
         <div class="container">
           <div class="card">
-            <img src="${process.env.APP_URL || "https://lab.dev"}/icon.png" alt="Lab.dev" class="logo">
+            <img src="${process.env.APP_URL || "https://thats.wtf"}/icon.png" alt="thats.wtf" class="logo">
             <h1>Verify your identity</h1>
-            <p>Welcome to <strong>lab.dev</strong>, ${username}.<br>Confirm your email to unlock your high-fidelity profile.</p>
+            <p>Welcome to <strong>thats.wtf</strong>, ${username}.<br>Confirm your email to unlock your high-fidelity profile.</p>
             <a href="${verificationUrl}" class="button">Verify Email Address</a>
             <div class="footer">
-              lab.dev &copy; 2025
+              thats.wtf &copy; 2025
             </div>
             <div class="link-alt">
               ${verificationUrl}
@@ -113,9 +113,9 @@ export async function sendVerificationEmail(email: string, token: string, userna
 
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"Lab.dev" <noreply@lab.dev>',
+      from: process.env.SMTP_FROM || '"thats.wtf" <noreply@thats.wtf>',
       to: email,
-      subject: "Verify your lab.dev account",
+      subject: "Verify your thats.wtf account",
       html: htmlContent,
     });
     return true;

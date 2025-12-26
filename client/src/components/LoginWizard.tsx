@@ -174,7 +174,7 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
                         {isLogin ? <Mail className="w-[18px] h-[18px]" /> : <div className="text-[14px] font-black opacity-50">@</div>}
                       </div>
                       <Input
-                        placeholder={isLogin ? "Email" : "lab.dev/"}
+                        placeholder={isLogin ? "Email" : "thats.wtf/"}
                         {...field}
                         className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 focus:ring-purple-500/20 rounded-2xl pl-12 text-white font-medium placeholder:text-zinc-600 transition-all"
                         data-testid="input-username"
@@ -306,7 +306,7 @@ export function LoginWizard({ isLogin, onSubmit, isPending, error, onToggleMode 
         {/* Toggle Mode */}
         <div className="text-center pt-2">
           <p className="text-[15px] font-bold text-zinc-500">
-            {isLogin ? "Are you new to lab.dev? " : "Already have an account? "}
+            {isLogin ? "Are you new to thats.wtf? " : "Already have an account? "}
             <button
               type="button"
               onClick={onToggleMode}
