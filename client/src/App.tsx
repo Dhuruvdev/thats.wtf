@@ -54,12 +54,7 @@ function Router() {
       <Route path="/login" component={Auth} />
       <Route path="/register" component={Auth} />
       <Route path="/verify-email" component={VerifyEmail} />
-      <Route path="/profile/:username" component={Profile} />
-      <Route path="/u/:username" component={Profile} />
       <Route path="/user" component={ProfilePage} />
-      <Route path="/">
-        {user ? <LabRedesign /> : <Home />}
-      </Route>
       <Route path="/~">
         <ProtectedRoute component={AccountOverview} />
       </Route>
@@ -75,6 +70,10 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/:username" component={Profile} />
+      <Route path="/">
+        {user ? <LabRedesign /> : <Home />}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );

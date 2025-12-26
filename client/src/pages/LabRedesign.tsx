@@ -33,7 +33,7 @@ export default function LabRedesign() {
   };
 
   const handleFullScreen = () => {
-    window.open(`/profile/${config.displayName}`, "_blank");
+    window.open(`/${config.displayName}`, "_blank");
   };
 
   const handleImport = () => {

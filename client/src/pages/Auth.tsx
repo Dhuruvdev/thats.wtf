@@ -12,6 +12,11 @@ export default function Auth() {
   const { mutateAsync: register, isPending: isRegisterPending } = useRegister();
   const { toast } = useToast();
 
+  if (user) {
+    window.location.href = "/lab";
+    return null;
+  }
+
   const onSubmit = async (data: any) => {
     try {
       if (isLogin) {
