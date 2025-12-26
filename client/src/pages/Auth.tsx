@@ -1,4 +1,4 @@
-import { useLogin, useRegister } from "@/hooks/use-auth";
+import { useLogin, useRegister, useUser } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { LoginWizard } from "@/components/LoginWizard";
 import LoadingPage from "@/components/LoadingPage";
