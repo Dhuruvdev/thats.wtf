@@ -1,5 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as DiscordStrategy } from "passport-discord";
 import { Express } from "express";
 import session from "express-session";
 import pgSession from "connect-pg-simple";
@@ -68,6 +69,80 @@ export async function setupAuth(app: Express) {
       }
     }),
   );
+
+  if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
+    passport.use(
+      new DiscordStrategy(
+        {
+          clientID: process.env.DISCORD_CLIENT_ID,
+          clientSecret: process.env.DISCORD_CLIENT_SECRET,
+          callbackURL: "/api/auth/discord/callback",
+          scope: ["identify", "email"],
+        },
+        async (accessToken, refreshToken, profile, done) => {
+          try {
+            let user = await storage.getUserByDiscordId(profile.id);
+            if (!user) {
+              // Try by email if discord didn't give id match
+              if (profile.email) {
+                user = await storage.getUserByEmail(profile.email);
+              }
+              
+              if (user) {
+                // Link account
+                user = await storage.updateUser(user.id, { discordId: profile.id });
+              } else {
+                // Create new user
+                user = await storage.createUser({
+                  username: profile.username,
+                  email: profile.email || `${profile.id}@discord.com`,
+                  password: randomBytes(16).toString("hex"), // Random password for OAuth users
+                  discordId: profile.id,
+                  isEmailVerified: true,
+                  themeConfig: {
+                    background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
+                    cursor: { type: "default", color: "#ffffff", size: 24 },
+                    typography: { headingFont: "Space Grotesk", bodyFont: "Inter", displayNameFont: "Space Grotesk", bioFont: "Inter", accentColor: "#7c3aed", displayNameGlowColor: "#7c3aed" },
+                    motion: { intensity: 1, reduced: false },
+                    frameOverlay: { style: "glass", opacity: 0.5, blur: 10, color: "#7c3aed" },
+                    animations: {
+                      displayName: { enabled: true, type: "fade", duration: 0.6 },
+                      bio: { enabled: true, type: "fade", duration: 0.8 }
+                    },
+                    entranceMode: {
+                      enabled: true,
+                      type: "particles",
+                      text: "reveal"
+                    },
+                    screenEffects: {
+                      enabled: false,
+                      type: "none",
+                      intensity: 1
+                    }
+                  },
+                  geometry: { radius: 40, blur: 20, opacity: 3 },
+                  entranceAnimation: "none",
+                  isPro: false,
+                });
+              }
+            }
+            return done(null, user);
+          } catch (err) {
+            return done(err);
+          }
+        },
+      ),
+    );
+
+    app.get("/api/auth/discord", passport.authenticate("discord"));
+    app.get(
+      "/api/auth/discord/callback",
+      passport.authenticate("discord", {
+        successRedirect: "/lab",
+        failureRedirect: "/auth",
+      }),
+    );
+  }
 
   passport.serializeUser((user: any, done) => {
     done(null, user.id);
