@@ -59,6 +59,17 @@ async function buildAll() {
     external: externals,
     logLevel: "info",
   });
+
+  // Copy table.sql from connect-pg-simple to dist/
+  try {
+    const { copyFile, mkdir } = await import("fs/promises");
+    const { join } = await import("path");
+    const sqlPath = join(process.cwd(), "node_modules", "connect-pg-simple", "table.sql");
+    await copyFile(sqlPath, join("dist", "table.sql"));
+    console.log("Successfully copied table.sql to dist/");
+  } catch (err) {
+    console.error("Warning: Could not copy table.sql:", err);
+  }
 }
 
 buildAll().catch((err) => {
