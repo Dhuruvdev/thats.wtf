@@ -115,7 +115,12 @@ export async function setupAuth(app: Express) {
               
               if (user) {
                 // Link account
-                user = await storage.updateUser(user.id, { discordId: profile.id });
+                user = await storage.updateUser(user.id, { 
+                  discordId: profile.id,
+                  avatarUrl: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
+                  displayName: profile.global_name || profile.username,
+                  bio: (profile as any).bio || ""
+                });
               } else {
                 // Create new user
                 user = await storage.createUser({
@@ -123,6 +128,9 @@ export async function setupAuth(app: Express) {
                   email: discordEmail || `${profile.id}@discord.com`,
                   password: randomBytes(16).toString("hex"), // Random password for OAuth users
                   discordId: profile.id,
+                  avatarUrl: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
+                  displayName: profile.global_name || profile.username,
+                  bio: (profile as any).bio || "",
                   themeConfig: {
                     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
                     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -149,6 +157,30 @@ export async function setupAuth(app: Express) {
                   isPro: false,
                 });
               }
+
+              // Automatically add social link for Discord if not already present
+              const existingBlocks = await storage.getBlocksByUserId(user.id);
+              const discordBlock = existingBlocks.find(b => b.type === 'social' && (b.content as any).platform === 'discord');
+              if (!discordBlock) {
+                await storage.createBlock({
+                  userId: user.id,
+                  type: 'social',
+                  content: { 
+                    platform: 'discord', 
+                    username: profile.username,
+                    url: `https://discord.com/users/${profile.id}`
+                  },
+                  order: existingBlocks.length,
+                  visible: true
+                });
+              }
+            } else {
+              // Update profile data on every login
+              user = await storage.updateUser(user.id, {
+                avatarUrl: profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : null,
+                displayName: profile.global_name || profile.username,
+                bio: (profile as any).bio || user.bio // Keep existing bio if Discord has none
+              });
             }
             return done(null, user);
           } catch (err) {
