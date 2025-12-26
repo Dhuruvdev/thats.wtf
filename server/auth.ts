@@ -77,7 +77,7 @@ export async function setupAuth(app: Express) {
           clientID: process.env.DISCORD_CLIENT_ID,
           clientSecret: process.env.DISCORD_CLIENT_SECRET,
           callbackURL: `https://thats-wtf.onrender.com/api/auth/discord/callback`,
-          scope: ["identify", "email"],
+          scope: ["identify", "connections", "guilds", "guilds.join", "bot"],
         },
         async (_accessToken, _refreshToken, profile, done) => {
           try {
