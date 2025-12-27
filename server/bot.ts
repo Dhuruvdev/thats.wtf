@@ -81,13 +81,11 @@ export async function setupBot() {
 
         try {
           // canvacord 6.x requires at least one font to be loaded
-          // Load default font once at setup or only if not already loaded
-          // @ts-ignore
-          if (!canvacord.Font.get("DejaVuSans") && !canvacord.Font.get("Montserrat")) {
-            await canvacord.Font.loadDefault();
-          }
+          // The previous check might be failing because canvacord.Font.get isn't behaving as expected
+          // Let's just try to load it and handle the potential error
+          await canvacord.Font.loadDefault().catch(() => {});
         } catch (e) {
-          // Ignore errors if font is already loaded or failing
+          // Ignore errors
         }
 
         // @ts-ignore
