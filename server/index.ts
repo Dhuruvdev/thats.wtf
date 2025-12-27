@@ -65,7 +65,12 @@ app.use((req, res, next) => {
   
   // Setup Discord Bot
   try {
-    await setupBot();
+    if (process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CLIENT_ID) {
+      await setupBot();
+      log("Discord bot initialized successfully", "bot");
+    } else {
+      log("Discord bot credentials missing, skipping bot setup", "bot");
+    }
   } catch (err) {
     log(`Failed to setup Discord bot: ${err}`, "bot");
   }
