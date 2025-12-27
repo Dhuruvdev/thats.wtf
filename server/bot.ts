@@ -65,8 +65,20 @@ export async function setupBot() {
         }
 
         const domain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0] || "localhost:5000";
+        const avatarUrl = interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
+        
         await interaction.reply({ 
-          content: `🔗 **${user.displayName || user.username}'s Profile**\nhttps://${domain}/${user.username}`
+          content: `🔗 **${user.displayName || user.username}'s Profile**\nhttps://${domain}/${user.username}`,
+          embeds: [{
+            author: {
+              name: interaction.user.tag,
+              icon_url: avatarUrl
+            },
+            thumbnail: {
+              url: avatarUrl
+            },
+            color: 0x7c3aed
+          }]
         });
       } catch (error) {
         console.error("Error fetching profile link:", error);
