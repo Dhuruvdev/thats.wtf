@@ -72,22 +72,29 @@ export async function setupBot() {
         const card = new canvacord.RankCardBuilder()
           .setAvatar(avatar)
           .setCurrentXP(user.xp)
-          .setRequiredXP(user.level * 1000) // Estimate required XP based on level
+          .setRequiredXP(user.level * 1000)
           .setStatus("online")
           .setUsername(user.username)
           .setDisplayName(user.displayName || user.username)
           .setLevel(user.level)
-          .setRank(1)
-          .setStyles({
-            progressbar: {
-              thumb: {
-                style: {
-                  backgroundColor: accentColor
-                }
-              }
-            }
-          });
+          .setRank(1);
 
+        try {
+          // canvacord 6.x requires at least one font to be loaded
+          // Using a standard system font path for Linux environments
+          // @ts-ignore - canvacord types might be slightly off
+          await canvacord.Font.fromPath("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "DejaVuSans");
+        } catch (e) {
+          try {
+            // Fallback to a remote font if local font is missing
+            // @ts-ignore
+            await canvacord.Font.fromPath("https://github.com/google/fonts/raw/main/ofl/montserrat/Montserrat-Regular.ttf", "Montserrat");
+          } catch (err) {
+            console.error("Font loading failed:", err);
+          }
+        }
+
+        // @ts-ignore - build options types in canvacord 6.x
         const image = await card.build({ format: "png" });
         const attachment = new AttachmentBuilder(image, { name: "profile.png" });
         
