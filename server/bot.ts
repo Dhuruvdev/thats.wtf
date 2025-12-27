@@ -42,7 +42,7 @@ export async function setupBot() {
     log(`Logged in as ${client.user?.tag}!`, "bot");
   });
 
-  client.on("interactionCreate", async (interaction) => {
+    client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
     const { commandName } = interaction;
@@ -58,7 +58,9 @@ export async function setupBot() {
       await interaction.reply(`📊 **Stats for ${user.username}**\nLevel: ${user.level}\nXP: ${user.xp}\nViews: ${user.views}`);
     } else if (commandName === "profile") {
       try {
-        await interaction.deferReply();
+        if (!interaction.deferred && !interaction.replied) {
+          await interaction.deferReply();
+        }
         
         const user = await storage.getUserByDiscordId(interaction.user.id);
         if (!user) {
@@ -67,8 +69,7 @@ export async function setupBot() {
         }
 
         const avatar = interaction.user.displayAvatarURL({ extension: "png", size: 256 });
-        const accentColor = user.accentColor || "#7c3aed";
-
+        
         const card = new canvacord.RankCardBuilder()
           .setAvatar(avatar)
           .setCurrentXP(user.xp)
@@ -80,12 +81,9 @@ export async function setupBot() {
           .setRank(1);
 
         try {
-          // canvacord 6.x requires at least one font to be loaded
-          // The previous check might be failing because canvacord.Font.get isn't behaving as expected
-          // Let's just try to load it and handle the potential error
           await canvacord.Font.loadDefault().catch(() => {});
         } catch (e) {
-          // Ignore errors
+          // Ignore font loading errors if already loaded
         }
 
         // @ts-ignore
@@ -99,7 +97,11 @@ export async function setupBot() {
         });
       } catch (error) {
         console.error("Error generating profile card:", error);
-        await interaction.editReply("An error occurred while generating your profile card.");
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply("An error occurred while generating your profile card.");
+        } else {
+          await interaction.reply({ content: "An error occurred while generating your profile card.", ephemeral: true });
+        }
       }
     }
   });
