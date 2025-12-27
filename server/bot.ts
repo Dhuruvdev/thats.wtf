@@ -81,16 +81,13 @@ export async function setupBot() {
 
         try {
           // canvacord 6.x requires at least one font to be loaded
-          // Using a standard system font path for Linux environments
+          // Load default font once at setup or only if not already loaded
           // @ts-ignore
-          await canvacord.Font.loadDefault();
-        } catch (e) {
-          try {
-            // @ts-ignore
-            await canvacord.Font.fromPath("https://github.com/google/fonts/raw/main/ofl/montserrat/Montserrat-Regular.ttf", "Montserrat");
-          } catch (err) {
-            console.error("Font loading failed:", err);
+          if (!canvacord.Font.get("DejaVuSans") && !canvacord.Font.get("Montserrat")) {
+            await canvacord.Font.loadDefault();
           }
+        } catch (e) {
+          // Ignore errors if font is already loaded or failing
         }
 
         // @ts-ignore
