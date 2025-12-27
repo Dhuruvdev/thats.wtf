@@ -76,7 +76,7 @@ export async function setupBot() {
         // On Render, ensure your actual domain is set in these env vars if needed, 
         // or it will fallback to localhost which only works in local dev.
         const rawDomain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0];
-        const domain = rawDomain && !rawDomain.includes('localhost') ? rawDomain:`${domain}/${user.username}`;
+        const domain = rawDomain && !rawDomain.includes('localhost') ? rawDomain : (rawDomain || 'localhost');
         
         const avatarUrl = interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
         
