@@ -48,14 +48,22 @@ export async function setupBot() {
     const { commandName } = interaction;
 
     if (commandName === "ping") {
-      await interaction.reply("Pong!");
-    } else if (commandName === "stats") {
-      const user = await storage.getUserByDiscordId(interaction.user.id);
-      if (!user) {
-        await interaction.reply("You haven't linked your account yet! Visit the site to login with Discord.");
-        return;
+      try {
+        await interaction.reply("Pong!");
+      } catch (e) {
+        console.error("Ping error:", e);
       }
-      await interaction.reply(`📊 **Stats for ${user.username}**\nLevel: ${user.level}\nXP: ${user.xp}\nViews: ${user.views}`);
+    } else if (commandName === "stats") {
+      try {
+        const user = await storage.getUserByDiscordId(interaction.user.id);
+        if (!user) {
+          await interaction.reply("You haven't linked your account yet! Visit the site to login with Discord.");
+          return;
+        }
+        await interaction.reply(`📊 **Stats for ${user.username}**\nLevel: ${user.level}\nXP: ${user.xp}\nViews: ${user.views}`);
+      } catch (e) {
+        console.error("Stats error:", e);
+      }
     } else if (commandName === "profile") {
       try {
         const user = await storage.getUserByDiscordId(interaction.user.id);
@@ -64,7 +72,12 @@ export async function setupBot() {
           return;
         }
 
-        const domain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0] || "localhost:5000";
+        // Use REPLIT_DEV_DOMAIN or the first configured domain.
+        // On Render, ensure your actual domain is set in these env vars if needed, 
+        // or it will fallback to localhost which only works in local dev.
+        const rawDomain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0];
+        const domain = rawDomain && !rawDomain.includes('localhost') ? rawDomain : "lab.dev"; 
+        
         const avatarUrl = interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
         
         await interaction.reply({ 
@@ -82,7 +95,9 @@ export async function setupBot() {
         });
       } catch (error) {
         console.error("Error fetching profile link:", error);
-        await interaction.reply({ content: "An error occurred while fetching your profile link.", ephemeral: true });
+        if (!interaction.replied && !interaction.deferred) {
+          await interaction.reply({ content: "An error occurred while fetching your profile link.", ephemeral: true }).catch(() => {});
+        }
       }
     }
   });
