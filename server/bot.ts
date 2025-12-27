@@ -80,6 +80,11 @@ export async function setupBot() {
         
         const avatarUrl = interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
         
+        // Update user avatar in database if it's different
+        if (user.avatarUrl !== avatarUrl) {
+          await storage.updateUser(user.id, { avatarUrl });
+        }
+        
         await interaction.reply({ 
           content: `🔗 **${user.displayName || user.username}'s Profile**\nhttps://${domain}/${user.username}`,
           embeds: [{
