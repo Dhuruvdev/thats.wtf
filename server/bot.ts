@@ -58,50 +58,19 @@ export async function setupBot() {
       await interaction.reply(`📊 **Stats for ${user.username}**\nLevel: ${user.level}\nXP: ${user.xp}\nViews: ${user.views}`);
     } else if (commandName === "profile") {
       try {
-        if (!interaction.deferred && !interaction.replied) {
-          await interaction.deferReply();
-        }
-        
         const user = await storage.getUserByDiscordId(interaction.user.id);
         if (!user) {
-          await interaction.editReply("You haven't linked your account yet!");
+          await interaction.reply({ content: "You haven't linked your account yet! Visit the site to login with Discord.", ephemeral: true });
           return;
         }
 
-        const avatar = interaction.user.displayAvatarURL({ extension: "png", size: 256 });
-        
-        const card = new canvacord.RankCardBuilder()
-          .setAvatar(avatar)
-          .setCurrentXP(user.xp)
-          .setRequiredXP(user.level * 1000)
-          .setStatus("online")
-          .setUsername(user.username)
-          .setDisplayName(user.displayName || user.username)
-          .setLevel(user.level)
-          .setRank(1);
-
-        try {
-          await canvacord.Font.loadDefault().catch(() => {});
-        } catch (e) {
-          // Ignore font loading errors if already loaded
-        }
-
-        // @ts-ignore
-        const image = await card.build({ format: "png" });
-        const attachment = new AttachmentBuilder(image, { name: "profile.png" });
-        
         const domain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0] || "localhost:5000";
-        await interaction.editReply({ 
-          content: `🔗 View full profile: https://${domain}/u/${user.username}`,
-          files: [attachment] 
+        await interaction.reply({ 
+          content: `🔗 **${user.displayName || user.username}'s Profile**\nhttps://${domain}/u/${user.username}`
         });
       } catch (error) {
-        console.error("Error generating profile card:", error);
-        if (interaction.deferred || interaction.replied) {
-          await interaction.editReply("An error occurred while generating your profile card.");
-        } else {
-          await interaction.reply({ content: "An error occurred while generating your profile card.", ephemeral: true });
-        }
+        console.error("Error fetching profile link:", error);
+        await interaction.reply({ content: "An error occurred while fetching your profile link.", ephemeral: true });
       }
     }
   });
