@@ -71,11 +71,12 @@ export async function setupBot() {
 
         const card = new canvacord.RankCardBuilder()
           .setAvatar(avatar)
-          .setXP(user.xp)
+          .setCurrentXP(user.xp)
           .setRequiredXP(user.level * 1000) // Estimate required XP based on level
           .setStatus("online")
-          .setProgressBar(accentColor, "COLOR")
-          .setUsername(user.displayName || user.username)
+          .setProgressBar(accentColor)
+          .setUsername(user.username)
+          .setDisplayName(user.displayName || user.username)
           .setDiscriminator("0000")
           .setLevel(user.level)
           .setRank(1);
