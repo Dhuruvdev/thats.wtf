@@ -66,7 +66,7 @@ export async function setupBot() {
 
         const domain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0] || "localhost:5000";
         await interaction.reply({ 
-          content: `🔗 **${user.displayName || user.username}'s Profile**\nhttps://${domain}/u/${user.username}`
+          content: `🔗 **${user.displayName || user.username}'s Profile**\nhttps://${domain}/${user.username}`
         });
       } catch (error) {
         console.error("Error fetching profile link:", error);
