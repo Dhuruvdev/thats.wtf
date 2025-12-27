@@ -307,15 +307,26 @@ export function LabProfilePreview({
                 discordConnections.map((conn) => {
                   const platform = PLATFORM_ICONS[conn.type] || { icon: SiDiscord, color: "#ffffff" };
                   const Icon = platform.icon;
+                  // Map platform type to actual URL if possible
+                  let url = "#";
+                  if (conn.type === 'github') url = `https://github.com/${conn.name}`;
+                  if (conn.type === 'twitter') url = `https://twitter.com/${conn.name}`;
+                  if (conn.type === 'twitch') url = `https://twitch.tv/${conn.name}`;
+                  if (conn.type === 'youtube') url = `https://youtube.com/channel/${conn.id}`;
+                  if (conn.type === 'instagram') url = `https://instagram.com/${conn.name}`;
+                  if (conn.type === 'tiktok') url = `https://tiktok.com/@${conn.name}`;
+                  
                   return (
                     <a 
                       key={conn.id}
-                      href="#" 
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-white/30 transition-all duration-300 hover:scale-125"
                       style={{ '--hover-color': platform.color } as any}
                       onMouseEnter={(e) => (e.currentTarget.style.color = platform.color)}
                       onMouseLeave={(e) => (e.currentTarget.style.color = '')}
-                      title={conn.name}
+                      title={`${conn.type}: ${conn.name}`}
                     >
                        <Icon className="w-6 h-6" />
                     </a>
