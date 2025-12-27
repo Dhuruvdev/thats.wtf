@@ -69,18 +69,18 @@ export async function setupBot() {
         const avatar = interaction.user.displayAvatarURL({ extension: "png", size: 256 });
         const accentColor = user.accentColor || "#7c3aed";
 
-        const card = new canvacord.Rank()
+        const card = new canvacord.RankCardBuilder()
           .setAvatar(avatar)
-          .setCurrentXP(user.xp)
+          .setXP(user.xp)
           .setRequiredXP(user.level * 1000) // Estimate required XP based on level
           .setStatus("online")
           .setProgressBar(accentColor, "COLOR")
           .setUsername(user.displayName || user.username)
           .setDiscriminator("0000")
           .setLevel(user.level)
-          .setRank(1, "RANK", false);
+          .setRank(1);
 
-        const image = await card.build();
+        const image = await card.build({ format: "png" });
         const attachment = new AttachmentBuilder(image, { name: "profile.png" });
         
         const domain = process.env.REPLIT_DEV_DOMAIN || "localhost:5000";
