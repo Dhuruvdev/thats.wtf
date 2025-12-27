@@ -72,6 +72,7 @@ export default function Profile() {
           geometry={profile.geometry || { radius: 40, blur: 20, opacity: 3 }}
           entranceAnimation={profile.entranceAnimation || "none"}
           decorations={(profile as any).decorations || []}
+          discordConnections={(profile as any).discordConnections || []}
         />
       </div>
     </div>

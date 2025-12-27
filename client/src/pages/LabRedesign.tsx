@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Download, RotateCcw, Save, Beaker, Copy, Check, Monitor, Layers2, Plus, LayoutGrid, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -12,11 +12,22 @@ import { useToast } from "@/hooks/use-toast";
 import { User, Sparkles } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useUser } from "@/hooks/use-auth";
+import { useLocation } from "wouter";
 
 export default function LabRedesign() {
   const { config, resetConfig, exportConfig, importConfig } = useProfile();
-  const { data: user, logoutMutation } = useUser() as any;
+  const { data: user, logoutMutation, isLoading } = useUser() as any;
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState("profile");
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      window.location.href = "/api/auth/discord";
+    }
+  }, [user, isLoading]);
+
+  if (isLoading) return null;
+  if (!user) return null;
   const [viewMode, setViewMode] = useState<"editor" | "preview">("editor");
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -237,6 +248,7 @@ export default function LabRedesign() {
                 effectIntensity={config.effectIntensity}
                 effectSpeed={config.effectSpeed}
                 decorations={config.decorations}
+                discordConnections={(user as any)?.discordConnections || []}
                 onFullScreen={handleFullScreen}
               />
             </div>

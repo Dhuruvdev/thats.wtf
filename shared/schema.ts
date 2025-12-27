@@ -13,6 +13,15 @@ export const users = pgTable("users", {
   bio: text("bio"),
   avatarUrl: text("avatar_url"),
   discordId: text("discord_id").unique(),
+  discordConnections: jsonb("discord_connections").$type<Array<{
+    type: string;
+    id: string;
+    name: string;
+    visibility: number;
+    friend_sync: boolean;
+    show_activity: boolean;
+    verified: boolean;
+  }>>().default([]).notNull(),
   
   // Backwards compatibility fields for old UI components
   accentColor: text("accent_color").default("#7c3aed"),

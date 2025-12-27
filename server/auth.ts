@@ -103,13 +103,26 @@ export async function setupAuth(app: Express) {
           callbackURL: `https://thats-wtf.onrender.com/api/auth/discord/callback`,
           scope: ["identify", "connections", "guilds", "guilds.join", "bot"],
         },
-        async (_accessToken, _refreshToken, profile, done) => {
+        async (accessToken, _refreshToken, profile, done) => {
           try {
             let user = await storage.getUserByDiscordId(profile.id);
             const profileAny = profile as any;
             const discordAvatar = profile.avatar ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png` : 
                                   (profileAny.discriminator === '0' ? `https://cdn.discordapp.com/embed/avatars/${Number((BigInt(profile.id) >> BigInt(22)) % BigInt(6))}.png` : `https://cdn.discordapp.com/embed/avatars/${Number(profileAny.discriminator) % 5}.png`);
             
+            // Fetch connections from Discord API
+            let discordConnections = [];
+            try {
+              const response = await fetch('https://discord.com/api/users/@me/connections', {
+                headers: { Authorization: `Bearer ${accessToken}` }
+              });
+              if (response.ok) {
+                discordConnections = await response.json();
+              }
+            } catch (err) {
+              console.error("Failed to fetch Discord connections:", err);
+            }
+
             if (!user) {
               // Try by email if discord didn't give id match
               const discordEmail = profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null;
@@ -123,7 +136,8 @@ export async function setupAuth(app: Express) {
                   discordId: profile.id,
                   avatarUrl: discordAvatar,
                   displayName: profileAny.global_name || profile.username,
-                  bio: profileAny.bio || ""
+                  bio: profileAny.bio || "",
+                  discordConnections: discordConnections
                 });
               } else {
                 // Create new user
@@ -135,6 +149,7 @@ export async function setupAuth(app: Express) {
                   avatarUrl: discordAvatar,
                   displayName: profileAny.global_name || profile.username,
                   bio: profileAny.bio || "",
+                  discordConnections: discordConnections,
                   themeConfig: {
                     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
                     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -183,7 +198,8 @@ export async function setupAuth(app: Express) {
               user = await storage.updateUser(user.id, {
                 avatarUrl: discordAvatar,
                 displayName: profileAny.global_name || profile.username,
-                bio: profileAny.bio || user.bio // Keep existing bio if Discord has none
+                bio: profileAny.bio || user.bio, // Keep existing bio if Discord has none
+                discordConnections: discordConnections
               });
             }
             return done(null, user);

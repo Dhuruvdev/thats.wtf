@@ -1,5 +1,5 @@
 import { Eye, Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
-import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat } from "react-icons/si";
+import { SiInstagram, SiThreads, SiRoblox, SiSpotify, SiSnapchat, SiDiscord, SiTwitch, SiYoutube, SiX, SiGithub, SiTiktok } from "react-icons/si";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import stockAvatar from '@assets/stock_images/professional_portrai_594a4b95.jpg';
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,26 @@ interface LabProfilePreviewProps {
   effectIntensity?: number;
   effectSpeed?: number;
   decorations?: string[];
+  discordConnections?: Array<{
+    type: string;
+    id: string;
+    name: string;
+    verified: boolean;
+  }>;
   onFullScreen?: () => void;
 }
+
+const PLATFORM_ICONS: Record<string, any> = {
+  spotify: { icon: SiSpotify, color: "#1DB954" },
+  discord: { icon: SiDiscord, color: "#5865F2" },
+  twitch: { icon: SiTwitch, color: "#9146FF" },
+  youtube: { icon: SiYoutube, color: "#FF0000" },
+  twitter: { icon: SiX, color: "#ffffff" },
+  github: { icon: SiGithub, color: "#ffffff" },
+  instagram: { icon: SiInstagram, color: "#E4405F" },
+  tiktok: { icon: SiTiktok, color: "#ff0050" },
+  roblox: { icon: SiRoblox, color: "#00A2FF" },
+};
 
 export function LabProfilePreview({
   username = "Alex Rivera",
@@ -40,6 +58,7 @@ export function LabProfilePreview({
   effectIntensity = 1,
   effectSpeed = 1,
   decorations = [],
+  discordConnections = [],
   onFullScreen,
 }: LabProfilePreviewProps) {
   const displayAvatar = avatarUrl || stockAvatar;
@@ -283,22 +302,44 @@ export function LabProfilePreview({
             </div>
 
             {/* Social Icons Array */}
-            <div className="flex items-center justify-center gap-7 mb-12">
-              <a href="#" className="text-white/30 hover:text-[#1DB954] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(29,185,84,0.4)]" data-testid="link-spotify">
-                 <SiSpotify className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-white/30 hover:text-[#E4405F] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(228,64,95,0.4)]" data-testid="link-instagram">
-                 <SiInstagram className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-white/30 hover:text-[#FFFC00] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(255,252,0,0.4)]" data-testid="link-snapchat">
-                 <SiSnapchat className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-white/30 hover:text-white transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" data-testid="link-threads">
-                 <SiThreads className="w-6 h-6" />
-              </a>
-              <a href="#" className="text-white/30 hover:text-[#00A2FF] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(0,162,255,0.4)]" data-testid="link-roblox">
-                 <SiRoblox className="w-6 h-6" />
-              </a>
+            <div className="flex items-center justify-center flex-wrap gap-7 mb-12">
+              {discordConnections.length > 0 ? (
+                discordConnections.map((conn) => {
+                  const platform = PLATFORM_ICONS[conn.type] || { icon: SiDiscord, color: "#ffffff" };
+                  const Icon = platform.icon;
+                  return (
+                    <a 
+                      key={conn.id}
+                      href="#" 
+                      className="text-white/30 transition-all duration-300 hover:scale-125"
+                      style={{ '--hover-color': platform.color } as any}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = platform.color)}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+                      title={conn.name}
+                    >
+                       <Icon className="w-6 h-6" />
+                    </a>
+                  );
+                })
+              ) : (
+                <>
+                  <a href="#" className="text-white/30 hover:text-[#1DB954] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(29,185,84,0.4)]" data-testid="link-spotify">
+                     <SiSpotify className="w-6 h-6" />
+                  </a>
+                  <a href="#" className="text-white/30 hover:text-[#E4405F] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(228,64,95,0.4)]" data-testid="link-instagram">
+                     <SiInstagram className="w-6 h-6" />
+                  </a>
+                  <a href="#" className="text-white/30 hover:text-[#FFFC00] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(255,252,0,0.4)]" data-testid="link-snapchat">
+                     <SiSnapchat className="w-6 h-6" />
+                  </a>
+                  <a href="#" className="text-white/30 hover:text-white transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]" data-testid="link-threads">
+                     <SiThreads className="w-6 h-6" />
+                  </a>
+                  <a href="#" className="text-white/30 hover:text-[#00A2FF] transition-all duration-300 hover:scale-125 hover:drop-shadow-[0_0_12px_rgba(0,162,255,0.4)]" data-testid="link-roblox">
+                     <SiRoblox className="w-6 h-6" />
+                  </a>
+                </>
+              )}
             </div>
 
             {/* Views Counter */}
