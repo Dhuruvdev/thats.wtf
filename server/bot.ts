@@ -74,12 +74,19 @@ export async function setupBot() {
           .setCurrentXP(user.xp)
           .setRequiredXP(user.level * 1000) // Estimate required XP based on level
           .setStatus("online")
-          .setProgressBar(accentColor)
           .setUsername(user.username)
           .setDisplayName(user.displayName || user.username)
-          .setDiscriminator("0000")
           .setLevel(user.level)
-          .setRank(1);
+          .setRank(1)
+          .setStyles({
+            progressbar: {
+              thumb: {
+                style: {
+                  backgroundColor: accentColor
+                }
+              }
+            }
+          });
 
         const image = await card.build({ format: "png" });
         const attachment = new AttachmentBuilder(image, { name: "profile.png" });
