@@ -92,9 +92,9 @@ export async function setupBot() {
         const image = await card.build({ format: "png" });
         const attachment = new AttachmentBuilder(image, { name: "profile.png" });
         
-        const domain = process.env.REPLIT_DEV_DOMAIN || "localhost:5000";
+        const domain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0] || "localhost:5000";
         await interaction.editReply({ 
-          content: `🔗 View full profile: https://${domain}/${user.username}`,
+          content: `🔗 View full profile: https://${domain}/u/${user.username}`,
           files: [attachment] 
         });
       } catch (error) {
