@@ -15,7 +15,7 @@ import { useUser } from "@/hooks/use-auth";
 
 export default function LabRedesign() {
   const { config, resetConfig, exportConfig, importConfig } = useProfile();
-  const { logoutMutation } = useUser();
+  const { data: user, logoutMutation } = useUser() as any;
   const [activeTab, setActiveTab] = useState("profile");
   const [viewMode, setViewMode] = useState<"editor" | "preview">("editor");
   const [isMobilePreview, setIsMobilePreview] = useState(false);

@@ -4,6 +4,8 @@ import { ProfileRenderer } from "@/components/ProfileRenderer";
 import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { LabProfilePreview } from "@/components/LabProfilePreview";
+import { Navigation } from "@/components/Navigation";
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
@@ -15,11 +17,10 @@ export default function Profile() {
     videoUrl: "",
     videoVolume: 0.5,
     videoPlaying: true,
-    audioUrl: "",
+    audioUrl: undefined as string | undefined,
     audioVolume: 0.3,
     audioDuration: 0,
   });
-
 
   useEffect(() => {
     if (username) {
@@ -32,9 +33,9 @@ export default function Profile() {
     if (profile?.audioUrl) {
       setMedia((prev) => ({
         ...prev,
-        audioUrl: profile.audioUrl,
+        audioUrl: profile.audioUrl as string,
         audioPlaying: true,
-      }));
+      } as any));
     }
   }, [profile?.audioUrl]);
 
