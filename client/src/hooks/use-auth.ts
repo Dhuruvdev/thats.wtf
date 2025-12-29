@@ -1,17 +1,29 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
 
 export function useUser() {
   return useQuery({
     queryKey: ["/api/user"],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return null;
-      const res = await fetch(`/api/users/profile/${encodeURIComponent(session.user.email || "")}`);
-      if (!res.ok) return null;
-      return res.json();
+      try {
+        // Check for active Supabase session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error || !session) return null;
+        
+        const email = session.user?.email;
+        if (!email) return null;
+        
+        const res = await fetch(`/api/users/profile/${encodeURIComponent(email)}`);
+        if (!res.ok) return null;
+        return res.json();
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        return null;
+      }
     },
-    retry: false,
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }
 
