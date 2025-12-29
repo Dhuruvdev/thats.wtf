@@ -124,6 +124,7 @@ export const users = pgTable("users", {
   backgroundEffect: text("background_effect").default("none"),
   cursorEffect: text("cursor_effect").default("none"),
   effectIntensity: integer("effect_intensity").default(1),
+  supabaseId: text("supabase_id").unique(),
 
   logicRules: jsonb("logic_rules").$type<Array<{
     trigger: "mobile" | "night" | "idle" | "scroll" | "returning";

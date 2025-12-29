@@ -6,10 +6,10 @@ export const loader = async () => {
 };
 
 export default function Index() {
-  const { message } = useLoaderData<typeof loader>();
+  const data = useLoaderData() as { message: string };
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>{message}</h1>
+      <h1>{data.message}</h1>
     </div>
   );
 }

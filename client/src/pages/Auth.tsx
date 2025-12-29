@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { SiDiscord } from "react-icons/si";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 export default function Auth() {
   const { data: user } = useUser();
@@ -16,12 +17,24 @@ export default function Auth() {
   const { toast } = useToast();
 
   if (user) {
-    window.location.href = "/lab";
+    setLocation("/lab");
     return null;
   }
 
-  const handleDiscordLogin = () => {
-    window.location.href = "/api/auth/discord";
+  const handleDiscordLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'discord',
+      options: {
+        redirectTo: window.location.origin + '/lab'
+      }
+    });
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Auth Error",
+        description: error.message
+      });
+    }
   };
 
   const onSubmit = async (data: any) => {

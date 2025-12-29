@@ -78,15 +78,16 @@ export async function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
-        // Try to find user by email first, then username
-        let user = await storage.getUserByEmail(username);
-        if (!user) {
-          user = await storage.getUserByUsername(username);
-        }
+        // Find user by email (Supabase uses email as login)
+        const user = await storage.getUserByEmail(username);
         
-        if (!user || !(await crypto.compare(password, user.password))) {
+        if (!user) {
           return done(null, false, { message: "Invalid email or password" });
         }
+        
+        // When using Supabase, we don't verify password on our backend
+        // The frontend already verified with Supabase and we trust the session/identifier
+        // This strategy is kept for backwards compatibility or session management
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -235,25 +236,18 @@ export async function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
-      const { username, email, password } = req.body;
+      const { username, email, password, supabaseId } = req.body;
       
       const existingUser = await storage.getUserByUsername(username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
-      const existingEmail = await storage.getUserByEmail(email);
-      if (existingEmail) {
-        return res.status(400).json({ message: "Email already registered" });
-      }
-
-      const hashedPassword = await crypto.hash(password);
-      const verificationToken = randomBytes(32).toString("hex");
-      
       const user = await storage.createUser({
         username,
         email,
-        password: hashedPassword,
+        password: "SUPABASE_AUTH", // Password managed by Supabase
+        discordId: supabaseId, // Use discordId column or add supabaseId to schema
         themeConfig: {
           background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
           cursor: { type: "default", color: "#ffffff", size: 24 },

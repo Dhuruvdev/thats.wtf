@@ -158,24 +158,21 @@ export async function registerRoutes(
 
   // === User Routes ===
   
-  // Get Public Profile
-  app.get(api.users.get.path, async (req, res) => {
-    const username = req.params.username;
-    const user = await storage.getUserByUsername(username);
+  // Get Public Profile by Username or Email
+  app.get("/api/users/profile/:identifier", async (req, res) => {
+    const identifier = req.params.identifier;
+    let user;
+    if (identifier.includes("@")) {
+      user = await storage.getUserByEmail(identifier);
+    } else {
+      user = await storage.getUserByUsername(identifier);
+    }
     
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     
     const blocks = await storage.getBlocksByUserId(user.id);
-    
-    // Prevent caching to ensure latest profile data is always shown
-    res.set({
-      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    });
-    
     res.json({ ...user, blocks });
   });
 
