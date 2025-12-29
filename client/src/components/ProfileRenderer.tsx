@@ -47,7 +47,17 @@ function getFrameStyles(activeTheme: any): string {
   return css;
 }
 
+import { AuroraEffect } from "./effects/AuroraEffect";
+import { SparkleEffect } from "./effects/SparkleEffect";
+import { FloatingParticlesEffect } from "./effects/FloatingParticlesEffect";
+import { StarsEffect } from "./effects/StarsEffect";
+import { RainEffect } from "./effects/RainEffect";
 import { ProfileOverlays } from "@/components/ProfileOverlays";
+
+interface ProfileRendererProps {
+  user: any;
+  blocks: any[];
+}
 
 export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,6 +68,19 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const renderProfileEffect = () => {
+    const effect = (user as any).profileEffect;
+    const intensity = (user as any).effectIntensity || 1;
+    switch (effect) {
+      case "aura": return <AuroraEffect intensity={intensity} />;
+      case "sparkles": return <SparkleEffect intensity={intensity} />;
+      case "particles": return <FloatingParticlesEffect intensity={intensity} />;
+      case "stars": return <StarsEffect intensity={intensity} />;
+      case "rain": return <RainEffect intensity={intensity} />;
+      default: return null;
+    }
+  };
 
   // Resolve media URLs to absolute paths for iframe compatibility
   const backgroundUrl = useMemo(() => resolveMediaUrl(user.backgroundUrl), [user.backgroundUrl]);
@@ -242,6 +265,7 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
         ...getScreenEffectStyles()
       }}
     >
+      {renderProfileEffect()}
       <ProfileOverlays activeOverlay={user.entranceAnimation as any} showSelector={false} />
 
       {/* Pixel Border Overlay */}

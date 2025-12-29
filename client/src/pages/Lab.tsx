@@ -37,6 +37,7 @@ import { MediaPlayer } from "@/components/MediaPlayer";
 import { CursorCustomizer } from "@/components/CursorCustomizer";
 import { FontCustomizer } from "@/components/FontCustomizer";
 import { DecorationsPanel } from "@/components/DecorationsPanel";
+import { useToast } from "@/hooks/use-toast";
 
 const blockSchema = insertBlockSchema.omit({ userId: true });
 
@@ -187,12 +188,15 @@ export default function Lab() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full grid grid-cols-4 bg-[#121212] p-1.5 rounded-2xl border border-white/5">
+            <TabsList className="w-full grid grid-cols-5 bg-[#121212] p-1.5 rounded-2xl border border-white/5">
               <TabsTrigger value="content" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
                 Content
               </TabsTrigger>
               <TabsTrigger value="design" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
                 Design
+              </TabsTrigger>
+              <TabsTrigger value="customization" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
+                Customization
               </TabsTrigger>
               <TabsTrigger value="media" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
                 Assets
@@ -201,6 +205,17 @@ export default function Lab() {
                 Connections
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="customization" className="mt-6">
+              <DecorationsPanel 
+                onUpdate={(data) => updateProfile(data)} 
+                profileEffect={(profile as any).profileEffect}
+                backgroundEffect={(profile as any).backgroundEffect}
+                cursorEffect={(profile as any).cursorEffect}
+                cursorUrl={(profile as any).cursorUrl}
+                effectIntensity={(profile as any).effectIntensity}
+              />
+            </TabsContent>
 
             {/* CONTENT TAB (Blocks + Identity) */}
             <TabsContent value="content" className="space-y-6 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">

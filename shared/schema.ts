@@ -43,6 +43,7 @@ export const users = pgTable("users", {
       type: "default" | "custom" | "fluid";
       color: string;
       size: number;
+      url?: string;
     };
     typography: {
       headingFont: string;
@@ -84,6 +85,11 @@ export const users = pgTable("users", {
       type: "none" | "cinema" | "bloom" | "vignette" | "neon" | "phosphor" | "chromatic" | "minimal";
       intensity: number;
     };
+    profileEffects: {
+      id: string;
+      enabled: boolean;
+      intensity: number;
+    }[];
   }>().default({
     background: { type: "static", value: "#000000", overlayOpacity: 0.5, blur: 0 },
     cursor: { type: "default", color: "#ffffff", size: 24 },
@@ -103,7 +109,8 @@ export const users = pgTable("users", {
       enabled: false,
       type: "none",
       intensity: 1
-    }
+    },
+    profileEffects: []
   }).notNull(),
 
   geometry: jsonb("geometry").$type<{
@@ -113,6 +120,10 @@ export const users = pgTable("users", {
   }>().default({ radius: 40, blur: 20, opacity: 3 }),
 
   entranceAnimation: text("entrance_animation").default("none"),
+  profileEffect: text("profile_effect").default("none"),
+  backgroundEffect: text("background_effect").default("none"),
+  cursorEffect: text("cursor_effect").default("none"),
+  effectIntensity: integer("effect_intensity").default(1),
 
   logicRules: jsonb("logic_rules").$type<Array<{
     trigger: "mobile" | "night" | "idle" | "scroll" | "returning";
