@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web", "postgresql-16"]
+modules = ["nodejs-20", "web"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
@@ -45,6 +45,5 @@ integrations = ["javascript_object_storage:2.0.0"]
 [userenv]
 
 [userenv.shared]
-DISCORD_CLIENT_ID = "1395808941107056832"
-DISCORD_CLIENT_SECRET = "nJZnilMaDhYuJxPTzkjCpk8gg09Yk6md"
-DATABASE_URL = "psql 'postgresql://neondb_owner:npg_Ta9lr4znXsPf@ep-snowy-waterfall-a4rsx4w3-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+VITE_SUPABASE_URL = "https://luqzvaykgcfmfpprywes.supabase.co"
+VITE_SUPABASE_ANON_KEY = "sb_publishable_FU6Pj6U1kVu5kg1NEm0JXw_6taio2vE"
