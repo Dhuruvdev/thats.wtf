@@ -11,7 +11,7 @@ import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
 import VerifyEmail from "@/pages/VerifyEmail";
 import Profile from "@/pages/Profile";
-import Lab from "@/pages/Lab";
+import Lab from "@/pages/LabRedesign";
 import Templates from "@/pages/Templates";
 import Analytics from "@/pages/Analytics";
 import CardNavDemo from "@/pages/CardNavDemo";
@@ -23,7 +23,6 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Loading from "@/pages/Loading";
 import ProfileCardDemo from "@/pages/ProfileCardDemo";
-import LabRedesign from "@/pages/LabRedesign";
 import ProfilePage from "@/pages/ProfilePage";
 
 import LoadingPage from "@/components/LoadingPage";
@@ -59,7 +58,7 @@ function Router() {
         <ProtectedRoute component={AccountOverview} />
       </Route>
       <Route path="/lab">
-        <ProtectedRoute component={LabRedesign} />
+        <ProtectedRoute component={Lab} />
       </Route>
       <Route path="/templates" component={Templates} />
       <Route path="/analytics">
@@ -72,7 +71,7 @@ function Router() {
       <Route path="/privacy" component={Privacy} />
       <Route path="/:username" component={Profile} />
       <Route path="/">
-        {user ? <LabRedesign /> : <Home />}
+        {user ? <Lab /> : <Home />}
       </Route>
       <Route component={NotFound} />
     </Switch>

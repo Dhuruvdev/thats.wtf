@@ -1,915 +1,325 @@
-import { useUser } from "@/hooks/use-auth";
-import { useUpdateProfile, useCreateLink, useDeleteLink, useProfile } from "@/hooks/use-profile";
-import { Navigation } from "@/components/Navigation";
-import { ProfileRenderer } from "@/components/ProfileRenderer";
-import { BackgroundMediaManager } from "@/components/BackgroundMediaManager";
-import { ProfileOverlays } from "@/components/ProfileOverlays";
-import { MediaTab } from "@/components/MediaTab";
-import { IdentityCard } from "@/components/IdentityCard";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useLocation } from "wouter";
-import { Loader2, Plus, Trash2, Wand2, Link as LinkIcon, Palette, ExternalLink, Upload, Type, Sparkles, Settings, Zap } from "lucide-react";
-import { SiDiscord, SiX, SiGithub, SiInstagram, SiSpotify, SiYoutube, SiTiktok, SiTwitch } from "react-icons/si";
 import { useState, useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { insertBlockSchema } from "@shared/schema";
-import { z } from "zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { motion } from "framer-motion";
-import Lenis from "lenis";
-
-import LoadingPage from "@/components/LoadingPage";
-import { MediaPlayer } from "@/components/MediaPlayer";
-import { CursorCustomizer } from "@/components/CursorCustomizer";
-import { FontCustomizer } from "@/components/FontCustomizer";
-import { DecorationsPanel } from "@/components/DecorationsPanel";
+import { Download, RotateCcw, Save, Beaker, Copy, Check, Monitor, Layers2, Plus, LayoutGrid, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { LabProfilePreview } from "@/components/LabProfilePreview";
+import { ProfileTabFull } from "@/components/ProfileTabFull";
+import { DesignTab } from "@/components/DesignTab";
+import { ThemeTab } from "@/components/ThemeTab";
+import { LayoutTab } from "@/components/LayoutTab";
+import { useProfile } from "@/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
-
-const blockSchema = insertBlockSchema.omit({ userId: true });
+import { User, Sparkles } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
+import { useUser } from "@/hooks/use-auth";
+import { useLocation } from "wouter";
 
 export default function Lab() {
-  const { data: user, isLoading: isUserLoading } = useUser();
+  const { config, resetConfig, exportConfig, importConfig } = useProfile();
+  const { data: user, logoutMutation, isLoading } = useUser() as any;
   const [, setLocation] = useLocation();
-  
-  // Initialize smooth scrolling with Lenis
+  const [activeTab, setActiveTab] = useState("profile");
+
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-    } as any);
-
-    const raf = (time: number) => {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    };
-    
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
-  }, []);
-  
-  if (!isUserLoading && !user) {
-    setLocation("/login");
-    return null;
-  }
-
-  const { data: profile } = useProfile(user?.username || "");
-  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
-  const { mutate: createLink, isPending: isCreating } = useCreateLink();
-  const { mutate: deleteLink, isPending: isDeleting } = useDeleteLink();
-
-  const [activeTab, setActiveTab] = useState("content");
-  const [displayName, setDisplayName] = useState(profile?.displayName || "");
-  const [bio, setBio] = useState(profile?.bio || "");
-  const dragRef = useRef<HTMLDivElement>(null);
-  const [backgroundUrl, setBackgroundUrl] = useState<string>("");
-  const [audioUrl, setAudioUrl] = useState<string>("");
-  const [activeOverlay, setActiveOverlay] = useState<"none" | "snowfall" | "particles" | "sparkles" | "aurora" | "rain" | "floating-orbs" | "light-streaks">("none");
-  
-  // Lab-specific media state (supports GIFs, video, and audio)
-  const [media, setMedia] = useState({
-    videoUrl: "",
-    videoVolume: 0.5,
-    videoPlaying: false,
-    audioUrl: "",
-    audioVolume: 0.5,
-    audioDuration: 0,
-  });
-
-  // Update state when profile loads
-  useEffect(() => {
-    if (profile) {
-      setDisplayName(profile.displayName || "");
-      setBio(profile.bio || "");
+    if (!isLoading && !user) {
+      window.location.href = "/api/auth/discord";
     }
-  }, [profile?.displayName, profile?.bio]);
+  }, [user, isLoading]);
 
-  const FONTS = [
-    { name: "Space Grotesk", value: "Space Grotesk" },
-    { name: "Inter", value: "Inter" },
-    { name: "Poppins", value: "Poppins" },
-    { name: "Playfair Display", value: "Playfair Display" },
-  ];
+  if (isLoading) return null;
+  if (!user) return null;
+  const [viewMode, setViewMode] = useState<"editor" | "preview">("editor");
+  const [isMobilePreview, setIsMobilePreview] = useState(false);
+  const [showExport, setShowExport] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const importInputRef = useRef<HTMLTextAreaElement>(null);
+  const { toast } = useToast();
 
-  const PREMADE_CURSORS = [
-    { name: "Default", value: "default" },
-    { name: "Pointer", value: "pointer" },
-    { name: "Hand", value: "grab" },
-    { name: "Text", value: "text" },
-  ];
-
-  const DECORATIONS = [
-    { id: "glow", name: "Glow Effect" },
-    { id: "particles", name: "Floating Particles" },
-    { id: "gradient", name: "Gradient Overlay" },
-    { id: "shimmer", name: "Shimmer Effect" },
-  ];
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    dragRef.current?.classList.add("opacity-60");
+  const handleExport = () => {
+    const json = exportConfig();
+    navigator.clipboard.writeText(json);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDragLeave = () => {
-    dragRef.current?.classList.remove("opacity-60");
+  const handleFullScreen = () => {
+    window.open(`/${config.displayName}`, "_blank");
   };
 
-  const handleFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    dragRef.current?.classList.remove("opacity-60");
-    const files = Array.from(e.dataTransfer.files);
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append("file", file);
-      try {
-        const res = await fetch("/api/upload", { method: "POST", body: formData });
-        const data = await res.json();
-        if (file.type.startsWith("image/") || file.type === "image/gif") {
-          setBackgroundUrl(data.url);
-          // Persist background image/gif to database
-          updateProfile({ backgroundUrl: data.url });
-        } else if (file.type.startsWith("audio/")) {
-          setAudioUrl(data.url);
-          // Persist audio to database
-          updateProfile({ audioUrl: data.url });
-        }
-      } catch (error) {
-        console.error("Upload failed:", error);
-      }
+  const handleImport = () => {
+    if (!importInputRef.current?.value) return;
+    try {
+      importConfig(importInputRef.current.value);
+      setShowImport(false);
+      toast({ title: "Success", description: "Config imported!" });
+    } catch {
+      toast({ title: "Error", description: "Invalid JSON", variant: "destructive" });
     }
   };
 
-  if (isUserLoading || !profile) {
-    return <LoadingPage />;
-  }
+  const handleReset = () => {
+    if (confirm("Reset all settings to defaults?")) {
+      resetConfig();
+      toast({ title: "Reset", description: "All settings restored to defaults" });
+    }
+  };
+
+  const handlePublish = async () => {
+    try {
+      await apiRequest("PATCH", "/api/user", config);
+      toast({ title: "Saved!", description: "Profile configuration updated successfully." });
+    } catch (err) {
+      toast({ title: "Error", description: "Failed to save changes", variant: "destructive" });
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
+  const tabs = [
+    { id: "profile", icon: User, label: "Profile" },
+    { id: "design", icon: Monitor, label: "Design" },
+    { id: "explore", icon: Layers2, label: "Explore" },
+    { id: "add", icon: Plus, label: "Add" },
+    { id: "layout", icon: LayoutGrid, label: "Layout" },
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "profile":
+        return <ProfileTabFull />;
+      case "design":
+        return <DesignTab />;
+      case "explore":
+        return <ThemeTab />;
+      case "add":
+        return <div className="text-white/40 text-center py-12">Coming soon...</div>;
+      case "layout":
+        return <LayoutTab />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-black pb-20 overflow-x-hidden">
-      {/* Video only in Lab, audio disabled */}
-      <BackgroundMediaManager media={media} setMedia={setMedia} playAudio={false} />
-      <Navigation />
-      
-      <main className="pt-28 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Editor Panel */}
-        <div className="lg:col-span-5 space-y-10 animate-in fade-in slide-in-from-left-4 duration-700">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-purple-500/10 rounded-2xl border border-purple-500/20">
-                <Wand2 className="w-6 h-6 text-purple-400" />
-              </div>
-              <h1 className="text-4xl font-black tracking-tighter text-white">The Lab</h1>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="px-3 py-1 bg-zinc-900 rounded-full border border-white/5 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[11px] font-black text-zinc-400 uppercase tracking-widest">Level {profile.level}</span>
-              </div>
-              <div className="px-3 py-1 bg-zinc-900 rounded-full border border-white/5 text-[11px] font-black text-zinc-400 uppercase tracking-widest">
-                XP: {profile.xp}
-              </div>
+    <div className="min-h-screen w-full bg-[#0a0a0c] text-white overflow-hidden flex flex-col relative">
+      {/* Background Gradients */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
+      </div>
+
+      {/* Header */}
+      <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-50">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+            <Beaker className="w-5 h-5 text-white" />
+          </div>
+          <span className="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Lab</span>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={handlePublish}
+            className="ml-auto md:ml-0 text-white/40 hover:text-white"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <div className="hidden md:flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleExport}
+            className="text-white/40 hover:text-white"
+            title="Export config"
+          >
+            {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowImport(true)}
+            className="text-white/40 hover:text-white"
+            title="Import config"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleReset}
+            className="text-white/40 hover:text-white"
+            title="Reset to defaults"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+          <Button
+            onClick={handlePublish}
+            className="bg-white text-black hover:bg-white/90 font-bold px-4 rounded-lg transition-all active:scale-95 text-sm"
+          >
+            <Save className="w-3 h-3 mr-2" />
+            Save Changes
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleLogout}
+            className="text-white/40 hover:text-white"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+          </Button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden relative">
+        {/* View Mode Switcher */}
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 flex bg-black/80 backdrop-blur-xl p-1.5 rounded-2xl border border-white/10 shadow-2xl">
+          <button
+            onClick={() => setViewMode("preview")}
+            className={`h-11 px-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
+              viewMode === "preview" 
+                ? "bg-cyan-400 text-black shadow-[0_0_30px_rgba(34,211,238,0.5)] scale-105" 
+                : "text-white/40 hover:text-white hover:bg-white/5"
+            }`}
+            data-testid="button-view-preview"
+          >
+            <div className={`w-1.5 h-1.5 rounded-full ${viewMode === "preview" ? "bg-black animate-pulse" : "bg-white/20"}`} />
+            Preview
+          </button>
+          <button
+            onClick={() => setViewMode("editor")}
+            className={`h-11 px-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
+              viewMode === "editor" 
+                ? "bg-white/10 text-white border border-white/10 scale-105" 
+                : "text-white/40 hover:text-white hover:bg-white/5"
+            }`}
+            data-testid="button-view-editor"
+          >
+            <div className={`w-1.5 h-1.5 rounded-full ${viewMode === "editor" ? "bg-white animate-pulse" : "bg-white/20"}`} />
+            Editor
+          </button>
+        </div>
+
+        {/* Preview Section */}
+        <section className={`flex-1 flex flex-col p-4 md:p-8 overflow-y-auto bg-gradient-to-b from-transparent via-purple-600/5 to-transparent transition-all duration-500 ${viewMode === "editor" ? "opacity-40 scale-[0.98] blur-sm pointer-events-none" : "opacity-100 scale-100 blur-0"}`}>
+          <div className="flex items-center justify-between mb-4 md:mb-8">
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30">Live Preview</h2>
+            <div className="flex bg-white/5 p-1 rounded-lg border border-white/5">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobilePreview(false)}
+                className={`h-7 px-3 rounded text-[9px] font-bold uppercase tracking-wider transition-all ${!isMobilePreview ? "bg-white/10 text-white" : "text-white/30"}`}
+                data-testid="button-preview-desktop"
+              >
+                Desktop
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMobilePreview(true)}
+                className={`h-7 px-3 rounded text-[9px] font-bold uppercase tracking-wider transition-all ${isMobilePreview ? "bg-white/10 text-white" : "text-white/30"}`}
+                data-testid="button-preview-mobile"
+              >
+                Mobile
+              </Button>
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full grid grid-cols-5 bg-[#121212] p-1.5 rounded-2xl border border-white/5">
-              <TabsTrigger value="content" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
-                Content
-              </TabsTrigger>
-              <TabsTrigger value="design" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
-                Design
-              </TabsTrigger>
-              <TabsTrigger value="customization" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
-                Customization
-              </TabsTrigger>
-              <TabsTrigger value="media" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
-                Assets
-              </TabsTrigger>
-              <TabsTrigger value="connections" className="rounded-xl data-[state=active]:bg-zinc-800 data-[state=active]:text-white font-bold text-xs transition-all">
-                Connections
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="customization" className="mt-6">
-              <DecorationsPanel 
-                onUpdate={(data) => updateProfile(data)} 
-                profileEffect={(profile as any).profileEffect}
-                backgroundEffect={(profile as any).backgroundEffect}
-                cursorEffect={(profile as any).cursorEffect}
-                cursorUrl={(profile as any).cursorUrl}
-                effectIntensity={(profile as any).effectIntensity}
+          <div className="flex-1 flex items-center justify-center">
+            <div className={`transition-all duration-700 ease-in-out flex items-center justify-center ${isMobilePreview ? "w-[320px] h-[580px] md:w-[360px] md:h-[640px]" : "w-full max-w-2xl h-auto"}`}>
+              <LabProfilePreview
+                isMobilePreview={isMobilePreview}
+                username={config.displayName}
+                tagline={config.bio}
+                views={config.views}
+                avatarUrl={config.avatarUrl}
+                backgroundUrl={config.backgroundUrl}
+                audioUrl={config.audioUrl}
+                geometry={config.geometry}
+                entranceAnimation={config.entranceAnimation}
+                effectIntensity={config.effectIntensity}
+                effectSpeed={config.effectSpeed}
+                decorations={config.decorations}
+                discordConnections={(user as any)?.discordConnections || []}
+                onFullScreen={handleFullScreen}
+                data-testid="preview-lab-profile"
               />
-            </TabsContent>
+            </div>
+          </div>
+        </section>
 
-            {/* CONTENT TAB (Blocks + Identity) */}
-            <TabsContent value="content" className="space-y-6 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="space-y-6">
-                {/* Identity Card Preview */}
-                {profile && <IdentityCard user={profile} />}
-
-                {/* Edit Identity Information */}
-                <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-                  <CardContent className="p-8 space-y-8">
-                    <div>
-                      <h3 className="text-lg font-bold text-white">Edit Profile</h3>
-                      <p className="text-xs text-zinc-500 font-medium">Customize how you appear to the world</p>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="space-y-3">
-                        <Label className="text-[14px] font-bold text-zinc-400 ml-1">Display Name</Label>
-                        <motion.div whileHover={{ scale: 1.02 }} className="relative group">
-                          <Input 
-                            value={displayName} 
-                            onChange={(e) => setDisplayName(e.target.value)}
-                            onBlur={(e) => {
-                              updateProfile({ displayName: e.target.value });
-                            }}
-                            className="h-[56px] bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 text-white font-medium placeholder:text-zinc-600 transition-all"
-                            placeholder="Your display name"
-                            data-testid="input-display-name"
-                            disabled={isUpdating}
-                          />
-                        </motion.div>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <Label className="text-[14px] font-bold text-zinc-400 ml-1">Bio / About</Label>
-                        <Textarea 
-                          value={bio}
-                          onChange={(e) => setBio(e.target.value)} 
-                          onBlur={(e) => {
-                            updateProfile({ bio: e.target.value });
-                          }}
-                          className="bg-black/40 border-white/5 focus:border-purple-500/50 rounded-2xl px-5 py-4 text-white font-medium placeholder:text-zinc-600 transition-all min-h-[120px] resize-none"
-                          placeholder="Tell the multiverse about yourself..."
-                          data-testid="textarea-bio"
-                          disabled={isUpdating}
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label className="text-[14px] font-bold text-zinc-400 ml-1">Public Profile URL</Label>
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex items-center gap-2 p-4 rounded-2xl bg-black/40 border border-white/5 hover:border-purple-500/20 transition-colors">
-                          <span className="text-zinc-500 font-bold text-sm">lab.dev/u/</span>
-                          <span className="text-white font-bold text-sm">{profile?.username}</span>
-                          <div className="ml-auto flex items-center gap-2">
-                             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                             <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Live</span>
-                          </div>
-                        </motion.div>
-                      </div>
-
-                      {/* Quick Stats */}
-                      <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-black/40 border border-white/5">
-                        <div className="text-center">
-                          <div className="text-2xl font-black text-white">{profile?.level || 1}</div>
-                          <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Level</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-black text-white">{profile?.xp || 0}</div>
-                          <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">XP</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-black text-white">{profile?.views || 0}</div>
-                          <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Views</div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Identity Blocks Section */}
-              <div className="grid grid-cols-1 gap-6">
-                <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-                  <CardContent className="p-8 space-y-8">
-                    <div className="flex justify-between items-center px-2">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-tight">Identity Blocks</h3>
-                        <p className="text-[13px] font-medium text-zinc-500 mt-1">Design your personal multiverse presence</p>
-                      </div>
-                      <AddBlockDialog onCreate={createLink} />
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {(profile.blocks || []).length === 0 && (
-                        <div className="col-span-full py-20 flex flex-col items-center justify-center border-2 border-dashed border-white/5 rounded-[40px] bg-black/20 group hover:border-purple-500/20 transition-colors">
-                          <div className="p-5 bg-white/5 rounded-3xl mb-4 group-hover:scale-110 transition-transform">
-                            <LinkIcon className="w-10 h-10 text-zinc-600" />
-                          </div>
-                          <p className="text-[15px] font-bold text-zinc-500">No blocks discovered in this sector</p>
-                          <p className="text-xs text-zinc-700 mt-1 uppercase tracking-widest font-black">Add your first link to start</p>
-                        </div>
-                      )}
-                      {(profile.blocks || []).map((block: any) => (
-                        <Card key={block.id} className="group relative bg-black/40 border border-white/5 rounded-[28px] hover:border-purple-500/30 hover:bg-black/60 transition-all duration-500 overflow-hidden shadow-lg hover:shadow-purple-500/5">
-                          <CardContent className="p-6">
-                            <div className="flex items-center gap-5">
-                              <div className="relative shrink-0">
-                                <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-sm font-black uppercase text-purple-400 group-hover:rotate-12 transition-transform">
-                                  {block.type.slice(0, 1)}
-                                </div>
-                                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-[#121212] rounded-full" />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-bold text-[15px] text-white truncate">{block.content.title || block.type}</span>
-                                  {block.visible && (
-                                    <div className="px-1.5 py-0.5 bg-purple-500/10 border border-purple-500/20 rounded-md text-[9px] font-black text-purple-400 uppercase tracking-tighter">
-                                      Live
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="text-[11px] font-bold text-zinc-600 uppercase tracking-[0.15em] truncate mt-1">
-                                  {block.content.url || block.type}
-                                </div>
-                              </div>
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="w-10 h-10 rounded-xl text-zinc-500 hover:text-white hover:bg-white/10"
-                                  data-testid={`button-edit-block-${block.id}`}
-                                >
-                                  <LinkIcon className="w-4 h-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="w-10 h-10 rounded-xl text-zinc-500 hover:text-red-500 hover:bg-red-500/10"
-                                  onClick={() => deleteLink(block.id)}
-                                  data-testid={`button-delete-block-${block.id}`}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+        {/* Tab Content Section (Editor) */}
+        <section className={`absolute inset-0 z-10 overflow-y-auto bg-[#0f0f12]/80 backdrop-blur-3xl transition-all duration-500 ${viewMode === "preview" ? "translate-y-full opacity-0" : "translate-y-0 opacity-100"}`}>
+          <div className="p-4 md:p-6 pt-6">
+            <div className="flex items-center justify-center mb-8">
+              <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 backdrop-blur-md">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2 transition-all rounded-lg ${
+                        isActive
+                          ? "text-white bg-white/10 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                          : "text-white/40 hover:text-white/60"
+                      }`}
+                      data-testid={`button-tab-${tab.id}`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider hidden sm:block">
+                        {tab.label}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            </TabsContent>
+            </div>
+            <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">Lab Editor</h2>
+            <p className="text-xs md:text-sm text-white/40 mt-1">Customize your profile in real-time</p>
+          </div>
 
-            {/* CONNECTIONS TAB */}
-            <TabsContent value="connections" className="space-y-6 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <Card className="bg-[#121212]/80 border-white/5 rounded-[32px] overflow-hidden backdrop-blur-3xl shadow-2xl">
-                <CardContent className="p-8 space-y-8">
-                  <div>
-                    <h3 className="text-lg font-bold text-white">Social Connections</h3>
-                    <p className="text-xs text-zinc-500 font-medium">Link your accounts to display presence and status</p>
-                  </div>
+          <div className="px-4 md:px-6 pb-40">
+            {renderTabContent()}
+          </div>
+        </section>
+      </main>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {[
-                      { name: "Discord", color: "#5865F2", Icon: SiDiscord },
-                      { name: "Twitter", color: "#000000", Icon: SiX },
-                      { name: "GitHub", color: "#ffffff", Icon: SiGithub },
-                      { name: "Instagram", color: "#E4405F", Icon: SiInstagram },
-                      { name: "Spotify", color: "#1DB954", Icon: SiSpotify },
-                      { name: "YouTube", color: "#FF0000", Icon: SiYoutube },
-                      { name: "TikTok", color: "#000000", Icon: SiTiktok },
-                      { name: "Twitch", color: "#9146FF", Icon: SiTwitch }
-                    ].map((platform) => (
-                      <button
-                        key={platform.name}
-                        className="group flex flex-col items-center gap-3 p-5 rounded-2xl bg-black/40 border border-white/5 hover:border-white/20 hover:bg-black/60 transition-all active:scale-95"
-                        style={{ "--hover-color": platform.color } as any}
-                      >
-                        <div className="relative w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110" style={{ background: `${platform.color}20` }}>
-                          <platform.Icon className="w-6 h-6" style={{ color: platform.color }} />
-                        </div>
-                        <div className="text-center">
-                          <p className="text-[11px] font-bold text-white">{platform.name}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="p-6 rounded-3xl bg-purple-500/5 border border-purple-500/10">
-                    <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0">
-                        <Wand2 className="w-5 h-5 text-purple-400" />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-sm font-bold text-purple-200">Pro Feature: Live Integration</h4>
-                        <p className="text-xs text-purple-300/60 leading-relaxed font-medium">
-                          Connect accounts to display real-time status, currently playing music, or live stream info directly on your profile.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* DESIGN TAB - Professional Implementation */}
-            <TabsContent value="design" className="space-y-4 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {/* Color Customization */}
-              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
-                <CardContent className="p-6 space-y-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-purple-500/20">
-                      <Palette className="w-5 h-5 text-purple-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white">Colors</h3>
-                      <p className="text-xs text-zinc-500">Customize your color palette</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label className="text-sm font-semibold text-zinc-200">Brand Accent</Label>
-                        <input
-                          type="text"
-                          value={profile.accentColor || "#7c3aed"}
-                          onChange={(e) => updateProfile({ accentColor: e.target.value })}
-                          className="w-20 px-2 py-1 text-xs rounded-lg bg-zinc-900 border border-white/10 text-white font-mono"
-                          placeholder="#7c3aed"
-                          data-testid="input-accent-color"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => updateProfile({ accentColor: color })}
-                            className={`w-full aspect-square rounded-xl border-2 transition-all hover:scale-105 ${profile.accentColor === color ? 'border-white ring-2 ring-white/30' : 'border-white/10'}`}
-                            style={{ background: color }}
-                            data-testid={`color-${color.slice(1)}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label className="text-sm font-semibold text-zinc-200">Username Glow</Label>
-                        <input
-                          type="text"
-                          value={profile.themeConfig?.typography?.displayNameGlowColor || "#7c3aed"}
-                          onChange={(e) => updateProfile({
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              typography: {
-                                ...profile.themeConfig.typography,
-                                displayNameGlowColor: e.target.value
-                              }
-                            }
-                          })}
-                          className="w-20 px-2 py-1 text-xs rounded-lg bg-zinc-900 border border-white/10 text-white font-mono"
-                          placeholder="#7c3aed"
-                          data-testid="input-glow-color"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => updateProfile({
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                typography: {
-                                  ...profile.themeConfig.typography,
-                                  displayNameGlowColor: color
-                                }
-                              }
-                            })}
-                            className={`w-full aspect-square rounded-xl border-2 transition-all hover:scale-105 ${profile.themeConfig?.typography?.displayNameGlowColor === color ? 'border-white ring-2 ring-white/30' : 'border-white/10'}`}
-                            style={{ background: color }}
-                            data-testid={`displayname-glow-color-${color.slice(1)}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label className="text-sm font-semibold text-zinc-200">Frame Color</Label>
-                        <input
-                          type="text"
-                          value={(profile.themeConfig?.frameOverlay as any)?.color || "#7c3aed"}
-                          onChange={(e) => updateProfile({
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              frameOverlay: {
-                                ...profile.themeConfig?.frameOverlay,
-                                color: e.target.value
-                              }
-                            }
-                          })}
-                          className="w-20 px-2 py-1 text-xs rounded-lg bg-zinc-900 border border-white/10 text-white font-mono"
-                          placeholder="#7c3aed"
-                          data-testid="input-frame-color"
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                        {["#7c3aed", "#2563eb", "#059669", "#dc2626", "#d97706", "#db2777", "#14b8a6", "#ffffff"].map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => updateProfile({
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                frameOverlay: {
-                                  ...profile.themeConfig?.frameOverlay,
-                                  color: color
-                                }
-                              }
-                            })}
-                            className={`w-full aspect-square rounded-xl border-2 transition-all hover:scale-105 ${(profile.themeConfig?.frameOverlay as any)?.color === color ? 'border-white ring-2 ring-white/30' : 'border-white/10'}`}
-                            style={{ background: color }}
-                            data-testid={`frame-overlay-color-${color.slice(1)}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Frame Customization */}
-              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
-                <CardContent className="p-6 space-y-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-blue-500/20">
-                      <Zap className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white">Frame</h3>
-                      <p className="text-xs text-zinc-500">Profile frame style and appearance</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-sm font-semibold text-zinc-200 mb-3 block">Style</Label>
-                      <div className="grid grid-cols-3 gap-2">
-                        {["none", "glass", "neon", "minimal", "transparent", "glowing-border"].map((style) => (
-                          <Button
-                            key={style}
-                            variant="outline"
-                            className={`h-9 rounded-lg capitalize font-semibold text-xs transition-all border ${profile.themeConfig?.frameOverlay?.style === style ? "bg-white text-black border-white shadow-lg" : "bg-zinc-900/30 text-zinc-400 border-white/10 hover:border-white/20 hover:bg-zinc-900/50"}`}
-                            onClick={() => updateProfile({ 
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                frameOverlay: {
-                                  ...profile.themeConfig?.frameOverlay,
-                                  style: style as any
-                                }
-                              }
-                            })}
-                            data-testid={`frame-overlay-${style}`}
-                          >
-                            {style}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Typography */}
-              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
-                <CardContent className="p-6 space-y-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-pink-500/20">
-                      <Type className="w-5 h-5 text-pink-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white">Typography</h3>
-                      <p className="text-xs text-zinc-500">Font selections</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <Label className="text-sm font-semibold text-zinc-200 mb-3 block">Username Font</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {FONTS.map((font) => (
-                          <Button
-                            key={font.value}
-                            variant="outline"
-                            onClick={() => updateProfile({ 
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                typography: {
-                                  ...profile.themeConfig.typography,
-                                  displayNameFont: font.value
-                                }
-                              }
-                            })}
-                            className={`h-9 rounded-lg font-semibold text-xs transition-all border ${profile.themeConfig?.typography?.displayNameFont === font.value ? "bg-white text-black border-white shadow-lg" : "bg-zinc-900/30 text-zinc-400 border-white/10 hover:border-white/20 hover:bg-zinc-900/50"}`}
-                            style={{ fontFamily: font.value }}
-                            data-testid={`button-displayname-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            {font.name}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label className="text-sm font-semibold text-zinc-200 mb-3 block">Bio Font</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {FONTS.map((font) => (
-                          <Button
-                            key={font.value}
-                            variant="outline"
-                            onClick={() => updateProfile({ 
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                typography: {
-                                  ...profile.themeConfig.typography,
-                                  bioFont: font.value
-                                }
-                              }
-                            })}
-                            className={`h-9 rounded-lg font-semibold text-xs transition-all border ${profile.themeConfig?.typography?.bioFont === font.value ? "bg-white text-black border-white shadow-lg" : "bg-zinc-900/30 text-zinc-400 border-white/10 hover:border-white/20 hover:bg-zinc-900/50"}`}
-                            style={{ fontFamily: font.value }}
-                            data-testid={`button-bio-font-${font.value.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            {font.name}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Effects & Animation */}
-              <Card className="bg-[#121212]/80 border-white/5 rounded-2xl overflow-hidden backdrop-blur-3xl">
-                <CardContent className="p-6 space-y-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-green-500/20">
-                      <Sparkles className="w-5 h-5 text-green-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-white">Effects</h3>
-                      <p className="text-xs text-zinc-500">Animations and glow effects</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-black/40 border border-white/5">
-                        <Label className="text-sm font-semibold text-zinc-200">Screen Effects</Label>
-                        <Switch 
-                          checked={profile.themeConfig?.screenEffects?.enabled ?? false}
-                          onCheckedChange={(checked) => updateProfile({
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              screenEffects: {
-                                ...profile.themeConfig?.screenEffects,
-                                enabled: checked,
-                                type: profile.themeConfig?.screenEffects?.type || "cinema"
-                              }
-                            }
-                          })}
-                          data-testid="switch-screen-effects"
-                          className="data-[state=checked]:bg-purple-600"
-                        />
-                      </div>
-
-                      {profile.themeConfig?.screenEffects?.enabled && (
-                        <div className="space-y-3">
-                          <Label className="text-sm font-semibold text-zinc-200 block">Effect Type</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {["cinema", "bloom", "vignette", "neon", "phosphor", "chromatic", "minimal"].map((type) => (
-                              <Button
-                                key={type}
-                                variant="ghost"
-                                size="sm"
-                                className={`capitalize text-xs h-8 rounded-lg font-semibold ${profile.themeConfig?.screenEffects?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
-                                onClick={() => updateProfile({
-                                  themeConfig: {
-                                    ...profile.themeConfig,
-                                    screenEffects: {
-                                      ...profile.themeConfig?.screenEffects,
-                                      type: type as any
-                                    }
-                                  }
-                                })}
-                                data-testid={`screen-effect-${type}`}
-                              >
-                                {type}
-                              </Button>
-                            ))}
-                          </div>
-
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <Label className="text-xs font-semibold text-zinc-200">Intensity</Label>
-                              <span className="text-xs text-zinc-400 font-mono">{Math.round((profile.themeConfig?.screenEffects?.intensity ?? 1) * 100)}%</span>
-                            </div>
-                            <input
-                              type="range"
-                              min="0.5"
-                              max="2"
-                              step="0.1"
-                              value={profile.themeConfig?.screenEffects?.intensity ?? 1}
-                              onChange={(e) => updateProfile({
-                                themeConfig: {
-                                  ...profile.themeConfig,
-                                  screenEffects: {
-                                    ...profile.themeConfig?.screenEffects,
-                                    intensity: parseFloat(e.target.value)
-                                  }
-                                }
-                              })}
-                              className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
-                              data-testid="slider-screen-effects-intensity"
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-black/40 border border-white/5">
-                      <Label className="text-sm font-semibold text-zinc-200">Ambient Glow</Label>
-                      <Switch 
-                        checked={profile.glowEnabled ?? true}
-                        onCheckedChange={(checked) => updateProfile({ glowEnabled: checked })}
-                        data-testid="switch-glow"
-                        className="data-[state=checked]:bg-purple-600"
-                      />
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-sm font-semibold text-zinc-200">Username Animation</Label>
-                        <Switch 
-                          checked={profile.themeConfig?.animations?.displayName?.enabled ?? true}
-                          onCheckedChange={(checked) => updateProfile({ 
-                            themeConfig: {
-                              ...profile.themeConfig,
-                              animations: {
-                                ...profile.themeConfig?.animations,
-                                displayName: {
-                                  ...profile.themeConfig?.animations?.displayName,
-                                  enabled: checked
-                                }
-                              }
-                            }
-                          })}
-                          data-testid="switch-displayname-animation"
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        {["fade", "slide", "scale", "wave", "glow-pulse"].map((type) => (
-                          <Button
-                            key={type}
-                            variant="ghost"
-                            size="sm"
-                            className={`capitalize text-xs h-8 rounded-lg font-semibold ${profile.themeConfig?.animations?.displayName?.type === type ? "bg-purple-600 text-white" : "text-zinc-400 hover:text-white hover:bg-white/5"}`}
-                            onClick={() => updateProfile({ 
-                              themeConfig: {
-                                ...profile.themeConfig,
-                                animations: {
-                                  ...profile.themeConfig?.animations,
-                                  displayName: {
-                                    ...profile.themeConfig?.animations?.displayName,
-                                    type: type as any
-                                  }
-                                }
-                              }
-                            })}
-                            data-testid={`displayname-animation-${type}`}
-                          >
-                            {type}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* MEDIA TAB */}
-            <TabsContent value="media" className="space-y-4 mt-4">
-              <MediaTab media={media} setMedia={setMedia as any} />
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        {/* Live Preview Panel - Discord Style */}
-        <div className="lg:col-span-7 sticky top-28 h-fit animate-in fade-in slide-in-from-right-4 duration-700">
-          <div className="flex items-center justify-between mb-6 px-2">
-            <h2 className="text-[13px] font-black text-zinc-500 uppercase tracking-[0.2em]">Live Preview</h2>
-            <Button variant="ghost" size="sm" className="h-9 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 font-bold" onClick={() => window.open(`/u/${profile.username}`, '_blank')} data-testid="button-open-public">
-              View Profile <ExternalLink className="w-3.5 h-3.5 ml-2" />
+      {/* Import Dialog */}
+      <Dialog open={showImport} onOpenChange={setShowImport}>
+        <DialogContent className="bg-[#0f0f12] border-white/5">
+          <DialogHeader>
+            <DialogTitle className="text-white">Import Configuration</DialogTitle>
+          </DialogHeader>
+          <textarea
+            ref={importInputRef}
+            placeholder="Paste your JSON config here..."
+            className="w-full h-64 p-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:border-purple-500 focus:outline-none resize-none"
+            data-testid="textarea-import-config"
+          />
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setShowImport(false)} className="flex-1" data-testid="button-cancel-import">
+              Cancel
+            </Button>
+            <Button onClick={handleImport} className="flex-1 bg-white text-black hover:bg-white/90" data-testid="button-confirm-import">
+              Import
             </Button>
           </div>
-          
-          {/* Clean Discord-style Profile Card */}
-          <div className="relative rounded-[32px] border border-white/10 bg-gradient-to-b from-white/5 to-black/40 overflow-hidden shadow-2xl backdrop-blur-xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent pointer-events-none" />
-            
-            {/* Profile Preview Content */}
-            <ProfileOverlays activeOverlay={activeOverlay} onOverlayChange={setActiveOverlay} showSelector={true} />
-            <div className="relative z-10 max-h-[820px] overflow-y-auto scrollbar-hide">
-              <ProfileRenderer user={profile} blocks={profile.blocks || []} />
-            </div>
-          </div>
-        </div>
-      </main>
+        </DialogContent>
+      </Dialog>
     </div>
-  );
-}
-
-function AddBlockDialog({ onCreate }: { onCreate: (data: any) => void }) {
-  const [open, setOpen] = useState(false);
-  const [blockType, setBlockType] = useState("link");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onCreate({
-      type: blockType,
-      content: { title, url, icon: "default" },
-      animationConfig: { intensity: 0.5, delay: 0, ease: "power2.out", trigger: "hover" },
-      order: 0,
-      visible: true
-    });
-    setOpen(false);
-    setTitle("");
-    setUrl("");
-    setBlockType("link");
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm" className="gap-2" data-testid="button-add-link"><Plus className="w-4 h-4" /> Add Block</Button>
-      </DialogTrigger>
-      <DialogContent className="bg-[#0a0a0a] border border-white/10 rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-white">Add New Block</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-          <div className="space-y-2">
-            <Label className="text-zinc-300">Block Type</Label>
-            <select 
-              value={blockType}
-              onChange={(e) => setBlockType(e.target.value)}
-              className="w-full h-10 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
-              data-testid="select-block-type"
-            >
-              <option value="link">Link</option>
-              <option value="bio">Bio</option>
-            </select>
-          </div>
-          <div className="space-y-2">
-            <Label className="text-zinc-300">Title</Label>
-            <Input 
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="My Portfolio" 
-              className="bg-black/40 border-white/10 rounded-xl text-white"
-              data-testid="input-block-title"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-zinc-300">URL</Label>
-            <Input 
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com" 
-              className="bg-black/40 border-white/10 rounded-xl text-white"
-              data-testid="input-block-url"
-              required
-            />
-          </div>
-          <Button type="submit" className="w-full rounded-xl bg-purple-600 hover:bg-purple-700" data-testid="button-create-link">
-            Create Block
-          </Button>
-        </form>
-      </DialogContent>
-    </Dialog>
   );
 }
