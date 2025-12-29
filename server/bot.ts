@@ -38,7 +38,7 @@ export async function setupBot() {
     console.error(error);
   }
 
-  client.once("clientReady", () => {
+  client.once("ready", () => {
     log(`Logged in as ${client.user?.tag}!`, "bot");
   });
 
@@ -72,10 +72,8 @@ export async function setupBot() {
           return;
         }
 
-        // Use REPLIT_DEV_DOMAIN or the first configured domain.
-        // On Render, ensure your actual domain is set in these env vars if needed, 
-        // or it will fallback to localhost which only works in local dev.
-        const rawDomain = process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0];
+        // Use PUBLIC_DOMAIN or first configured domain.
+        const rawDomain = process.env.PUBLIC_DOMAIN || process.env.REPLIT_DEV_DOMAIN || process.env.REPLIT_DOMAINS?.split(',')[0];
         const domain = rawDomain && !rawDomain.includes('localhost') ? rawDomain : (rawDomain || 'localhost');
         
         const avatarUrl = interaction.user.displayAvatarURL({ extension: 'png', size: 512 });
