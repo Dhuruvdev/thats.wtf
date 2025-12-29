@@ -59,6 +59,11 @@ interface ProfileRendererProps {
   blocks: any[];
 }
 
+import ElectricBorder from "./react-bits/ElectricBorder";
+import PixelCard from "./react-bits/PixelCard";
+import SpotlightCard from "./react-bits/SpotlightCard";
+import ProfileCard from "./react-bits/ProfileCard";
+
 export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -68,6 +73,26 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const renderCardWrapper = (content: React.ReactNode) => {
+    const cardClass = "max-w-md w-full mx-4 relative z-10 overflow-visible";
+    switch (user.profileEffect) {
+      case "electric":
+        return (
+          <ElectricBorder primaryColor={user.accentColor} className={cardClass}>
+            <div className="p-8 bg-[#121212]/90 rounded-[inherit]">{content}</div>
+          </ElectricBorder>
+        );
+      case "pixel":
+        return <PixelCard className={cardClass}>{content}</PixelCard>;
+      case "spotlight":
+        return <SpotlightCard className={cardClass}>{content}</SpotlightCard>;
+      case "profile_card":
+        return <ProfileCard className={cardClass}>{content}</ProfileCard>;
+      default:
+        return <div className="max-w-md w-full space-y-8 px-4 relative z-10">{content}</div>;
+    }
+  };
 
   const renderProfileEffect = () => {
     const effect = (user as any).profileEffect;
@@ -268,22 +293,6 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
       {renderProfileEffect()}
       <ProfileOverlays activeOverlay={user.entranceAnimation as any} showSelector={false} />
 
-      {/* Pixel Border Overlay */}
-      {user.decorations?.includes("pixel_border") && (
-        <div 
-          className="absolute inset-0 pointer-events-none z-50"
-          style={{
-            borderImageSource: "url('/assets/borders/pixel_border.svg')",
-            borderImageSlice: "40",
-            borderImageWidth: "32px",
-            borderImageRepeat: "stretch",
-            margin: "-16px",
-            imageRendering: "pixelated",
-            filter: "drop-shadow(0 0 10px rgba(255, 230, 0, 0.3))"
-          }}
-        />
-      )}
-
       {/* Background Image/GIF */}
       {backgroundUrl && (
         <div className="absolute inset-0 -z-20 bg-video-container" style={{ contain: 'strict', willChange: 'transform' }}>
@@ -394,89 +403,91 @@ export function ProfileRenderer({ user, blocks }: ProfileRendererProps) {
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--accent-color)]/5 pointer-events-none" />
       
-      <div className="relative z-10 max-w-md w-full space-y-8 px-4">
-        {/* Profile Header */}
-        <div className="flex flex-col items-center pt-12 profile-header">
-            <div className="relative mb-8 group">
-              {/* Avatar Decoration Asset */}
-              {user.decorations?.includes("avatar_decor") && (
-                <div className="absolute -inset-6 pointer-events-none z-20">
-                  {/* Main Animated Glow Ring */}
-                  <div className="absolute inset-0 rounded-full border-[6px] border-[#FFE600] opacity-90 shadow-[0_0_20px_#FFE600,inset_0_0_15px_#FFE600] animate-pulse" />
-                  
-                  {/* Rotating Tech Accents */}
-                  <div className="absolute inset-[-4px] rounded-full border-t-[3px] border-r-[3px] border-[#FFE600] animate-[spin_3s_linear_infinite]" />
-                  <div className="absolute inset-[-8px] rounded-full border-b-[3px] border-l-[3px] border-[#FFE600]/40 animate-[spin_5s_linear_infinite_reverse]" />
-                  
-                  {/* High-Fidelity Corner Accent */}
-                  <div className="absolute top-1 right-1 w-5 h-5 bg-[#FFE600] rounded-tr-lg rounded-bl-lg shadow-[0_0_10px_rgba(255,230,0,0.8)] flex items-center justify-center">
-                    <div className="w-2 h-2 bg-black rounded-sm animate-ping" />
+      {renderCardWrapper(
+        <>
+          {/* Profile Header */}
+          <div className="flex flex-col items-center profile-header">
+              <div className="relative mb-8 group">
+                {/* Avatar Decoration Asset */}
+                {user.decorations?.includes("avatar_decor") && (
+                  <div className="absolute -inset-6 pointer-events-none z-20">
+                    {/* Main Animated Glow Ring */}
+                    <div className="absolute inset-0 rounded-full border-[6px] border-[#FFE600] opacity-90 shadow-[0_0_20px_#FFE600,inset_0_0_15px_#FFE600] animate-pulse" />
+                    
+                    {/* Rotating Tech Accents */}
+                    <div className="absolute inset-[-4px] rounded-full border-t-[3px] border-r-[3px] border-[#FFE600] animate-[spin_3s_linear_infinite]" />
+                    <div className="absolute inset-[-8px] rounded-full border-b-[3px] border-l-[3px] border-[#FFE600]/40 animate-[spin_5s_linear_infinite_reverse]" />
+                    
+                    {/* High-Fidelity Corner Accent */}
+                    <div className="absolute top-1 right-1 w-5 h-5 bg-[#FFE600] rounded-tr-lg rounded-bl-lg shadow-[0_0_10px_rgba(255,230,0,0.8)] flex items-center justify-center">
+                      <div className="w-2 h-2 bg-black rounded-sm animate-ping" />
+                    </div>
+                    
+                    {/* Floating Pixel Particles */}
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
                   </div>
-                  
-                  {/* Floating Pixel Particles */}
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#FFE600] shadow-[0_0_10px_#FFE600]" />
+                )}
+                <div className="absolute inset-0 bg-[var(--accent-color)] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="relative w-28 h-28 rounded-full overflow-hidden border-3 border-[var(--accent-color)]/50 hover:border-[var(--accent-color)] transition-all duration-300 shadow-2xl">
+                  <img 
+                    src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
+                    alt={user.username}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-              )}
-              <div className="absolute inset-0 bg-[var(--accent-color)] rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
-              <div className="relative w-28 h-28 rounded-full overflow-hidden border-3 border-[var(--accent-color)]/50 hover:border-[var(--accent-color)] transition-all duration-300 shadow-2xl">
-                <img 
-                  src={user.avatarUrl || `https://avatar.vercel.sh/${user.username}`} 
-                  alt={user.username}
-                  className="w-full h-full object-cover"
-                />
               </div>
-            </div>
-          
-          <h1 
-            className="text-5xl font-black mb-4 text-white text-center tracking-tight displayname-text"
-            style={{ 
-              fontFamily: "var(--displayname-font)",
-              animation: activeTheme.animations?.displayName?.enabled 
-                ? `${activeTheme.animations.displayName.type}-in ${activeTheme.animations.displayName.duration}s ease-out forwards`
-                : 'none',
-              textShadow: `0 0 20px ${activeTheme.typography?.displayNameGlowColor || '#7c3aed'}80`
-            }}
-          >
-            {user.displayName || user.username}
-          </h1>
-          
-          {user.bio && (
-            <p 
-              className="text-[15px] text-zinc-400 text-center max-w-sm leading-relaxed font-medium bio-text"
+            
+            <h1 
+              className="text-5xl font-black mb-4 text-white text-center tracking-tight displayname-text"
               style={{ 
-                fontFamily: "var(--bio-font)",
-                animation: activeTheme.animations?.bio?.enabled 
-                  ? `${activeTheme.animations.bio.type}-in ${activeTheme.animations.bio.duration}s ease-out forwards`
-                  : 'none'
+                fontFamily: "var(--displayname-font)",
+                animation: activeTheme.animations?.displayName?.enabled 
+                  ? `${activeTheme.animations.displayName.type}-in ${activeTheme.animations.displayName.duration}s ease-out forwards`
+                  : 'none',
+                textShadow: `0 0 20px ${activeTheme.typography?.displayNameGlowColor || '#7c3aed'}80`
               }}
             >
-              {user.bio}
-            </p>
-          )}
-          
-          <div className="flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[11px] font-black text-zinc-500 uppercase tracking-widest">Level {user.level}</span>
-          </div>
-        </div>
-
-        {/* Dynamic Blocks */}
-        <div className="space-y-4 pb-8">
-          {blocks.length === 0 && (
-            <div className="py-12 flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-white/10">
-              <p className="text-sm font-bold text-zinc-600">No links published yet</p>
+              {user.displayName || user.username}
+            </h1>
+            
+            {user.bio && (
+              <p 
+                className="text-[15px] text-zinc-400 text-center max-w-sm leading-relaxed font-medium bio-text"
+                style={{ 
+                  fontFamily: "var(--bio-font)",
+                  animation: activeTheme.animations?.bio?.enabled 
+                    ? `${activeTheme.animations.bio.type}-in ${activeTheme.animations.bio.duration}s ease-out forwards`
+                    : 'none'
+                }}
+              >
+                {user.bio}
+              </p>
+            )}
+            
+            <div className="flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[11px] font-black text-zinc-500 uppercase tracking-widest">Level {user.level}</span>
             </div>
-          )}
-          {blocks
-            .filter(b => b.visible)
-            .sort((a, b) => a.order - b.order)
-            .map((block) => (
-              <IdentityBlock key={block.id} block={block} />
-            ))
-          }
-        </div>
-      </div>
+          </div>
+
+          {/* Dynamic Blocks */}
+          <div className="space-y-4 pb-8">
+            {blocks.length === 0 && (
+              <div className="py-12 flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-white/10">
+                <p className="text-sm font-bold text-zinc-600">No links published yet</p>
+              </div>
+            )}
+            {blocks
+              .filter(b => b.visible)
+              .sort((a, b) => a.order - b.order)
+              .map((block) => (
+                <IdentityBlock key={block.id} block={block} />
+              ))
+            }
+          </div>
+        </>
+      )}
 
       <style dangerouslySetInnerHTML={{ __html: `.profile-container {
           background: var(--profile-bg);

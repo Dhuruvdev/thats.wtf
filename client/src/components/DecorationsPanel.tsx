@@ -10,8 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 const PROFILE_EFFECTS = [
   { id: "aura", name: "Aura Glow", description: "Soft radiating glow around your avatar", intensity: true },
   { id: "glitch", name: "Cyber Glitch", description: "Digital distortion effect", intensity: true },
-  { id: "shimmer", name: "Diamond Shimmer", description: "Sparkling light reflections", intensity: false },
-  { id: "pulse", name: "Vitals Pulse", description: "Rhythmic heartbeat animation", intensity: true },
+  { id: "electric", name: "Electric Border", description: "High-energy rotating border", intensity: true },
+  { id: "spotlight", name: "Spotlight Card", description: "Interactive hover illumination", intensity: false },
+  { id: "pixel", name: "Pixel Card", description: "Retro-futuristic pixelated grid", intensity: false },
+  { id: "profile_card", name: "Profile Card", description: "Premium glass-morphism style", intensity: false },
 ];
 
 const BACKGROUND_EFFECTS = [

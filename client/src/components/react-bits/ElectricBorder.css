@@ -1,0 +1,35 @@
+.electric-border-container {
+  position: relative;
+  padding: 2px;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.electric-border-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    transparent,
+    var(--primary-color),
+    var(--secondary-color),
+    transparent 30%
+  );
+  animation: rotate var(--duration) linear infinite;
+  z-index: 0;
+}
+
+.electric-border-content {
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  border-radius: inherit;
+  height: 100%;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
